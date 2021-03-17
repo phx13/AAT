@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 from jinja2 import TemplateError
+
 from aat_main.utils.api_exception_helper import NotFoundException
 
 index_blueprint = Blueprint('index_blueprint', __name__)
