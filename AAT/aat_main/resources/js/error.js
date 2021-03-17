@@ -1,3 +1,3 @@
 setTimeout(function () {
     location.href = '/';
-}, 2000);
+}, 3000);

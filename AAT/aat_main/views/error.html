@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<section>
-    <h1>Client error</h1>
-    <h1>Redirect homepage after 2 seconds</h1>
+<section style="color: red">
+    <h1>{{api_exception.code}}</h1>
+    <h1>{{api_exception.message}}</h1>
+    <h1>Redirect homepage after 3 seconds</h1>
 </section>
 {% endblock %}
 
