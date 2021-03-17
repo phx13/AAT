@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<section>
+    <h1>Client error</h1>
+    <h1>Redirect homepage after 2 seconds</h1>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="/js/error.js" type="text/javascript"></script>
+{% endblock %}

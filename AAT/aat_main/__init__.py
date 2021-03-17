@@ -1,5 +1,5 @@
 import pymysql
-from flask import Flask, render_template, request, session
+from flask import Flask
 
 pymysql.install_as_MySQLdb()
 from flask_sqlalchemy import SQLAlchemy
@@ -13,15 +13,20 @@ db = SQLAlchemy(app)
 
 
 @app.errorhandler(404)
-def error404(e):
-    return render_template('error404.html')
+def error_404(e):
+    return render_template('error_404.html')
 
 
 @app.errorhandler(500)
-def error500(e):
-    return render_template('error500.html')
+def error_500(e):
+    return render_template('error_500.html')
 
 
 @app.before_request
 def before_request():
     pass
+
+
+from aat_main.controllers.index_controller import *
+
+app.register_blueprint(index_blueprint)
