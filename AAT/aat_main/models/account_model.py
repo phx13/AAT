@@ -16,8 +16,7 @@ class AccountModel(db.Model):
 
     def create_account(self, id, email, password, name):
         try:
-            account_model = AccountModel(id=id, email=email, password=password, name=name)
-            db.session.add(account_model)
+            db.session.add(AccountModel(id=id, email=email, password=password, name=name))
             db.session.commit()
         except:
             return InterServerErrorException()
