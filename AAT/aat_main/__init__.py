@@ -30,5 +30,7 @@ def before_request():
 
 
 from aat_main.controllers.index_controller import *
+from aat_main.controllers.course_controller import *
 
 app.register_blueprint(index_blueprint)
+app.register_blueprint(course_blueprint)
