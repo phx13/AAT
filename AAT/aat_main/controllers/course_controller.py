@@ -17,6 +17,6 @@ def course_page():
 @course_blueprint.route('/course/assessment/')
 def course_assessment_page():
     try:
-        return render_template('index.html')
+        return render_template('assessment.html')
     except TemplateError:
         raise NotFoundException()
