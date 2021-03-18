@@ -1,5 +1,4 @@
 from flask import render_template, current_app, send_from_directory
-import os
 from aat.main import bp
 
 
@@ -7,6 +6,7 @@ from aat.main import bp
 @bp.route('/home')
 @bp.route('/')
 def home():
+    print(current_app.config['SECRET_KEY'])
     return render_template('home.html', title='Home')
 #
 #
