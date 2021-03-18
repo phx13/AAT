@@ -1,2 +1,2 @@
-# CMT313Team_B.AutomatedAssessmentTool
+# This is Team B's automated assessment tool
 
