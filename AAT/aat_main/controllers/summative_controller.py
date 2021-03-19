@@ -3,7 +3,7 @@ from jinja2 import TemplateError
 
 from aat_main.utils.api_exception_helper import NotFoundException
 
-summative_blueprint = Blueprint('summative_blueprint', __name__)
+summative_blueprint = Blueprint('summative_blueprint', __name__, template_folder='../views/summative')
 
 
 @summative_blueprint.route('/summative/')
