@@ -1,13 +1,17 @@
 from sqlalchemy import MetaData, Table
 from sqlalchemy.exc import SQLAlchemyError
 
-from aat_main import db
+from aat_main import db, login_manager
 from aat_main.utils.api_exception_helper import InterServerErrorException
 
 
 class AccountModel(db.Model):
     __tablename__ = 'account'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
+    # id = db.Column(db.Integer, primary_key=True)
+    # email = db.Column(db.String(128), unique=True, nullable=False)
+    # password = db.Column(db.String(128), nullable=False)
+    # name = db.Column(db.String(64), nullable=False)
 
     @staticmethod
     def search_account_by_id(id):
@@ -37,3 +41,8 @@ class AccountModel(db.Model):
             db.session.commit()
         except SQLAlchemyError:
             return InterServerErrorException()
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.query(AccountModel).get(int(user_id))
