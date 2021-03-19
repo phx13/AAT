@@ -34,7 +34,9 @@ def before_request():
 from aat_main.controllers.index_controller import *
 from aat_main.controllers.course_controller import *
 from aat_main.controllers.summative_controller import *
+from aat_main.controllers.satisfaction_controller import *
 
 app.register_blueprint(index_blueprint)
 app.register_blueprint(course_blueprint)
 app.register_blueprint(summative_blueprint)
+app.register_blueprint(satisfaction_blueprint)
