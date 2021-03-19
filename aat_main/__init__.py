@@ -1,9 +1,9 @@
 import pymysql
 from flask import Flask, render_template
-from werkzeug.exceptions import HTTPException
+# from werkzeug.exceptions import HTTPException
 import os
 
-from aat_main.utils.api_exception_helper import APIException, InterServerErrorException
+# from aat_main.utils.api_exception_helper import APIException, InterServerErrorException
 
 pymysql.install_as_MySQLdb()
 from flask_login import LoginManager
@@ -40,9 +40,11 @@ from aat_main.controllers.course_controller import *
 from aat_main.controllers.summative_controller import *
 from aat_main.controllers.satisfaction_controller import *
 from aat_main.controllers.auth_controller import *
+from aat_main.controllers.error_controller import *
 
-app.register_blueprint(index_blueprint)
-app.register_blueprint(course_blueprint)
+app.register_blueprint(index_bp)
+app.register_blueprint(course_bp)
 app.register_blueprint(summative_blueprint)
-app.register_blueprint(satisfaction_blueprint)
-app.register_blueprint(auth_blueprint)
+app.register_blueprint(satisfaction_bp)
+app.register_blueprint(auth_bp)
+app.register_blueprint(error_bp)
