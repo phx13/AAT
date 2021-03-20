@@ -1,9 +1,11 @@
 from sqlalchemy import MetaData, Table
 from sqlalchemy.exc import SQLAlchemyError
 
+from flask import redirect, url_for
 from flask_login import UserMixin
 from aat_main import db, login_manager
 from aat_main.utils.api_exception_helper import InterServerErrorException
+from aat_main.models.assessment_models import Assessment, AssessmentCompletion
 
 
 class AccountModel(db.Model, UserMixin):
@@ -42,6 +44,22 @@ class AccountModel(db.Model, UserMixin):
             db.session.commit()
         except SQLAlchemyError:
             return InterServerErrorException()
+
+    def get_completed_assessments(self):
+        # return db.session.query(
+        #     Assessment
+        # ).join(
+        #     AssessmentCompletion
+        # ).filter(
+        #     AssessmentCompletion.student_id == self.id
+        # ).order_by(
+        #     Assessment.name.desc()
+        # )
+
+        # return db.session.query(AssessmentCompletion).select_from(Assessment).join(AssessmentCompletion.assessment_id).filter(AssessmentCompletion.student_id == self.id)
+
+        return [{id: 1, 'name': 'Fundamentals of Python'},
+                {id: 3, 'name': 'Polymorphism'}]
 
 
 @login_manager.user_loader
