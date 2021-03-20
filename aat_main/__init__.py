@@ -1,5 +1,5 @@
 import pymysql
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for, redirect
 # from werkzeug.exceptions import HTTPException
 import os
 
@@ -18,6 +18,9 @@ app.config['SQLALCHEMY_POOL_SIZE'] = 1000
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 login_manager = LoginManager(app)
+# reference https://www.digitalocean.com/community/tutorials/how-to-add-authentication-to-your-app-with-flask-login
+#  20th March
+login_manager.login_view = 'auth_bp.login'
 db = SQLAlchemy(app)
 
 
@@ -48,3 +51,5 @@ app.register_blueprint(summative_blueprint)
 app.register_blueprint(satisfaction_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(error_bp)
+
+
