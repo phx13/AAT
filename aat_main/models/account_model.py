@@ -1,11 +1,12 @@
 from sqlalchemy import MetaData, Table
 from sqlalchemy.exc import SQLAlchemyError
 
+from flask_login import UserMixin
 from aat_main import db, login_manager
 from aat_main.utils.api_exception_helper import InterServerErrorException
 
 
-class AccountModel(db.Model):
+class AccountModel(db.Model, UserMixin):
     __tablename__ = 'account'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
     # id = db.Column(db.Integer, primary_key=True)

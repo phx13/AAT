@@ -2,4 +2,28 @@
 
 {% block content %}
     <h1>Log in</h1>
+    <form action="" method="post">
+        {{ form.csrf_token() }}
+
+        <div>
+            {{ form.email.label }}
+            {{ form.email() }}
+        </div>
+
+        <div>
+            {{ form.password.label }}
+            {{ form.password() }}
+        </div>
+
+        {{ form.submit() }}
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <span style="color:red">{{ message }}</span><br>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
 {% endblock %}
