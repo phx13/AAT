@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 
-error_bp = Blueprint('error_blueprint', __name__, url_prefix='/error')
+error_bp = Blueprint('error_blueprint', __name__, url_prefix='/error', template_folder='../views/errors')
 
 
 @error_bp.app_errorhandler(404)
