@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI'
 app.config['SQLALCHEMY_POOL_SIZE'] = 1000
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-login_manager = LoginManager(app)
+# login_manager = LoginManager(app)
 db = SQLAlchemy(app)
 
 

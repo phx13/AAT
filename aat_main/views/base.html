@@ -15,28 +15,31 @@
     <link href="/images/icons/favicon.ico" rel="shortcut icon" type="image/x-icon">
 
     <!-- Import CSS -->
-    <link href="/css/import_css/bootstrap.min.css" rel="stylesheet" type="text/css">
+{#    <link href="/css/import_css/bootstrap.min.css" rel="stylesheet" type="text/css">#}
     <link href="/css/import_css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="/css/import_css/normalize.css" rel="stylesheet" type="text/css">
 
     <!-- Site CSS -->
-    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename="css/style.css") }}" rel="stylesheet" type="text/css">
 </head>
 
 <body>
 <header>
-    <h1>
-        This is page header in base html
-    </h1>
+    <nav>
+        <div class="nav-bar">
+            <a class="nav-item" href="{{ url_for('index_bp.home') }}">Home</a>
+            <a class="nav-item" href="{{ url_for('auth_bp.login') }}">Log in</a>
+        </div>
+    </nav>
 </header>
 
 {% block content %}
 {% endblock %}
 
 <footer>
-    <h1>
+    <div style="font-style: italic">
         This is page footer in base html
-    </h1>
+    </div>
 </footer>
 
 <!-- JS -->
