@@ -35,12 +35,12 @@ def before_request():
     pass
 
 
-from aat_main.controllers.index_controller import *
-from aat_main.controllers.course_controller import *
-from aat_main.controllers.summative_controller import *
-from aat_main.controllers.satisfaction_controller import *
-from aat_main.controllers.auth_controller import *
-from aat_main.controllers.error_controller import *
+from aat_main.controllers.index_controller import index_bp
+from aat_main.controllers.course_controller import course_bp
+from aat_main.controllers.summative_controller import summative_blueprint
+from aat_main.controllers.satisfaction_controller import satisfaction_bp
+from aat_main.controllers.auth_controller import auth_bp
+from aat_main.controllers.error_controller import error_bp
 
 app.register_blueprint(index_bp)
 app.register_blueprint(course_bp)

@@ -20,7 +20,7 @@
     <link href="/css/import_css/normalize.css" rel="stylesheet" type="text/css">
 
     <!-- Site CSS -->
-    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename="css/style.css") }}" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -51,12 +51,18 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/account/">Account</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('auth_bp.login') }}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/register/">Register</a>
-                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="navbar-text">Logged in as {{ current_user.name }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth_bp.logout') }}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth_bp.login') }}">Login</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -67,9 +73,9 @@
 {% endblock %}
 
 <footer>
-    <h1>
+    <div style="font-style: italic">
         This is page footer in base html
-    </h1>
+    </div>
 </footer>
 
 <!-- JS -->
