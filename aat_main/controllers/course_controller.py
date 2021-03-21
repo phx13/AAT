@@ -20,6 +20,7 @@ def course_assessment_page():
 @login_required
 def completed_assessments():
     assessments = current_user.get_completed_assessments()
+    print(assessments)
     return render_template('completed_assessments.html', assessments=assessments)
 
 

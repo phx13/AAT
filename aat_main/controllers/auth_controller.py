@@ -19,6 +19,7 @@ def login():
             flash('Email or password is incorrect.')
             return render_template('login.html', title='Log In', form=form)
         login_user(user, remember=True)
+        return redirect(url_for('index_bp.home'))
 
     return render_template('login.html', title='Log In', form=form)
 
