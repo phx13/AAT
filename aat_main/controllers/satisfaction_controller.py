@@ -13,19 +13,12 @@ def assessment_review(id):
     # reference https://stackoverflow.com/questions/14591202/how-to-make-a-radiofield-in-flask/14591681#14591681
     #  20 march
     if form.validate_on_submit():
-        answers = {'I feel that I had sufficient knowledge to complete this assessment': form.statement1.data,
-                   'I found this assessment difficult': form.statement2.data,
-                   'COMMENT': form.comment.data}
-        # submit answers here
-        print(answers)
         AssessmentReview.create_assessment_review(current_user.id, id, form.statement1.data, form.statement2.data,
                                                   form.comment.data)
-        # redirect(url_for('satisfaction_bp.assessment_review_complete'))
         return redirect(url_for('satisfaction_bp.assessment_review_complete'))
     else:
-        for field, error in form.errors.items():
-            for err in error:
-                flash(err)  # I decided to flash the errors to the browser
+        for error in form.errors.values():
+            flash(error)
 
     return render_template('assessment_review.html', assessment_id=id, form=form)
 

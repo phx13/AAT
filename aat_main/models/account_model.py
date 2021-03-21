@@ -1,9 +1,10 @@
 from sqlalchemy import MetaData, Table
 from sqlalchemy.exc import SQLAlchemyError
-
+from sqlalchemy import and_
 from flask import redirect, url_for
 from flask_login import UserMixin
 from aat_main import db, login_manager
+from aat_main.models.satisfaction_models import AssessmentReview
 from aat_main.utils.api_exception_helper import InterServerErrorException
 from aat_main.models.assessment_models import Assessment, AssessmentCompletion
 
@@ -55,6 +56,16 @@ class AccountModel(db.Model, UserMixin):
             AssessmentCompletion.student_id == self.id
         ).all()
 
+
+    def has_reviewed_assessment(self, id):
+        return db.session.query(
+            AssessmentReview
+        ).filter(
+            and_(
+                AssessmentReview.student_id == self.id,
+                AssessmentReview.assessment_id == id
+            )
+        ).first()
 
 @login_manager.user_loader
 def load_user(user_id):
