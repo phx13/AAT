@@ -1,13 +1,10 @@
-from sqlalchemy import MetaData, Table
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import and_
-from flask import redirect, url_for
+from sqlalchemy import MetaData, Table, and_
 from flask_login import UserMixin
-from aat_main import db, login_manager
-from aat_main.models.satisfaction_models import AssessmentReview
-from aat_main.utils.api_exception_helper import InterServerErrorException
-from aat_main.models.assessment_models import Assessment, AssessmentCompletion
 
+from aat_main import db, login_manager
+from aat_main.models.satisfaction_models import AssessmentReview, AATReview
+from aat_main.models.assessment_models import Assessment, AssessmentCompletion
+from datetime import datetime
 
 class AccountModel(db.Model, UserMixin):
     __tablename__ = 'account'
@@ -19,32 +16,20 @@ class AccountModel(db.Model, UserMixin):
 
     @staticmethod
     def search_account_by_id(id):
-        try:
-            return db.session.query(AccountModel).filter_by(id=id).first()
-        except SQLAlchemyError:
-            return InterServerErrorException()
+        return db.session.query(AccountModel).get(id)
 
     @staticmethod
     def create_account(id, email, password, name):
-        try:
-            db.session.add(AccountModel(id=id, email=email, password=password, name=name))
-            db.session.commit()
-        except SQLAlchemyError:
-            return InterServerErrorException()
+        db.session.add(AccountModel(id=id, email=email, password=password, name=name))
+        db.session.commit()
 
     def update_account(self, id, email, password, name):
-        try:
-            self.search_account_by_id(id).update({'email': email, 'password': password, 'name': name})
-            db.session.commit()
-        except SQLAlchemyError:
-            return InterServerErrorException()
+        self.search_account_by_id(id).update({'email': email, 'password': password, 'name': name})
+        db.session.commit()
 
     def delete_account(self, id):
-        try:
-            self.search_account_by_id(id).delete()
-            db.session.commit()
-        except SQLAlchemyError:
-            return InterServerErrorException()
+        self.search_account_by_id(id).delete()
+        db.session.commit()
 
     def get_completed_assessments(self):
         return db.session.query(
@@ -56,7 +41,6 @@ class AccountModel(db.Model, UserMixin):
             AssessmentCompletion.student_id == self.id
         ).all()
 
-
     def has_reviewed_assessment(self, id):
         return db.session.query(
             AssessmentReview
@@ -66,6 +50,24 @@ class AccountModel(db.Model, UserMixin):
                 AssessmentReview.assessment_id == id
             )
         ).first()
+
+    def get_last_aat_review(self):
+        return db.session.query(AATReview).filter_by(student_id=self.id).order_by(AATReview.date.desc()).first()
+
+    # reference https://stackoverflow.com/questions/46046136/find-out-if-a-date-is-more-than-30-days-old/46046182#46046182
+    # 21 March
+    def has_reviewed_aat_recently(self):
+        if (last_review := self.get_last_aat_review()) is None:
+            return False
+        else:
+            time_elapsed = datetime.now() - last_review.date
+            return time_elapsed.days < 7
+
+    def get_days_until_next_aat_review(self):
+        last_review_date = self.get_last_aat_review().date
+        time_elapsed = datetime.now() - last_review_date
+        return 7 - time_elapsed.days
+
 
 @login_manager.user_loader
 def load_user(user_id):

@@ -5,7 +5,7 @@
     <ul>
     {% for assessment in assessments %}
         <li>
-            id: {{ assessment.id }}, name: {{ assessment.name }}
+            {{ assessment.name }} -
             {% if current_user.has_reviewed_assessment(assessment.id) %}
                 You have reviewed this assessement
             {% else %}
