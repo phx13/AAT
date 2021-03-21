@@ -2,4 +2,44 @@
 
 {% block content %}
     <p>This is a review for assessment {{ assessment_id }}</p>
+    <form action="" method="post">
+        {{ form.csrf_token() }}
+
+        <div>
+            <p>{{ form.statement1.label }}</p>
+            {% for option in form.statement1 %}
+                {{ option }}
+                {{ option.label }}
+            {% endfor %}
+
+        </div>
+
+        <div>
+            <p>{{ form.statement2.label }}</p>
+            {% for option in form.statement2 %}
+                {{ option }}
+                {{ option.label }}
+            {% endfor %}
+
+        </div>
+
+        <div>
+            <p>{{ form.comment.label }}</p>
+            {{ form.comment }}
+        </div>
+
+        <div>
+            {{ form.submit.label }}
+            {{ form.submit }}
+        </div>
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <span style="color:red">{{ message }}</span><br>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
 {% endblock %}

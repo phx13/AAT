@@ -3,7 +3,8 @@
 {% block content %}
     <ul>
     {% for assessment in assessments %}
-        <li>{{ assessment.name }} <a>Review</a></li>
+        <li>{{ assessment.id }}, {{ assessment.name }} <a href="{{ url_for('satisfaction_bp.assessment_review', id=assessment.id) }}">Review</a></li>
     {% endfor %}
+
     </ul>
 {% endblock %}

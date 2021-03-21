@@ -46,20 +46,14 @@ class AccountModel(db.Model, UserMixin):
             return InterServerErrorException()
 
     def get_completed_assessments(self):
-        # return db.session.query(
-        #     Assessment
-        # ).join(
-        #     AssessmentCompletion
-        # ).filter(
-        #     AssessmentCompletion.student_id == self.id
-        # ).order_by(
-        #     Assessment.name.desc()
-        # )
-
-        # return db.session.query(AssessmentCompletion).select_from(Assessment).join(AssessmentCompletion.assessment_id).filter(AssessmentCompletion.student_id == self.id)
-
-        return [{id: 1, 'name': 'Fundamentals of Python'},
-                {id: 3, 'name': 'Polymorphism'}]
+        return db.session.query(
+            Assessment
+        ).join(
+            AssessmentCompletion,
+            Assessment.id == AssessmentCompletion.assessment_id
+        ).filter(
+            AssessmentCompletion.student_id == self.id
+        ).all()
 
 
 @login_manager.user_loader
