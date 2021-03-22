@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Assessments</h1>
+    <p style="color:greenyellow;background-color: red">change this so only assessments for modules the lecturer belongs to are shown</p>
+    <ul>
+        {% for assessment in assessments %}
+            <li>{{ assessment.name }} <a href="{{ url_for('satisfaction_result_bp.assessment_review_results', id=assessment.id) }}">View satisfaction review results</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

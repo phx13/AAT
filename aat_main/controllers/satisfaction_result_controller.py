@@ -1,6 +1,7 @@
-from statistics import mean, mode
+from statistics import mean
 
 from flask import Blueprint, render_template
+from flask_login import login_required
 
 from aat_main import db
 from aat_main.models.assessment_models import Assessment
@@ -10,21 +11,22 @@ from aat_main.utils.authorization_helper import check_if_authorized
 satisfaction_result_bp = Blueprint('satisfaction_result_bp', __name__, url_prefix='/review/results',
                                    template_folder='../views/satisfaction_results')
 
-authorized_role = 'lecturer'
+
+@satisfaction_result_bp.before_request
+@login_required
+def before_request():
+    authorized_role = 'lecturer'
+    check_if_authorized(authorized_role)
 
 
 @satisfaction_result_bp.route('/assessment/<id>', methods=['GET', 'POST'])
 def assessment_review_results(id):
-    check_if_authorized(authorized_role)
     assessment = Assessment.get_assessment_by_id(id)
     return render_template('assessment_review_result.html', assessment=assessment)
 
 
 @satisfaction_result_bp.route('/aat', methods=['GET', 'POST'])
 def aat_review():
-    check_if_authorized(authorized_role)
-
-
     statements = [
         'I find it easy to navigate the AAT to find my tasks that need to be completed',
         'I am pleased overall with the functionality of the AAT'
