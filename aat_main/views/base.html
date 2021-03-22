@@ -20,23 +20,64 @@
     <link href="/css/import_css/normalize.css" rel="stylesheet" type="text/css">
 
     <!-- Site CSS -->
-    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename="css/style.css") }}" rel="stylesheet" type="text/css">
 </head>
 
 <body>
 <header>
-    <h1>
-        This is page header in base html
-    </h1>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img class="img-fluid" src="/images/icons/favicon.ico" width="50px" height="50px" alt=""/>
+            </a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                    data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                Menu
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav text-uppercase ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/course/">Course</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('course_bp.assessments') }}">Assessments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/account/">Account</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="navbar-text">Logged in as {{ current_user.name }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth_bp.logout') }}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth_bp.login') }}">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
 </header>
 
-{% block content %}
-{% endblock %}
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
 
 <footer>
-    <h1>
+    <div style="font-style: italic">
         This is page footer in base html
-    </h1>
+    </div>
 </footer>
 
 <!-- JS -->

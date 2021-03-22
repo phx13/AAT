@@ -1,22 +1,30 @@
 from flask import Blueprint, render_template
-from jinja2 import TemplateError
+from flask_login import current_user, login_required
+from aat_main import db
+from aat_main.models.assessment_models import Assessment, AssessmentCompletion
 
-from aat_main.utils.api_exception_helper import NotFoundException
-
-course_blueprint = Blueprint('course_blueprint', __name__)
+course_bp = Blueprint('course_bp', __name__)
 
 
-@course_blueprint.route('/course/')
+@course_bp.route('/course/')
 def course_page():
-    try:
-        return render_template('course.html')
-    except TemplateError:
-        raise NotFoundException()
+    return render_template('course.html')
 
 
-@course_blueprint.route('/course/assessment/')
+@course_bp.route('/course/assessment/')
 def course_assessment_page():
-    try:
-        return render_template('assessment.html')
-    except TemplateError:
-        raise NotFoundException()
+    return render_template('assessment.html')
+
+
+@course_bp.route('/completed_assessments/')
+@login_required
+def completed_assessments():
+    assessments = current_user.get_completed_assessments()
+    print(assessments)
+    return render_template('completed_assessments.html', assessments=assessments)
+
+
+@course_bp.route('/assessments/')
+@login_required
+def assessments():
+    return render_template('assessments.html')

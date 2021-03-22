@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-<main>
-    <h2>
-        This is content in index html
-    </h2>
-</main>
+    {% include '_flash-messages.html' %}
+    <h1>
+        Home
+    </h1>
+    {% if current_user.is_authenticated %}
+        {% if current_user.has_reviewed_aat_recently() %}
+            You must wait {{ current_user.get_days_until_next_aat_review() }} days before leaving another review
+        {% else %}
+            <p><a href="{{ url_for('satisfaction_bp.aat_review') }}">Leave a review</a></p>
+        {% endif %}
+    {% endif %}
 {% endblock %}
 
 {% block scripts %}
-{{ super() }}
+    {{ super() }}
 {% endblock %}
