@@ -8,6 +8,7 @@ from aat_main.models.assessment_models import Assessment, AssessmentCompletion
 from aat_main.models.satisfaction_review_models import AssessmentReview, AATReview
 
 
+
 class AccountModel(db.Model, UserMixin):
     __tablename__ = 'account'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
@@ -24,12 +25,17 @@ class AccountModel(db.Model, UserMixin):
         return db.session.query(AccountModel).get(id)
 
     @staticmethod
+    def search_account_by_email(email):
+        return db.session.query(AccountModel).filter_by(email=email).first()
+
+    @staticmethod
     def create_account(id, email, password, name):
         db.session.add(AccountModel(id=id, email=email, password=password, name=name))
         db.session.commit()
 
-    def update_account(self, id, email, password, name):
-        self.search_account_by_id(id).update({'email': email, 'password': password, 'name': name})
+    @staticmethod
+    def update_account(email, id, password, name):
+        db.session.query(AccountModel).filter_by(email=email).update({'id': id, 'password': password, 'name': name})
         db.session.commit()
 
     def delete_account(self, id):

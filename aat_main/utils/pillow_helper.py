@@ -5,19 +5,10 @@ from io import BytesIO
 
 from PIL import Image, ImageFont, ImageDraw
 
+from aat_main.utils.random_helper import RandomHelper
+
 
 class ImageCaptchaHelper:
-    @staticmethod
-    def generate_code():
-        return ''.join(random.sample(string.ascii_letters + string.digits, 4))
-
-    @staticmethod
-    def generate_color():
-        red = random.randint(50, 200)
-        green = random.randint(50, 200)
-        blue = random.randint(50, 200)
-        return red, green, blue
-
     @staticmethod
     def generate_line(draw, width, height):
         for i in range(2):
@@ -28,14 +19,14 @@ class ImageCaptchaHelper:
             draw.line(((x1, y1), (x2, y2)), 'black', 1)
 
     def generate_image_captcha(self):
-        code = self.generate_code()
+        code = RandomHelper.generate_code(4)
         width, height = 100, 50
         image = Image.new('RGB', (width, height), 'white')
         # font = ImageFont.truetype('DejaVuSans.ttf', 30)
-        font = ImageFont.truetype('/fonts/arial.ttf', 30)
+        font = ImageFont.truetype('../resources/fonts/arial.ttf', 30)
         draw = ImageDraw.Draw(image)
         for i in range(4):
-            draw.text((10 + random.randint(-10, 10) + 20 * i, 10 + random.randint(-10, 10)), code[i], self.generate_color(), font)
+            draw.text((10 + random.randint(-10, 10) + 20 * i, 10 + random.randint(-10, 10)), code[i], RandomHelper.generate_color(), font)
         self.generate_line(draw, width, height)
         return image, code
 
