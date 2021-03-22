@@ -32,6 +32,7 @@ class AATReview(db.Model):
     statement1_answer: int
     statement2_answer: int
     comment: text
+    date: datetime, default=now()
     """
 
     @staticmethod

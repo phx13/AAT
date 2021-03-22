@@ -21,10 +21,10 @@ def login():
     if form.validate_on_submit():
         user = AccountModel.search_account_by_email(form.email.data)
 
-        if form.login_captcha.data.lower().strip() != session.get('login_captcha'):
-            flash('Fail (Server) : Incorrect login captcha')
-            return render_template('login.html', title='Log In', form=form)
-        elif not user:
+        # if form.login_captcha.data.lower().strip() != session.get('login_captcha'):
+        #     flash('Fail (Server) : Incorrect login captcha')
+        #     return render_template('login.html', title='Log In', form=form)
+        if not user:
             flash('Fail (Server) : Account does not exist')
             return render_template('login.html', title='Log In', form=form)
         elif form.password.data != user.password:
