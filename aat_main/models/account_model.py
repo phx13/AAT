@@ -1,18 +1,23 @@
-from sqlalchemy import MetaData, Table, and_
+from datetime import datetime
+
 from flask_login import UserMixin
+from sqlalchemy import MetaData, Table, and_
 
 from aat_main import db, login_manager
-from aat_main.models.satisfaction_models import AssessmentReview, AATReview
 from aat_main.models.assessment_models import Assessment, AssessmentCompletion
-from datetime import datetime
+from aat_main.models.satisfaction_review_models import AssessmentReview, AATReview
+
 
 class AccountModel(db.Model, UserMixin):
     __tablename__ = 'account'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
-    # id = db.Column(db.Integer, primary_key=True)
-    # email = db.Column(db.String(128), unique=True, nullable=False)
-    # password = db.Column(db.String(128), nullable=False)
-    # name = db.Column(db.String(64), nullable=False)
+    """
+    id: int, primary key, auto_increment
+    email: varchar(128)
+    password: varchar(128)
+    name: varchar(64)
+    role: varchar(16) (either student, lecturer, or admin)
+    """
 
     @staticmethod
     def search_account_by_id(id):

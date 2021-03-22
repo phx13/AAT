@@ -5,10 +5,14 @@
         Home
     </h1>
     {% if current_user.is_authenticated %}
-        {% if current_user.has_reviewed_aat_recently() %}
-            You must wait {{ current_user.get_days_until_next_aat_review() }} days before leaving another review
-        {% else %}
-            <p><a href="{{ url_for('satisfaction_bp.aat_review') }}">Leave a review</a></p>
+        {% if current_user.role == 'student' %}
+            {% if current_user.has_reviewed_aat_recently() %}
+                You must wait {{ current_user.get_days_until_next_aat_review() }} days before leaving another review
+            {% else %}
+                <p><a href="{{ url_for('satisfaction_review_bp.aat_review') }}">Leave a review</a></p>
+            {% endif %}
+        {% elif current_user.role == 'lecturer' %}
+            <a href="{{ url_for('satisfaction_result_bp.aat_review') }}">View AAT review results</a>
         {% endif %}
     {% endif %}
 {% endblock %}

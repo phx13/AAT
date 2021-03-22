@@ -9,7 +9,7 @@
             {% if current_user.has_reviewed_assessment(assessment.id) %}
                 You have reviewed this assessement
             {% else %}
-                <a href="{{ url_for('satisfaction_bp.assessment_review', id=assessment.id) }}">
+                <a href="{{ url_for('satisfaction_review_bp.assessment_review', id=assessment.id) }}">
                     Review
                 </a>
             {% endif %}
