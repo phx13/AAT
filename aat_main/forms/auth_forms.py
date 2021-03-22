@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, TextAreaField, StringField, PasswordField
+from wtforms import SubmitField, StringField, PasswordField
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Email')
-    password = PasswordField('Password')
-    submit = SubmitField('Submit')
+    email = StringField()
+    password = PasswordField()
+    login_captcha = StringField()
+    submit = SubmitField('Login')

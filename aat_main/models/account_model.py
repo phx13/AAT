@@ -1,14 +1,17 @@
-from sqlalchemy import MetaData, Table, and_
+from datetime import datetime
+
 from flask_login import UserMixin
+from sqlalchemy import MetaData, Table, and_
 
 from aat_main import db, login_manager
-from aat_main.models.satisfaction_models import AssessmentReview, AATReview
 from aat_main.models.assessment_models import Assessment, AssessmentCompletion
-from datetime import datetime
+from aat_main.models.satisfaction_models import AssessmentReview, AATReview
+
 
 class AccountModel(db.Model, UserMixin):
     __tablename__ = 'account'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
+
     # id = db.Column(db.Integer, primary_key=True)
     # email = db.Column(db.String(128), unique=True, nullable=False)
     # password = db.Column(db.String(128), nullable=False)
@@ -19,12 +22,17 @@ class AccountModel(db.Model, UserMixin):
         return db.session.query(AccountModel).get(id)
 
     @staticmethod
+    def search_account_by_email(email):
+        return db.session.query(AccountModel).filter_by(email=email).first()
+
+    @staticmethod
     def create_account(id, email, password, name):
         db.session.add(AccountModel(id=id, email=email, password=password, name=name))
         db.session.commit()
 
-    def update_account(self, id, email, password, name):
-        self.search_account_by_id(id).update({'email': email, 'password': password, 'name': name})
+    @staticmethod
+    def update_account(email, id, password, name):
+        db.session.query(AccountModel).filter_by(email=email).update({'id': id, 'password': password, 'name': name})
         db.session.commit()
 
     def delete_account(self, id):
