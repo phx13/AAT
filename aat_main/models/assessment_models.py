@@ -11,6 +11,10 @@ class Assessment(db.Model):
     name: varchar(64)
     """
 
+    @staticmethod
+    def get_assessment_by_id(id):
+        return db.session.query(Assessment).get(id)
+
 
 class AssessmentCompletion(db.Model):
     __tablename__ = 'assessment_completion'

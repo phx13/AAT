@@ -15,10 +15,12 @@ function monitorInput() {
         $("#loginEmailVerification").html("Valid email");
     }
 
-    if ($.trim($("#loginPassword").val()).length < 5) {
+    if ($.trim($("#loginPassword").val()).length === 0) {
+    // if ($.trim($("#loginPassword").val()).length < 5) {
         $("#loginPassword").attr("class", "form-control col-sm-12 col-md-6 col-lg-6 is-invalid");
         $("#loginPasswordVerification").attr("class", "invalid-feedback");
-        $("#loginPasswordVerification").html("Password less than 5 letters");
+        $("#loginPasswordVerification").html("Password must be at least 1 character");
+        // $("#loginPasswordVerification").html("Password less than 5 letters");
     } else {
         $("#loginPassword").attr("class", "form-control col-sm-12 col-md-6 col-lg-6 is-valid");
         $("#loginPasswordVerification").attr("class", "valid-feedback");
