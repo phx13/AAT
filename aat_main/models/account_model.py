@@ -8,7 +8,6 @@ from aat_main.models.assessment_models import Assessment, AssessmentCompletion
 from aat_main.models.satisfaction_review_models import AssessmentReview, AATReview
 
 
-
 class AccountModel(db.Model, UserMixin):
     __tablename__ = 'account'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
