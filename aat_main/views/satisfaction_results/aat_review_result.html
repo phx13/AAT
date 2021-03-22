@@ -2,56 +2,15 @@
 
 {% block content %}
     <h1>Results of aat reviews</h1>
-    {% for statement, mean, mode in results %}
+    {% for statement, mean in results %}
         <h2>{{ statement }}</h2>
-        <p>mean: {{ mean }}. mode: {{ mode }}</p>
+        <p>mean: {{ mean }}</p>
+{#        reference https://stackoverflow.com/questions/12145434/how-to-output-loop-counter-in-python-jinja-template
+           22 March #}
+        <div id="donutchart{{ loop.index }}" style="width: 900px; height: 500px;"></div>
     {% endfor %}
 
-{#    <canvas id="chart" width="600" height="400"></canvas>#}
-    <div id="donutchart" style="width: 900px; height: 500px;"></div>
-{#        <script>#}
-{#        var pieData = [#}
-{#            {% for item, label, colors in set %}#}
-{#                {#}
-{#                    value: {{item}},#}
-{#                    label: "{{label}}",#}
-{#                    color: "{{colors}}"#}
-{#                },#}
-{#            {% endfor %}#}
-{#        ];#}
-{##}
-{#        // get bar chart canvas#}
-{#        var mychart = document.getElementById("chart").getContext("2d");#}
-{#        console.log(mychart)#}
-{#        steps = 10#}
-{#        max = {{ max }}#}
-{##}
-{#            // draw pie chart#}
-{#            new Chart(document.getElementById("chart").getContext("2d")).Pie(pieData);#}
-{##}
-{#    </script>#}
-        <script type="text/javascript">
-      google.charts.load("current", {packages:["corechart"]});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Task', 'Hours per Day'],
-          ['Work',     11],
-          ['Eat',      2],
-          ['Commute',  2],
-          ['Watch TV', 2],
-          ['Sleep',    7]
-        ]);
 
-        var options = {
-          title: 'My Daily Activities',
-          pieHole: 0.4,
-        };
-
-        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-        chart.draw(data, options);
-      }
-    </script>
     <h2>Comments</h2>
     {% for comment in comments %}
         <p style="border: black 1px solid">{{ comment }}</p>
@@ -59,6 +18,11 @@
 {% endblock %}
 
 {% block scripts %}
-
-
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    {% set chart_title = 'Responses' %}
+    {% for response_count in response_counts %}
+        {# reference. 22 march. https://stackoverflow.com/questions/2061439/string-concatenation-in-jinja/55192200#55192200#}
+        {% set chart_container = 'donutchart' ~ loop.index %}
+        {% include '_pie-chart-script.html' %}
+    {% endfor %}
 {% endblock %}

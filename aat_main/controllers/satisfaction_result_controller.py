@@ -24,30 +24,25 @@ def assessment_review_results(id):
 def aat_review():
     check_if_authorized(authorized_role)
 
-    reviews = db.session.query(AATReview).all()
-    s1_answers = [r.statement1_answer for r in reviews]
-    s2_answers = [r.statement2_answer for r in reviews]
-
-    s1_mean = '{:.2}'.format(mean(s1_answers))
-    s1_mode = mode(s1_answers)  # TODO this mode picks first one encountered in s1_answers. decide if we should use
-                                #  min(multimode(data)) or max(multimode(data))
-
-    s2_mean = '{:.2}'.format(mean(s2_answers))
-    s2_mode = mode(s2_answers)
-
-    means = [s1_mean, s2_mean]
-    modes = [s1_mode, s2_mode]
-
-    values = [1, 1, 3, 1, 1]
-    labels = ['Strongly disagree', 'Disagree', 'Neither agree nor disagree', 'Agree', 'Strongly agree']
-    colors = ['red', 'blue', 'green', 'yellow', 'black']
-
-    comments = [r.comment for r in reviews if r.comment]
 
     statements = [
         'I find it easy to navigate the AAT to find my tasks that need to be completed',
         'I am pleased overall with the functionality of the AAT'
     ]
-    results = zip(statements, means, modes)
-    print(comments)
-    return render_template('aat_review_result.html', results=results, comments=comments, max='10', set=zip(values, labels, colors))
+    responses = ['Strongly disagree', 'Disagree', 'Neither agree nor disagree', 'Agree', 'Strongly agree']
+    reviews = db.session.query(AATReview).all()
+    s_answers = [
+        [r.statement1_answer for r in reviews],
+        [r.statement2_answer for r in reviews]
+    ]
+
+    # reference https://stackoverflow.com/questions/455612/limiting-floats-to-two-decimal-points/455634#455634. 22 March
+    means = ['{:.2f}'.format(mean(answers)) for answers in s_answers]
+
+    values_list = [[s.count(1), s.count(2), s.count(3), s.count(4), s.count(5)] for s in s_answers]
+    values_list = [zip(responses, v) for v in values_list]
+
+    comments = [r.comment for r in reviews if r.comment]
+
+    return render_template('aat_review_result.html', results=zip(statements, means), comments=comments,
+                           response_counts=values_list)
