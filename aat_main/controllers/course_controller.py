@@ -28,3 +28,9 @@ def completed_assessments():
 @login_required
 def assessments():
     return render_template('assessments.html')
+
+# Assessments Management page (Matt)
+@course_bp.route('/assessments/assessments_management/')
+@login_required
+def assessments_management():
+    return render_template('assessments_management.html')

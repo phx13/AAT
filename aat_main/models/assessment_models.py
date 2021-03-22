@@ -9,11 +9,16 @@ class Assessment(db.Model):
     """
     id: int, auto_increment
     name: varchar(64)
+    description: text
     """
 
     @staticmethod
     def get_assessment_by_id(id):
         return db.session.query(Assessment).get(id)
+
+    def create_assessment(title):
+        db.session.add(Assessment(name=title))
+        db.session.commit()
 
 
 class AssessmentCompletion(db.Model):
