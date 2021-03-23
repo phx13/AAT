@@ -1,6 +1,7 @@
 from sqlalchemy import MetaData, Table
 
 from aat_main import db
+from aat_main.models.satisfaction_review_models import AssessmentReview
 
 
 class Assessment(db.Model):
@@ -15,6 +16,9 @@ class Assessment(db.Model):
     @staticmethod
     def get_assessment_by_id(id):
         return db.session.query(Assessment).get(id)
+
+    def get_reviews(self):
+        return db.session.query(AssessmentReview).filter_by(assessment_id=self.id).all()
 
     def create_assessment(title):
         db.session.add(Assessment(name=title))

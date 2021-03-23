@@ -1,4 +1,5 @@
 <script type="text/javascript">
+    console.log('pie script start')
     google.charts.load("current", {packages: ["corechart"]});
     google.charts.setOnLoadCallback(drawChart);
 
@@ -7,11 +8,11 @@
     function drawChart() {
         const data = google.visualization.arrayToDataTable([
             ['Response', 'Frequency'],
-            {% for response, count in response_count %}
+            //reference 23 March. https://stackoverflow.com/questions/25373154/how-to-iterate-through-a-list-of-dictionaries-in-jinja-template
+            {% for response, count in response_counts_dict.items() %}
                 ['{{ response }}', {{ count }}],
             {% endfor %}
         ]);
-
         const options = {
             title: '{{ chart_title }}',
             pieHole: 0.4,
