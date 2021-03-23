@@ -1,0 +1,23 @@
+<script type="text/javascript">
+    google.charts.load("current", {packages: ["corechart"]});
+    google.charts.setOnLoadCallback(drawChart);
+
+    // reference for knowing how to use jinja inside script tag. 22 March
+    //  https://blog.ruanbekker.com/blog/2017/12/14/graphing-pretty-charts-with-python-flask-and-chartjs/
+    function drawChart() {
+        const data = google.visualization.arrayToDataTable([
+            ['Response', 'Frequency'],
+            {% for response, count in response_count %}
+                ['{{ response }}', {{ count }}],
+            {% endfor %}
+        ]);
+
+        const options = {
+            title: '{{ chart_title }}',
+            pieHole: 0.4,
+        };
+
+        const chart = new google.visualization.PieChart(document.getElementById('{{ chart_container }}'));
+        chart.draw(data, options);
+    }
+</script>
