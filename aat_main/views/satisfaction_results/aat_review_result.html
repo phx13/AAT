@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <h1>Results of aat reviews</h1>
     {% for statement in results %}
-        <h3>{{ statement }}</h3>
-{#        <p>mean: {{ mean }}</p>#}
-{#        reference https://stackoverflow.com/questions/12145434/how-to-output-loop-counter-in-python-jinja-template
+        <h3>{{ statement['statement'] }}</h3>
+        {#        reference https://stackoverflow.com/questions/12145434/how-to-output-loop-counter-in-python-jinja-template
            22 March #}
-        <div id="donutchart{{ loop.index }}" style="width: 900px; height: 500px;"></div>
-    {% for response_count in response_counts %}
-        {# reference. 22 march. https://stackoverflow.com/questions/2061439/string-concatenation-in-jinja/55192200#55192200#}
         {% set chart_container = 'donutchart' ~ loop.index %}
+        {% set chart_title = 'Responses' %}
+        {% set response_counts_dict = statement['responses'] %}
+        <div id="{{ chart_container }}" style="width: 900px; height: 500px;"></div>
+
+        {# reference. 22 march. https://stackoverflow.com/questions/2061439/string-concatenation-in-jinja/55192200#55192200#}
         {% include '_pie-chart-script.html' %}
-    {% endfor %}
     {% endfor %}
 
 
@@ -23,6 +24,4 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    {% set chart_title = 'Responses' %}
 {% endblock %}

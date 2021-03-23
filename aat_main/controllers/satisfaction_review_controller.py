@@ -59,8 +59,12 @@ def aat_review():
         #     form.statement1.label: form.statement1.data,
         #     form.statement2.label: form.statement2.data
         # }
+        statement_response_map = DBHelper.encode(
+            (form.statement1.label.text, form.statement1.data),
+            (form.statement2.label.text, form.statement2.data)
+        )
 
-        AATReview.create_review(current_user.id, form.statement1.data, form.statement2.data, form.comment.data)
+        AATReview.create_review(current_user.id, statement_response_map, form.comment.data)
         flash('Thanks for leaving a review!')
         return redirect(url_for('index_bp.home'))
     else:

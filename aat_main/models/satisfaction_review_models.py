@@ -34,7 +34,10 @@ class AATReview(db.Model):
     """
 
     @staticmethod
-    def create_review(student_id, statement1_answer, statement2_answer, comment):
-        db.session.add(AATReview(student_id=student_id, statement1_answer=statement1_answer,
-                                        statement2_answer=statement2_answer, comment=comment))
+    def create_review(student_id, statement_response_map, comment):
+        db.session.add(AATReview(student_id=student_id, statement_response_map=statement_response_map, comment=comment))
         db.session.commit()
+
+    @staticmethod
+    def get_all_reviews():
+        return db.session.query(AATReview).all()
