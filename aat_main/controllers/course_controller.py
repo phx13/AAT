@@ -31,9 +31,18 @@ def completed_assessments():
 
 @course_bp.route('/assessments/')
 def assessments():
+
     if current_user.role == 'student':
         return render_template('assessments_students.html')
     elif current_user.role == 'lecturer':
         assessments = db.session.query(Assessment).all()
         return render_template('assessments_lecturers.html', assessments=assessments)
+
+    return render_template('assessments.html')
+
+# Assessments Management page (Matt)
+@course_bp.route('/assessments/assessments_management/')
+@login_required
+def assessments_management():
+    return render_template('assessments_management.html')
 

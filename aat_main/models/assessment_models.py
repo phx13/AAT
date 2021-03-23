@@ -10,6 +10,7 @@ class Assessment(db.Model):
     """
     id: int, auto_increment
     name: varchar(64)
+    description: text
     """
 
     @staticmethod
@@ -18,6 +19,10 @@ class Assessment(db.Model):
 
     def get_reviews(self):
         return db.session.query(AssessmentReview).filter_by(assessment_id=self.id).all()
+
+    def create_assessment(title):
+        db.session.add(Assessment(name=title))
+        db.session.commit()
 
 
 class AssessmentCompletion(db.Model):
