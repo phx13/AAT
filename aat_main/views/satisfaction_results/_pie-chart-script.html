@@ -1,4 +1,5 @@
 <script type="text/javascript">
+    console.log('pie script start')
     google.charts.load("current", {packages: ["corechart"]});
     google.charts.setOnLoadCallback(drawChart);
 
@@ -7,11 +8,14 @@
     function drawChart() {
         const data = google.visualization.arrayToDataTable([
             ['Response', 'Frequency'],
-            {% for response, count in response_count %}
+            {% for response, count in response_counts_dict.items() %}
                 ['{{ response }}', {{ count }}],
             {% endfor %}
         ]);
-
+{#        {% for response, count in response_counts_dict.items() %}#}
+{#            console.log({{ response }}, {{ count }})#}
+{#        {% endfor %}#}
+{#        console.log('ok')#}
         const options = {
             title: '{{ chart_title }}',
             pieHole: 0.4,

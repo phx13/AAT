@@ -12,7 +12,7 @@
                 <p><a href="{{ url_for('satisfaction_review_bp.aat_review') }}">Leave a review</a></p>
             {% endif %}
         {% elif current_user.role == 'lecturer' %}
-            <a href="{{ url_for('satisfaction_result_bp.aat_review') }}">View AAT review results</a>
+            <a href="{{ url_for('satisfaction_result_bp.aat_review_results') }}">View AAT review results</a>
         {% endif %}
     {% endif %}
 {% endblock %}

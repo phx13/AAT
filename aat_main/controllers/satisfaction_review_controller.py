@@ -1,10 +1,12 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import current_user
+import json
 
 from aat_main.forms.satisfaction_forms import AssessmentReviewForm, AATReviewForm
 from aat_main.models.assessment_models import Assessment
 from aat_main.models.satisfaction_review_models import AssessmentReview, AATReview
 from aat_main.utils.authorization_helper import check_if_authorized
+from aat_main.utils.db_helper import DBHelper
 
 satisfaction_review_bp = Blueprint('satisfaction_review_bp', __name__, url_prefix='/review',
                                    template_folder='../views/satisfaction_reviews')
@@ -12,16 +14,24 @@ satisfaction_review_bp = Blueprint('satisfaction_review_bp', __name__, url_prefi
 authorized_role = 'student'
 
 
-@satisfaction_review_bp.route('/assessment/<id>', methods=['GET', 'POST'])
-def assessment_review(id):
+@satisfaction_review_bp.route('/assessment/<assessment_id>', methods=['GET', 'POST'])
+def assessment_review(assessment_id):
     check_if_authorized(authorized_role)
 
     form = AssessmentReviewForm()
     # reference https://stackoverflow.com/questions/14591202/how-to-make-a-radiofield-in-flask/14591681#14591681
     #  20 march
     if form.validate_on_submit():
-        AssessmentReview.create_review(current_user.id, id, form.statement1.data, form.statement2.data,
-                                       form.comment.data)
+        # TODO find way to use list of dicts here instead of janky string
+        # statement_response_map = f'{form.statement1.label.text},{form.statement1.data}+' +\
+        #                          f'{form.statement2.label.text},{form.statement2.data}'
+        # print(statement_response_map)
+        statement_response_map = DBHelper.encode(
+            (form.statement1.label.text, form.statement1.data),
+            (form.statement2.label.text, form.statement2.data)
+        )
+
+        AssessmentReview.create_review(current_user.id, assessment_id, statement_response_map, form.comment.data)
         return redirect(url_for('satisfaction_review_bp.assessment_review_complete'))
     else:
         for error in form.errors.values():
