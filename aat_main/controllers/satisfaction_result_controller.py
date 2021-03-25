@@ -7,7 +7,7 @@ from aat_main import db
 from aat_main.models.assessment_models import Assessment
 from aat_main.models.satisfaction_review_models import AATReview
 from aat_main.utils.authorization_helper import check_if_authorized
-from aat_main.utils.db_helper import DBHelper
+from aat_main.utils.serialization_helper import SerializationHelper
 satisfaction_result_bp = Blueprint('satisfaction_result_bp', __name__, url_prefix='/review/results',
                                    template_folder='../views/satisfaction_results')
 
@@ -23,9 +23,11 @@ def before_request():
 def assessment_review_results(id):
     assessment = Assessment.get_assessment_by_id(id)
     reviews = assessment.get_reviews()
+
     responses = {1: 'Strongly disagree', 2: 'Disagree', 3: 'Neither agree nor disagree', 4: 'Agree', 5: 'Strongly agree'}
     statement_responses = [review.statement_response_map for review in reviews]
-    statement_counts = DBHelper.decode(statement_responses, responses)
+
+    statement_counts = SerializationHelper.decode(statement_responses, responses)
     # TODO maybe add mentimeter-style visualization (including mean?)
     comments = [r.comment for r in reviews if r.comment]
     return render_template('assessment_review_result.html', assessment=assessment, results=statement_counts,
@@ -56,7 +58,7 @@ def aat_review_results():
     reviews = AATReview.get_all_reviews()
     responses = {1: 'Strongly disagree', 2: 'Disagree', 3: 'Neither agree nor disagree', 4: 'Agree', 5: 'Strongly agree'}
     statement_responses = [review.statement_response_map for review in reviews]
-    statement_counts = DBHelper.decode(statement_responses, responses)
+    statement_counts = SerializationHelper.decode(statement_responses, responses)
     # TODO maybe add mentimeter-style visualization (including mean?)
 
     comments = [r.comment for r in reviews if r.comment]

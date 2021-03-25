@@ -27,8 +27,7 @@ class AATReview(db.Model):
     """
     id: int, auto_increment
     student_id: int, foreign key
-    statement1_answer: int
-    statement2_answer: int
+    map
     comment: text
     date: datetime, default=now()
     """
