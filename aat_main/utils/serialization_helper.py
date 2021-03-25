@@ -1,40 +1,41 @@
 from typing import List
 
 
-class DBHelper:
+class SerializationHelper:
     # reference. 23 march https://stackoverflow.com/questions/68645/are-static-class-variables-possible-in-python
     ENCODE_PAIR = ',,,'
     ENCODE_NEXT_ITEM = '&&&'
 
     @staticmethod
-    def list_model(result):
-        list_model = []
-        dict_model = {}
-        for k, v in result:
-            if not k.startswith('_sa_instance_state'):
-                dict_model[k] = v
-        list_model.append(dict_model)
-        return list_model
+    def model_to_list(models):
+        list_data = []
+        for model in models:
+            dict_data = {}
+            for k, v in model.__dict__.items():
+                if not k.startswith('_sa_instance_state'):
+                    dict_data[k] = v
+            list_data.append(dict_data)
+        return list_data
 
     @staticmethod
-    def join_list_model(result):
-        join_list_model = []
-        for obj1, obj2 in result:
-            dict_model = {}
+    def join_model_to_list(join_models):
+        list_data = []
+        for obj1, obj2 in join_models:
+            dict_data = {}
             for k1, v1 in obj1.__dict__.items():
                 if not k1.startswith('_sa_instance_state'):
-                    if not k1 in dict_model:
-                        dict_model[k1] = v1
+                    if not k1 in dict_data:
+                        dict_data[k1] = v1
             for k2, v2 in obj2.__dict__.items():
                 if not k2.startswith('_sa_instance_state'):
-                    if not k2 in dict_model:
-                        dict_model[k2] = v2
-            join_list_model.append(dict_model)
-        return join_list_model
+                    if not k2 in dict_data:
+                        dict_data[k2] = v2
+            list_data.append(dict_data)
+        return list_data
 
     @staticmethod
     def encode(s1: tuple, s2: tuple) -> str:
-        return f'{s1[0]}{DBHelper.ENCODE_PAIR}{s1[1]}{DBHelper.ENCODE_NEXT_ITEM}{s2[0]}{DBHelper.ENCODE_PAIR}{s2[1]}'
+        return f'{s1[0]}{SerializationHelper.ENCODE_PAIR}{s1[1]}{SerializationHelper.ENCODE_NEXT_ITEM}{s2[0]}{SerializationHelper.ENCODE_PAIR}{s2[1]}'
 
     @staticmethod
     def decode(sr_raws: List[str], responses: dict) -> List[dict]:
@@ -59,9 +60,9 @@ class DBHelper:
         """
         statement_counts = []
         for sr_map in sr_raws:
-            qas = sr_map.split(DBHelper.ENCODE_NEXT_ITEM)
+            qas = sr_map.split(SerializationHelper.ENCODE_NEXT_ITEM)
             for qa in qas:
-                q, a = qa.split(DBHelper.ENCODE_PAIR)
+                q, a = qa.split(SerializationHelper.ENCODE_PAIR)
                 # print([s['statement'] for s in statement_counts])
                 if not any(s['statement'] == q for s in statement_counts):
                     # print(f'{q} not in {statement_counts}\n')
