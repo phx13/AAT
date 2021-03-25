@@ -6,7 +6,7 @@ from aat_main.forms.satisfaction_forms import AssessmentReviewForm, AATReviewFor
 from aat_main.models.assessment_models import Assessment
 from aat_main.models.satisfaction_review_models import AssessmentReview, AATReview
 from aat_main.utils.authorization_helper import check_if_authorized
-from aat_main.utils.db_helper import DBHelper
+from aat_main.utils.serialization_helper import SerializationHelper
 
 satisfaction_review_bp = Blueprint('satisfaction_review_bp', __name__, url_prefix='/review',
                                    template_folder='../views/satisfaction_reviews')
@@ -26,7 +26,7 @@ def assessment_review(assessment_id):
         # statement_response_map = f'{form.statement1.label.text},{form.statement1.data}+' +\
         #                          f'{form.statement2.label.text},{form.statement2.data}'
         # print(statement_response_map)
-        statement_response_map = DBHelper.encode(
+        statement_response_map = SerializationHelper.encode(
             (form.statement1.label.text, form.statement1.data),
             (form.statement2.label.text, form.statement2.data)
         )
@@ -59,7 +59,7 @@ def aat_review():
         #     form.statement1.label: form.statement1.data,
         #     form.statement2.label: form.statement2.data
         # }
-        statement_response_map = DBHelper.encode(
+        statement_response_map = SerializationHelper.encode(
             (form.statement1.label.text, form.statement1.data),
             (form.statement2.label.text, form.statement2.data)
         )
