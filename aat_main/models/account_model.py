@@ -20,6 +20,10 @@ class AccountModel(db.Model, UserMixin):
     """
 
     @staticmethod
+    def search_all():
+        return db.session.query(AccountModel).all()
+
+    @staticmethod
     def search_account_by_id(id):
         return db.session.query(AccountModel).get(id)
 
