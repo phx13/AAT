@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import current_user
 import json
 
@@ -6,7 +6,6 @@ from aat_main.forms.satisfaction_forms import AssessmentReviewForm, AATReviewFor
 from aat_main.models.assessment_models import Assessment
 from aat_main.models.satisfaction_review_models import AssessmentReview, AATReview
 from aat_main.utils.authorization_helper import check_if_authorized
-from aat_main.utils.serialization_helper import SerializationHelper
 
 satisfaction_review_bp = Blueprint('satisfaction_review_bp', __name__, url_prefix='/review',
                                    template_folder='../views/satisfaction_reviews')
