@@ -35,6 +35,7 @@ class SerializationHelper:
 
     @staticmethod
     def encode(s1: tuple, s2: tuple) -> str:
+
         return f'{s1[0]}{SerializationHelper.ENCODE_PAIR}{s1[1]}{SerializationHelper.ENCODE_NEXT_ITEM}{s2[0]}{SerializationHelper.ENCODE_PAIR}{s2[1]}'
 
     @staticmethod
