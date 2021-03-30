@@ -10,14 +10,18 @@
         {% endfor %}
         data.push(titleRow)
 
+
         let newRow
+        {% set statements_shortened = {
+            'I find it easy to navigate the AAT to find my tasks that need to be completed' : 'Easy to navigate',
+            'I am pleased overall with the functionality of the AAT': 'Pleased overall',
+            'I feel that I had sufficient knowledge to complete this assessment': 'Sufficient knowledge',
+            'I found this assessment difficult': 'Difficult assessment'
+        } %}
         {% for statement in results %}
             newRow = []
-            {% if statement['statement'] == 'I find it easy to navigate the AAT to find my tasks that need to be completed' %}
-                newRow.push('Easy to navigate')
-            {% elif statement['statement'] == 'I am pleased overall with the functionality of the AAT' %}
-                newRow.push('Easy to navigate')
-            {% endif %}
+            {# reference 30 march. https://stackoverflow.com/questions/30637054/case-statement-for-setting-var-in-ansible-jinja2#}
+            newRow.push('{{ statements_shortened[statement['statement']] | default('statement' ~ loop.index) }}')
             {% for count in statement['responses'].values() %}
                 newRow.push({{ count }})
             {% endfor %}
