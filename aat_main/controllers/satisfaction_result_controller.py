@@ -1,13 +1,11 @@
-from statistics import mean
-from ast import literal_eval
 from flask import Blueprint, render_template
 from flask_login import login_required
 
-from aat_main import db
 from aat_main.models.assessment_models import Assessment
 from aat_main.models.satisfaction_review_models import AATReview
 from aat_main.utils.authorization_helper import check_if_authorized
 from aat_main.utils.serialization_helper import SerializationHelper
+
 satisfaction_result_bp = Blueprint('satisfaction_result_bp', __name__, url_prefix='/review/results',
                                    template_folder='../views/satisfaction_results')
 
@@ -60,4 +58,5 @@ def aat_review_results():
 
     comments = [review.comment for review in reviews if review.comment]
 
-    return render_template('aat_review_result.html', results=statement_response_counts, comments=comments, responses=responses)
+    return render_template('aat_review_result.html', results=statement_response_counts, comments=comments,
+                           responses=responses)
