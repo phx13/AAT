@@ -22,13 +22,11 @@ def assessment_review(assessment_id):
     # reference https://stackoverflow.com/questions/14591202/how-to-make-a-radiofield-in-flask/14591681#14591681
     #  20 march
     if form.validate_on_submit():
-        # TODO find way to use list of dicts here instead of janky string
-        # statement_response_map = f'{form.statement1.label.text},{form.statement1.data}+' +\
-        #                          f'{form.statement2.label.text},{form.statement2.data}'
-        # print(statement_response_map)
-        statement_response_map = SerializationHelper.encode(
-            (form.statement1.label.text, form.statement1.data),
-            (form.statement2.label.text, form.statement2.data)
+        statement_response_map = json.dumps(
+            {
+                form.statement1.label.text: form.statement1.data,
+                form.statement2.label.text: form.statement2.data
+            }
         )
 
         AssessmentReview.create_review(current_user.id, assessment_id, statement_response_map, form.comment.data)
@@ -52,16 +50,14 @@ def aat_review():
 
     form = AATReviewForm()
     if form.validate_on_submit():
-
         # TODO restructure program to allow for more statements to be added to forms and answers to be stored easily
-        # https://stackoverflow.com/questions/988228/convert-a-string-representation-of-a-dictionary-to-a-dictionary
-        # qa_map = {
-        #     form.statement1.label: form.statement1.data,
-        #     form.statement2.label: form.statement2.data
-        # }
-        statement_response_map = SerializationHelper.encode(
-            (form.statement1.label.text, form.statement1.data),
-            (form.statement2.label.text, form.statement2.data)
+        # reference 30 march. https://stackoverflow.com/questions/988228/convert-a-string-representation-of-a-dictionary-to-a-dictionary
+        # reference 30 march. https://stackoverflow.com/questions/7907596/json-dumps-vs-flask-jsonify
+        statement_response_map = json.dumps(
+            {
+                form.statement1.label.text: form.statement1.data,
+                form.statement2.label.text: form.statement2.data
+            }
         )
 
         AATReview.create_review(current_user.id, statement_response_map, form.comment.data)
