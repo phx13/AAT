@@ -9,6 +9,14 @@ from aat_main.utils.serialization_helper import SerializationHelper
 satisfaction_result_bp = Blueprint('satisfaction_result_bp', __name__, url_prefix='/review/results',
                                    template_folder='../views/satisfaction_results')
 
+responses = {
+    '1': 'Strongly disagree',
+    '2': 'Disagree',
+    '3': 'Neither agree nor disagree',
+    '4': 'Agree',
+    '5': 'Strongly agree'
+}
+
 
 @satisfaction_result_bp.before_request
 @login_required
@@ -20,15 +28,7 @@ def before_request():
 @satisfaction_result_bp.route('/assessment/<id>', methods=['GET', 'POST'])
 def assessment_review_results(id):
     assessment = Assessment.get_assessment_by_id(id)
-
     reviews = assessment.get_reviews()
-    responses = {
-        '1': 'Strongly disagree',
-        '2': 'Disagree',
-        '3': 'Neither agree nor disagree',
-        '4': 'Agree',
-        '5': 'Strongly agree'
-    }
 
     statement_response_counts = SerializationHelper.decode(reviews, responses)
 
@@ -45,13 +45,6 @@ def aat_review_results():
     # means = ['{:.2f}'.format(mean(answers)) for answers in statement_answers]
 
     reviews = AATReview.get_all_reviews()
-    responses = {
-        '1': 'Strongly disagree',
-        '2': 'Disagree',
-        '3': 'Neither agree nor disagree',
-        '4': 'Agree',
-        '5': 'Strongly agree'
-    }
     statement_response_counts = SerializationHelper.decode(reviews, responses)
 
     # TODO maybe add mentimeter-style visualization (including mean?)

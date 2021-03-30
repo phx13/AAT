@@ -32,6 +32,10 @@ def login():
             return render_template('login.html', title='Log In', form=form)
 
         login_user(user, remember=True)
+
+        if next_url := request.args.get('next'):
+            return redirect(next_url)
+
         return redirect(url_for('index_bp.home'))
 
     return render_template('login.html', title='Log In', form=form)
@@ -40,7 +44,7 @@ def login():
 @auth_bp.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index_bp.home'))
+    return redirect(url_for('auth_bp.login'))
 
 
 @auth_bp.route('/login/captcha/')
