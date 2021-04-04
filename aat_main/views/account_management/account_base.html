@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3 col-12">
+                <div class="card">
+                    <img src="/images/{{ current_account.avatar }}"
+                         class="card-img-top mx-auto" id="cardAvatar">
+                    <div class="card-body">
+                        <h4 class="card-title"><i class="fa fa-user" aria-hidden="true"></i> {{ current_account.name }}</h4>
+                        <p class="card-text"><i class="fa fa-envelope" aria-hidden="true"></i> {{ current_account.email }}</p>
+                        <hr>
+                        <p class="card-text"><i class="fa fa-file-text" aria-hidden="true"></i> {{ current_account.profile }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-9 col-12">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                           role="tab"
+                           aria-controls="nav-profile" aria-selected="false">Profile</a>
+                        <a class="nav-item nav-link" id="nav-activity-tab" data-toggle="tab" href="#nav-stat" role="tab"
+                           aria-controls="nav-stat" aria-selected="false">Stat</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-profile" role="tabpanel"
+                         aria-labelledby="nav-profile-tab">
+                        <div>
+                            <form method="post" enctype="multipart/form-data">
+                                <img src="/images/{{ current_account.avatar }}" id="avatar" class="mx-auto d-block img-thumbnail"
+                                     style="height: 250px; width: 250px; margin-bottom: 20px;">
+                                <div class="form-group row" style="width: 250px; margin: 20px auto; padding-bottom: 20px;">
+                                    <div class="custom-file">
+                                        <input onchange="fileChange(this)" type="file"
+                                               id="inputGroupFile"
+                                               aria-describedby="inputGroupFileAddon">
+                                        <label class="custom-file-label" id="filenameLabel" for="inputGroupFile">Choose avatar
+                                            image</label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputNickname" class="col-sm-2 col-form-label"><i class="fa fa-user" aria-hidden="true"></i> Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputNickname" value="{{ current_account.name }}" placeholder="Your name">
+                                        <h4 id="inputNicknameVerification"></h4>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="staticEmail" class="col-sm-2 col-form-label"><i class="fa fa-envelope" aria-hidden="true"></i> Email</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ current_account.email }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword" class="col-sm-2 col-form-label"><i class="fa fa-key" aria-hidden="true"></i> Password</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="inputPassword" placeholder="Your password">
+                                        <h4 id="inputPasswordVerification"></h4>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="confirmPassword" class="col-sm-2 col-form-label"><i class="fa fa-key" aria-hidden="true"></i> Confirm</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="confirmPassword" placeholder="Repeat your password">
+                                        <h4 id="confirmPasswordVerification"></h4>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputProfile" class="col-sm-2 col-form-label"><i class="fa fa-file-text" aria-hidden="true"></i> Profile</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputProfile" value="{{ current_account.profile }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <button type="button" class="btn btn-success" onclick="updateProfile()">Update Profile
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-stat" role="tabpanel" aria-labelledby="nav-stat-tab">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript" src="/js/account.js"></script>
+{% endblock %}

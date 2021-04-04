@@ -1,4 +1,5 @@
 import hashlib
+import time
 
 from flask import Blueprint, render_template, redirect, url_for, flash, session, request
 from flask_login import current_user, login_user, logout_user
@@ -41,7 +42,7 @@ def login():
     return render_template('login.html', title='Log In', form=form)
 
 
-@auth_bp.route('/logout')
+@auth_bp.route('/logout/')
 def logout():
     logout_user()
     return redirect(url_for('auth_bp.login'))
@@ -74,7 +75,8 @@ def login_password():
         EmailHelper.send_email(subject, content, receiver_email, sender_name, sender_email)
 
         password = hashlib.md5(password.encode()).hexdigest()
-        AccountModel().update_account(email, user.id, password, user.name)
+        update_time = time.strftime('%Y-%m-%d %H:%M:%S')
+        AccountModel().update_account(email, user.id, password, user.name, user.role, user.avatar, user.profile, update_time)
         return 'Success (Server) : Reset password successful'
     except:
         return 'Fail (Server) : Email send failed'
