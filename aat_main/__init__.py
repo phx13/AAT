@@ -1,9 +1,9 @@
 import pymysql
 from flask import Flask, render_template, url_for, redirect
-# from werkzeug.exceptions import HTTPException
+from werkzeug.exceptions import HTTPException
 import os
 
-# from aat_main.utils.api_exception_helper import APIException, InterServerErrorException
+from aat_main.utils.api_exception_helper import APIException, InterServerErrorException
 
 pymysql.install_as_MySQLdb()
 from flask_login import LoginManager
@@ -30,7 +30,7 @@ db = SQLAlchemy(app)
 #         api_exception = APIException(e.code, e.description)
 #     else:
 #         api_exception = InterServerErrorException()
-#     return render_template('error.html', api_exception=api_exception)
+#     return render_template('/errors/error.html', api_exception=api_exception)
 
 
 @app.before_request

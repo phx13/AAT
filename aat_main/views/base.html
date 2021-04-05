@@ -20,7 +20,7 @@
     <link href="/css/import_css/normalize.css" rel="stylesheet" type="text/css">
 
     <!-- Site CSS -->
-    <link href="{{ url_for('static', filename="css/style.css") }}" rel="stylesheet" type="text/css">
+    <link href="/css/custom_css/style.css" rel="stylesheet" type="text/css">
     {#        <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>#}
 </head>
 
@@ -57,7 +57,7 @@
                             </a>
                         </li>
                         <li class=" nav-item">
-                            <a class="nav-link" href="/account/">
+                            <a class="nav-link" href="{{ url_for('account_bp.account_page') }}">
                                 Account
                             </a>
                         </li>

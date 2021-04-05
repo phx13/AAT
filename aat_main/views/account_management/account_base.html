@@ -17,16 +17,29 @@
             <div class="col-sm-9 col-12">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
-                           role="tab"
-                           aria-controls="nav-profile" aria-selected="false">Profile</a>
-                        <a class="nav-item nav-link" id="nav-activity-tab" data-toggle="tab" href="#nav-stat" role="tab"
+                        <a class="nav-item nav-link active" id="nav-activity-tab" data-toggle="tab" href="#nav-stat" role="tab"
                            aria-controls="nav-stat" aria-selected="false">Stat</a>
+                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab"
+                           aria-controls="nav-profile" aria-selected="false">Profile</a>
                     </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-profile" role="tabpanel"
-                         aria-labelledby="nav-profile-tab">
+                    <div class="tab-pane fade show active" id="nav-stat" role="tabpanel" aria-labelledby="nav-stat-tab">
+                        {% if current_account.role == 'student' %}
+                            {% if student_stat_status == 0 %}
+                                {% include 'student_stat_base.html' %}
+                            {% elif student_stat_status == 1 %}
+                                {% include 'student_stat_attempt.html' %}
+                            {% elif student_stat_status == 2 %}
+                                {% include 'student_stat_attainment.html' %}
+                            {% elif student_stat_status == 3 %}
+                                {% include 'student_stat_engagement.html' %}
+                            {% endif %}
+                        {% else %}
+                            Staff stat
+                        {% endif %}
+                    </div>
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                         <div>
                             <form method="post" enctype="multipart/form-data">
                                 <img src="/images/{{ current_account.avatar }}" id="avatar" class="mx-auto d-block img-thumbnail"
@@ -79,8 +92,6 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="nav-stat" role="tabpanel" aria-labelledby="nav-stat-tab">
                     </div>
                 </div>
             </div>
