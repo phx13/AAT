@@ -3,18 +3,18 @@
 {% block content %}
     <h1>completed assessments</h1>
     <ul>
-    {% for assessment in assessments %}
-        <li>
-            {{ assessment.name }} -
-            {% if current_user.has_reviewed_assessment(assessment.id) %}
-                You have reviewed this assessement
-            {% else %}
-                <a href="{{ url_for('satisfaction_review_bp.assessment_review', assessment_id=assessment.id) }}">
-                    Review
-                </a>
-            {% endif %}
-        </li>
-    {% endfor %}
+        {% for assessment in assessments %}
+            <li>
+                {{ assessment.name }} -
+                {% if current_user.has_reviewed_assessment(assessment.id) %}
+                    You have reviewed this assessement
+                {% else %}
+                    <a href="{{ url_for('satisfaction_review_bp.assessment_review', assessment_id=assessment.id) }}">
+                        Review
+                    </a>
+                {% endif %}
+            </li>
+        {% endfor %}
 
     </ul>
 {% endblock %}

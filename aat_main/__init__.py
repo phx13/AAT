@@ -1,7 +1,7 @@
-import pymysql
-from flask import Flask, render_template, url_for, redirect
-from werkzeug.exceptions import HTTPException
 import os
+
+import pymysql
+from flask import Flask
 
 from aat_main.utils.api_exception_helper import APIException, InterServerErrorException
 
@@ -55,5 +55,3 @@ app.register_blueprint(satisfaction_result_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(error_bp)
 app.register_blueprint(account_bp)
-
-
