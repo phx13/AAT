@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, flash, request, redirect, url_for
 from jinja2 import TemplateError
 
 from aat_main.utils.api_exception_helper import NotFoundException
@@ -58,13 +58,13 @@ def save_type_two_question():
 @question_blueprint.route('/course/assessment/<int:assessment_id>/multiplechoice<question_id>/remove')
 def edit_type_one_question_remove():
     try:
-        return render_template('assessment.html')
+        return redirect(url_for('assessment_page'))
     except TemplateError:
         raise NotFoundException()
 
 @question_blueprint.route('/course/assessment/<int:assessment_id>/multiplechoice<question_id>/remove')
 def edit_type_one_question_remove():
     try:
-        return render_template('assessment.html')
+        return redirect(url_for('assessment_page'))
     except TemplateError:
         raise NotFoundException()
