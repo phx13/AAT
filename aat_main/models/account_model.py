@@ -17,6 +17,9 @@ class AccountModel(db.Model, UserMixin):
     password: varchar(128)
     name: varchar(64)
     role: varchar(16) (either student, lecturer, or admin)
+    avatar: varchar(64)
+    profile: tinytext(0)
+    time: datetime
     """
 
     @staticmethod
@@ -37,8 +40,9 @@ class AccountModel(db.Model, UserMixin):
         db.session.commit()
 
     @staticmethod
-    def update_account(email, id, password, name):
-        db.session.query(AccountModel).filter_by(email=email).update({'id': id, 'password': password, 'name': name})
+    def update_account(email, id, password, name, role, avatar, profile, time):
+        db.session.query(AccountModel).filter_by(email=email).update(
+            {'id': id, 'password': password, 'name': name, 'role': role, 'avatar': avatar, 'profile': profile, 'time': time})
         db.session.commit()
 
     def delete_account(self, id):

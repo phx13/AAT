@@ -13,8 +13,10 @@
         <div id="{{ chart_container }}" style="width: 900px; height: 500px;"></div>
 
         {#         reference. 22 march. https://stackoverflow.com/questions/2061439/string-concatenation-in-jinja/55192200#55192200#}
-        {% include '_pie-chart-script.html' %}
+        {% include '_pie-chart.html' %}
     {% endfor %}
+    <h3>Summary</h3>
+    <div id="combo-chart" style="width: 80vw; height: 80vh"></div>
 
 
     <h2>Comments</h2>
@@ -24,4 +26,5 @@
 {% endblock %}
 
 {% block scripts %}
+    {% include '_combo-chart.html' %}
 {% endblock %}
