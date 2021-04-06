@@ -1,6 +1,7 @@
+import json
+
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import current_user
-import json
 
 from aat_main.forms.satisfaction_forms import AssessmentReviewForm, AATReviewForm
 from aat_main.models.assessment_models import Assessment

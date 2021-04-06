@@ -11,6 +11,7 @@ class Assessment(db.Model):
     id: int, auto_increment
     name: varchar(64)
     description: text
+    course: varchar(64)
     """
 
     @staticmethod
