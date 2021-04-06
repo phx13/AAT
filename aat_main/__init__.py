@@ -1,9 +1,9 @@
-import pymysql
-from flask import Flask, render_template, url_for, redirect
-# from werkzeug.exceptions import HTTPException
 import os
 
-# from aat_main.utils.api_exception_helper import APIException, InterServerErrorException
+import pymysql
+from flask import Flask
+
+from aat_main.utils.api_exception_helper import APIException, InterServerErrorException
 
 pymysql.install_as_MySQLdb()
 from flask_login import LoginManager
@@ -30,7 +30,7 @@ db = SQLAlchemy(app)
 #         api_exception = APIException(e.code, e.description)
 #     else:
 #         api_exception = InterServerErrorException()
-#     return render_template('error.html', api_exception=api_exception)
+#     return render_template('/errors/error.html', api_exception=api_exception)
 
 
 @app.before_request
@@ -45,6 +45,8 @@ from aat_main.controllers.satisfaction_review_controller import satisfaction_rev
 from aat_main.controllers.satisfaction_result_controller import satisfaction_result_bp
 from aat_main.controllers.auth_controller import auth_bp
 from aat_main.controllers.error_controller import error_bp
+from aat_main.controllers.account_controller import account_bp
+from aat_main.controllers.create_question_controller import question_blueprint
 
 app.register_blueprint(index_bp)
 app.register_blueprint(course_bp)
@@ -53,5 +55,5 @@ app.register_blueprint(satisfaction_review_bp)
 app.register_blueprint(satisfaction_result_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(error_bp)
-
-
+app.register_blueprint(account_bp)
+app.register_blueprint(question_blueprint)

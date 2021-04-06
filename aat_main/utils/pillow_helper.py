@@ -1,6 +1,5 @@
 import base64
 import random
-import string
 from io import BytesIO
 
 from PIL import Image, ImageFont, ImageDraw
