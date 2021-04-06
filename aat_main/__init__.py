@@ -46,6 +46,7 @@ from aat_main.controllers.satisfaction_result_controller import satisfaction_res
 from aat_main.controllers.auth_controller import auth_bp
 from aat_main.controllers.error_controller import error_bp
 from aat_main.controllers.account_controller import account_bp
+from aat_main.controllers.create_question_controller import question_blueprint
 
 app.register_blueprint(index_bp)
 app.register_blueprint(course_bp)
@@ -55,3 +56,4 @@ app.register_blueprint(satisfaction_result_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(error_bp)
 app.register_blueprint(account_bp)
+app.register_blueprint(question_blueprint)

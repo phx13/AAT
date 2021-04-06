@@ -39,7 +39,7 @@ def assessments():
         assessments = db.session.query(Assessment).all()
         return render_template('assessments_lecturers.html', assessments=assessments)
 
-    return render_template('assessments.html')
+    return render_template('base.html')
 
 
 # Assessments Management page (Matt)
