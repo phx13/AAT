@@ -8,10 +8,11 @@ class Assessment(db.Model):
     __tablename__ = 'assessment'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
     """
-    id: int, auto_increment
+    id: int, auto_increment, primary
     name: varchar(64)
     description: text
     course: varchar(64)
+    questions: varchar(256)
     """
 
     @staticmethod
@@ -21,8 +22,8 @@ class Assessment(db.Model):
     def get_reviews(self):
         return db.session.query(AssessmentReview).filter_by(assessment_id=self.id).all()
 
-    def create_assessment(title):
-        db.session.add(Assessment(name=title))
+    def create_assessment(title, questions, description, course):
+        db.session.add(Assessment(name=title, questions=questions, description=description, course=course))
         db.session.commit()
 
 

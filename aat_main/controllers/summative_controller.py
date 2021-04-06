@@ -3,6 +3,7 @@ from jinja2 import TemplateError
 
 from aat_main.forms.summative_forms import assessment_form
 from aat_main.models.assessment_models import Assessment
+from aat_main.models.question_models import Question
 from aat_main.utils.api_exception_helper import NotFoundException
 
 summative_blueprint = Blueprint('summative_blueprint', __name__, template_folder='../views/summative')
@@ -10,9 +11,10 @@ summative_blueprint = Blueprint('summative_blueprint', __name__, template_folder
 
 @summative_blueprint.route('/assessments/assessments_management/summative/', methods=['GET', 'POST'])
 def summative():
+    # Collector for question data
     form = assessment_form()
     if form.validate_on_submit():
-        Assessment.create_assessment(form.title.data)
+        Assessment.create_assessment(form.title.data, form.questions.data, form.course.data, form.description.data)
         return redirect(url_for('course_bp.assessments'))
 
     return render_template("summative.html", form=form)

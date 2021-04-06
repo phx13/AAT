@@ -13,6 +13,9 @@ class Question(db.Model):
     """
 
     @staticmethod
+    def get_questions():
+        return db.session.query(Question).all()
+        
     def get_question_by_id(id):
         return db.session.query(Question).get(id)
 
