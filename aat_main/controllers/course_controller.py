@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template
 from flask_login import current_user, login_required
+
 from aat_main import db
 from aat_main.models.assessment_models import Assessment
+
 course_bp = Blueprint('course_bp', __name__)
 
 
@@ -31,7 +33,6 @@ def completed_assessments():
 
 @course_bp.route('/assessments/')
 def assessments():
-
     if current_user.role == 'student':
         return render_template('assessments_students.html')
     elif current_user.role == 'lecturer':
@@ -40,9 +41,9 @@ def assessments():
 
     return render_template('base.html')
 
+
 # Assessments Management page (Matt)
 @course_bp.route('/assessments/assessments_management/')
 @login_required
 def assessments_management():
     return render_template('assessments_management.html')
-

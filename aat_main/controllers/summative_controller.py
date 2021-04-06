@@ -29,7 +29,6 @@ def course_assessment_page():
     except TemplateError:
         raise NotFoundException()
 
-
 # @summative_blueprint.errorhandler(404)
 # def catch_http_exception(e):
 #     if isinstance(e, HTTPException):

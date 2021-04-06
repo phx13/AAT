@@ -1,10 +1,8 @@
+from ast import literal_eval
 from typing import List
 
 
 class SerializationHelper:
-    # reference. 23 march https://stackoverflow.com/questions/68645/are-static-class-variables-possible-in-python
-    ENCODE_PAIR = ',,,'
-    ENCODE_NEXT_ITEM = '&&&'
 
     @staticmethod
     def model_to_list(models):
@@ -34,11 +32,7 @@ class SerializationHelper:
         return list_data
 
     @staticmethod
-    def encode(s1: tuple, s2: tuple) -> str:
-        return f'{s1[0]}{SerializationHelper.ENCODE_PAIR}{s1[1]}{SerializationHelper.ENCODE_NEXT_ITEM}{s2[0]}{SerializationHelper.ENCODE_PAIR}{s2[1]}'
-
-    @staticmethod
-    def decode(sr_raws: List[str], responses: dict) -> List[dict]:
+    def decode(reviews: List, responses: dict) -> List[dict]:
         """
         This produces a list of the form
         [
@@ -58,20 +52,19 @@ class SerializationHelper:
             }
         ]
         """
+        # reference 30 march. https://stackoverflow.com/questions/988228/convert-a-string-representation-of-a-dictionary-to-a-dictionary
+        statement_responses = [literal_eval(review.statement_response_map) for review in reviews]
         statement_counts = []
-        for sr_map in sr_raws:
-            qas = sr_map.split(SerializationHelper.ENCODE_NEXT_ITEM)
-            for qa in qas:
-                q, a = qa.split(SerializationHelper.ENCODE_PAIR)
-                # print([s['statement'] for s in statement_counts])
-                if not any(s['statement'] == q for s in statement_counts):
-                    # print(f'{q} not in {statement_counts}\n')
+        for statement_response in statement_responses:
+            for statement, response in statement_response.items():
+                if not any(s['statement'] == statement for s in statement_counts):
                     statement_counts.append({
-                        'statement': q,
-                        'responses': {response: 0 for response in responses.values()}
+                        'statement': statement,
+                        # 'responses': {r: 1 if r == responses[response] else 0 for r in responses.values()}
+                        'responses': {r: 0 for r in responses.values()}
                     })
                 for sc in statement_counts:
-                    if sc['statement'] == q:
-                        response = responses[int(a)]
-                        sc['responses'][response] = sc['responses'][response] + 1
+                    if sc['statement'] == statement:
+                        response = responses[response]
+                        sc['responses'][response] += 1
         return statement_counts
