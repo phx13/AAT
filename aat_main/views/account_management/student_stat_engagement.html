@@ -1,2 +1,120 @@
-<h3>Engagement Of {{ course }}</h3>
-<a href="{{ url_for('account_bp.account_page') }}">back</a>
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <p class="display-4">Engagement Of {{ course }}</p>
+        </div>
+        <div class="col-2">
+            <a href="{{ url_for('account_bp.account_page') }}" class="btn btn-primary" style="float: right; margin: 0 auto;">Back</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-4">
+            <div>
+                <p class="lead font-italic">Total Credit</p>
+                <p class="display-4 font-italic">150</p>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg">
+                        <p class="lead">Formative</p>
+                        <h3>40</h3>
+                        <p class="lead">Summative</p>
+                        <h3>30</h3>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg">
+                        <p class="lead">Feedback</p>
+                        <h3>20</h3>
+                        <p class="lead">Collection</p>
+                        <h3>10</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-8">
+            <div id="engagementPieChart" style="width: 100%; height: 400px;"></div>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Category</th>
+                <th scope="col">Type</th>
+                <th scope="col">Question</th>
+                <th scope="col">Time</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Python</td>
+                <td>Formative</td>
+                <td><a class="font-italic" href="#">This is a question</a></td>
+                <td>2021-04-01</td>
+                <td><a class="btn btn-danger">Cancel collection</a></td>
+            </tr>
+            <tr>
+                <td>Java</td>
+                <td>Formative</td>
+                <td><a class="font-italic" href="#">This is a question</a></td>
+                <td>2021-04-01</td>
+                <td><a class="btn btn-danger">Cancel collection</a></td>
+            </tr>
+            <tr>
+                <td>JavaScript</td>
+                <td>Formative</td>
+                <td><a class="font-italic" href="#">This is a question</a></td>
+                <td>2021-04-01</td>
+                <td><a class="btn btn-danger">Cancel collection</a></td>
+            </tr>
+            <tr>
+                <td>Html/Css</td>
+                <td>Formative</td>
+                <td><a class="font-italic" href="#">This is a question</a></td>
+                <td>2021-04-01</td>
+                <td><a class="btn btn-danger">Cancel collection</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/import_js/echarts.js"></script>
+<script>
+    //engagement pie chart
+    let engagementPieChart = echarts.init(document.getElementById("engagementPieChart"));
+    let engagementPieChartOption = {
+        legend: {
+            top: 'top'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{b} : {c} ({d}%)'
+        },
+        series: [
+            {
+                type: 'pie',
+                radius: [30, 150],
+                center: ['50%', '50%'],
+                roseType: 'radius',
+                label: {
+                    show: false
+                },
+                emphasis: {
+                    label: {
+                        show: true
+                    }
+                },
+                itemStyle: {
+                    borderRadius: 10
+                },
+                data: [
+                    {value: 50, name: 'login'},
+                    {value: 40, name: 'formative'},
+                    {value: 30, name: 'summative'},
+                    {value: 20, name: 'feedback'},
+                    {value: 10, name: 'collection'}
+                ]
+            }
+        ]
+    };
+    engagementPieChart.setOption(engagementPieChartOption);
+</script>

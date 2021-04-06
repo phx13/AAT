@@ -1,2 +1,141 @@
-<h3>Attempt Of {{ course }}</h3>
-<a href="{{ url_for('account_bp.account_page') }}">back</a>
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <p class="display-4">Attempt Of {{ course }}</p>
+        </div>
+        <div class="col-2">
+            <a href="{{ url_for('account_bp.account_page') }}" class="btn btn-primary" style="float: right; margin: 0 auto;">Back</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <a class="btn btn-primary">Reset</a>
+        </div>
+        <div class="col">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="categoryMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Category
+                </button>
+                <div class="dropdown-menu" aria-labelledby="categoryMenu">
+                    <a class="dropdown-item" href="#">Python</a>
+                    <a class="dropdown-item" href="#">Java</a>
+                    <a class="dropdown-item" href="#">JavaScript</a>
+                    <a class="dropdown-item" href="#">Html/Css</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="typeMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Type
+                </button>
+                <div class="dropdown-menu" aria-labelledby="typeMenu">
+                    <a class="dropdown-item" href="#">Formative</a>
+                    <a class="dropdown-item" href="#">Summative</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Start Date" id="startDate">
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" placeholder="End Date" id="endDate">
+        </div>
+    </div>
+    <div class="row">
+        <div id="attemptBarChart" style="width: 100%; height: 400px;"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/import_js/laydate.js"></script>
+<script type="text/javascript" src="/js/import_js/echarts.js"></script>
+<script>
+    laydate.render({
+        elem: '#startDate',
+        lang: 'en'
+    });
+    laydate.render({
+        elem: '#endDate',
+        lang: 'en'
+    });
+
+    //attempt bar chart
+    let attemptBarChart = echarts.init(document.getElementById("attemptBarChart"));
+    let attemptBarChartDataAxis = ['2021-04-01', '2021-04-02', '2021-04-03', '2021-04-04', '2021-04-05', '2021-04-06', '2021-04-07', '2021-04-08', '2021-04-09', '2021-04-10'];
+    let attemptBarChartData = [220, 182, 191, 234, 290, 220, 156, 108, 189, 300];
+    let attemptBarChartOption = {
+        xAxis: {
+            data: attemptBarChartDataAxis,
+            axisLabel: {
+                inside: true,
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            axisTick: {
+                show: false
+            },
+            axisLine: {
+                show: false
+            },
+            z: 10
+        },
+        yAxis: {
+            axisLine: {
+                show: false
+            },
+            axisTick: {
+                show: false
+            },
+            axisLabel: {
+                textStyle: {
+                    color: '#999'
+                }
+            }
+        },
+        dataZoom: [
+            {
+                type: 'inside'
+            }
+        ],
+        series: [
+            {
+                type: 'bar',
+                showBackground: true,
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            {offset: 0, color: '#83bff6'},
+                            {offset: 0.5, color: '#188df0'},
+                            {offset: 1, color: '#188df0'}
+                        ]
+                    )
+                },
+                emphasis: {
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(
+                            0, 0, 0, 1,
+                            [
+                                {offset: 0, color: '#2378f7'},
+                                {offset: 0.7, color: '#2378f7'},
+                                {offset: 1, color: '#83bff6'}
+                            ]
+                        )
+                    }
+                },
+                data: attemptBarChartData
+            }
+        ]
+    };
+    // Enable data zoom when user click bar.
+    let attemptBarChartXZoomSize = 6;
+    attemptBarChart.on('click', function (params) {
+        attemptBarChart.dispatchAction({
+            type: 'dataZoom',
+            startValue: attemptBarChartDataAxis[Math.max(params.dataIndex - attemptBarChartXZoomSize / 2, 0)],
+            endValue: attemptBarChartDataAxis[Math.min(params.dataIndex + attemptBarChartXZoomSize / 2, attemptBarChartData.length - 1)]
+        });
+    });
+    attemptBarChart.setOption(attemptBarChartOption);
+</script>
