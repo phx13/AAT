@@ -6,7 +6,7 @@ from aat_main.models.assessment_models import Assessment
 from aat_main.utils.api_exception_helper import NotFoundException
 
 
-summative_blueprint = Blueprint('formative_blueprint', __name__, template_folder='../views/formative')
+formative_blueprint = Blueprint('formative_blueprint', __name__, template_folder='../views/formative')
 
 
 @formative_blueprint.route('/assessments/assessments_management/formative/', methods=['GET', 'POST'])
