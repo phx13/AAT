@@ -23,9 +23,21 @@ class Assessment(db.Model):
         return db.session.query(AssessmentReview).filter_by(assessment_id=self.id).all()
 
     def create_assessment(title, questions, description, course):
-        db.session.add(Assessment(name=title, questions=questions, description=description, course=course))
+        question_string = generate_question_string(questions)
+        db.session.add(Assessment(name=title, questions=question_string, description=description, course=course))
         db.session.commit()
 
+    def generate_question_string(questions):
+        question_string = ""
+        count = 0
+        while count < (len(questions) - 1):
+            temp = questions[count]
+            question_string.append(str(temp) + "&")
+            count+=1
+        temp = questions[count]
+        question_string.append(str(temp))
+        return question_string
+        
 
 class AssessmentCompletion(db.Model):
     __tablename__ = 'assessment_completion'
