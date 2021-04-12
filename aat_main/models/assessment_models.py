@@ -1,7 +1,7 @@
 from sqlalchemy import MetaData, Table
 
 from aat_main import db
-from aat_main.models.satisfaction_review_models import AssessmentReview
+from aat_main.models.satisfaction_review_model import AssessmentReview
 
 
 class Assessment(db.Model):
