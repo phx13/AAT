@@ -10,3 +10,8 @@ main {
     margin-bottom: 5vh;
     background-color: lightgray;
 }
+
+.review-comment {
+    margin: 1vh 0;
+    box-shadow: 2px 2px 5px black;
+}
