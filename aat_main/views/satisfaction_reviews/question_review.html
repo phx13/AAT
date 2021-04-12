@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <p>This is a review for the question: <i>{{ question.description }}</i></p>
+    <p>This is a review for the question: <span style="font-style:italic;">{{ question.description }}</span></p>
     <p>Please indicate your level of agreement with each of statements below.</p>
     <form action="" method="post">
         {{ form.csrf_token() }}
