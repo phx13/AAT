@@ -56,11 +56,10 @@
                                 Assessments
                             </a>
                         </li>
-                        {% if current_user.role == 'student' %}
-                        {% else %}
+                        {% if current_user.role == 'lecturer' %}
                             <li class="nav-item">
-                                <a class="nav-link" href="/course/">
-                                    Question
+                                <a class="nav-link" href="{{ url_for('question_bp.manage_questions') }}">
+                                    Questions
                                 </a>
                             </li>
                         {% endif %}

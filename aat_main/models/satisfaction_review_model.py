@@ -54,7 +54,7 @@ class QuestionReview(db.Model):
     """
 
     @staticmethod
-    def create_review(student_id, question_id, statement_reponse_map, comment):
+    def create_review(student_id, question_id, statement_response_map, comment):
         db.session.add(QuestionReview(student_id=student_id, question_id=question_id,
-                                      statement_reponse_map=statement_reponse_map, comment=comment))
+                                      statement_response_map=statement_response_map, comment=comment))
         db.session.commit()

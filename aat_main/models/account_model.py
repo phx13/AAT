@@ -5,7 +5,8 @@ from sqlalchemy import MetaData, Table, and_
 
 from aat_main import db, login_manager
 from aat_main.models.assessment_models import Assessment, AssessmentCompletion
-from aat_main.models.satisfaction_review import AssessmentReview, AATReview
+from aat_main.models.question_models import Question
+from aat_main.models.satisfaction_review_model import AssessmentReview, AATReview, QuestionReview
 
 
 class AccountModel(db.Model, UserMixin):
@@ -42,7 +43,8 @@ class AccountModel(db.Model, UserMixin):
     @staticmethod
     def update_account(email, id, password, name, role, avatar, profile, time):
         db.session.query(AccountModel).filter_by(email=email).update(
-            {'id': id, 'password': password, 'name': name, 'role': role, 'avatar': avatar, 'profile': profile, 'time': time})
+            {'id': id, 'password': password, 'name': name, 'role': role, 'avatar': avatar, 'profile': profile,
+             'time': time})
         db.session.commit()
 
     def delete_account(self, id):
@@ -66,6 +68,20 @@ class AccountModel(db.Model, UserMixin):
             and_(
                 AssessmentReview.student_id == self.id,
                 AssessmentReview.assessment_id == id
+            )
+        ).first()
+
+    def get_completed_questions(self):
+        # TODO implement this properly
+        return db.session.query(Question).all()
+
+    def has_reviewed_question(self, id):
+        return db.session.query(
+            QuestionReview
+        ).filter(
+            and_(
+                QuestionReview.student_id == self.id,
+                QuestionReview.question_id == id
             )
         ).first()
 

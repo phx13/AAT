@@ -1,6 +1,8 @@
 from sqlalchemy import MetaData, Table
 
 from aat_main import db
+from aat_main.models.module_model import Module
+from aat_main.models.satisfaction_review_model import QuestionReview
 
 
 class Question(db.Model):
@@ -10,7 +12,7 @@ class Question(db.Model):
     id: int, auto_increment, primary
     name: varchar(128)
     description: varchar(256)
-    module_id: int, foreign key
+    module_code: int, foreign key
     """
 
     @staticmethod
@@ -18,6 +20,16 @@ class Question(db.Model):
         return db.session.query(Question).get(id)
 
     @staticmethod
-    def create_question(name, description, module_id):
-        db.session.add(Question(name=name, description=description, module_id=module_id))
+    def create_question(name, description, module_code):
+        db.session.add(Question(name=name, description=description, module_code=module_code))
         db.session.commit()
+
+    def get_module(self):
+        return db.session.query(
+            Module
+        ).filter_by(
+            code=self.module
+        ).first()
+
+    def get_reviews(self):
+        return db.session.query(QuestionReview).filter_by(question_id=self.id)
