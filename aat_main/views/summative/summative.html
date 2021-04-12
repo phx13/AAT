@@ -6,7 +6,38 @@
     <form action="" method="post">
         {{ form.csrf_token() }}
         {{ form.title.label }} {{ form.title }}
-        {{ form.questions.label }} {{ form.questions }}
+        
+        <!-- <select name="questions_form" id="questions_form" class="form-control selectpicker" data-live-search="true" multiple>
+            {% for question in questions %}
+                <Option name="{{ question.id }}" value="{{ question.id }}">{{ question.name }}</Option>
+            {% endfor %}
+        </select> -->
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Add Question?</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in questions %}
+                    <tr>
+                        <th scope="row">{{ question.id }}</th>
+                        <td>{{ question.name }}</td>
+                        <td>{{ question.description }}</td>
+                        <td>
+                            <input type="checkbox" id="{{ question.id }}" name="{{ question.id }}" value="{{ question.id }}">
+
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+        
         {{ form.course.lable }} {{ form.course }}
         {{ form.description.label }} {{ form.description }}
         {{ form.submit.label }} {{ form.submit }}

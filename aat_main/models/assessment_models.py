@@ -23,20 +23,24 @@ class Assessment(db.Model):
         return db.session.query(AssessmentReview).filter_by(assessment_id=self.id).all()
 
     def create_assessment(title, questions, description, course):
-        question_string = generate_question_string(questions)
-        db.session.add(Assessment(name=title, questions=question_string, description=description, course=course))
+        # question_string = generate_question_string(questions)
+        db.session.add(Assessment(name=title, questions=questions, description=description, course=course))
         db.session.commit()
 
     def generate_question_string(questions):
+        #Note: Tried to remove "None" from strings, however, system would always freeze when trying to remove "None" from 
+        #the middle. Will investigate, or find solutation down the line (In assessment system).
         question_string = ""
         count = 0
         while count < (len(questions) - 1):
             temp = questions[count]
-            question_string.append(str(temp) + "&")
+            question_string = question_string + (str(temp) + "&")
             count+=1
+        #Last entry in questions.
         temp = questions[count]
-        question_string.append(str(temp))
+        question_string = question_string + (str(temp))
         return question_string
+
         
 
 class AssessmentCompletion(db.Model):
