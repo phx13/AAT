@@ -5,7 +5,7 @@ from sqlalchemy import MetaData, Table, and_
 
 from aat_main import db, login_manager
 from aat_main.models.assessment_models import Assessment, AssessmentCompletion
-from aat_main.models.satisfaction_review_models import AssessmentReview, AATReview
+from aat_main.models.satisfaction_review import AssessmentReview, AATReview
 
 
 class AccountModel(db.Model, UserMixin):

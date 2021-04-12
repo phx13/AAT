@@ -7,7 +7,7 @@ from jinja2 import TemplateError
 from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main.models.account_model import AccountModel
-from aat_main.models.course_model import CourseModel
+from aat_main.models.enrollment import StudentEnrolment
 from aat_main.utils.api_exception_helper import InterServerErrorException, NotFoundException
 from aat_main.utils.base64_helper import Base64Helper
 
@@ -23,7 +23,7 @@ def before_request():
 @account_bp.route('/account/')
 def account_page():
     try:
-        courses = CourseModel.search_courses_by_email(current_user.email).split(',')
+        courses = StudentEnrolment.search_courses_by_email(current_user.email).split(',')
         return render_template('account_base.html', current_account=current_user, courses=courses, student_stat_status=0)
     except TemplateError:
         raise NotFoundException()
