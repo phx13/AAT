@@ -126,11 +126,7 @@ def edit_type_two_question_remove():
         raise NotFoundException()
 
 
-<<<<<<< aat_main/controllers/question_controller.py
 @question_bp.route('/review_completed')
-=======
-@question_bp.route('/completed/')
->>>>>>> aat_main/controllers/question_controller.py
 def completed_questions():
     questions = current_user.get_completed_questions()
     return render_template('completed_questions.html', questions=questions)
