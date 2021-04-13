@@ -7,7 +7,7 @@ class Module(db.Model):
     __tablename__ = 'module'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
     """
-    code: varchar(8)
+    code: varchar(8), primary
     name: varchar(128)
     """
 

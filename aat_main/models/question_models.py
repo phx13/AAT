@@ -17,7 +17,7 @@ class Question(db.Model):
     """
 
     @staticmethod
-    def get_questions():
+    def get_all():
         return db.session.query(Question).all()
 
     def get_question_by_id(id):
@@ -48,7 +48,6 @@ class QuestionData(db.Model):
     description: varchar(256)
     course: varchar(64)
     """
-
 
     @staticmethod
     def search_all():

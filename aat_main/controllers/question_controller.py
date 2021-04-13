@@ -1,28 +1,24 @@
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from flask_login import current_user
 from jinja2 import TemplateError
-from sqlalchemy.exc import SQLAlchemyError
 
-from aat_main.models.question_models import QuestionData
-from aat_main.utils.api_exception_helper import NotFoundException, InterServerErrorException
 from aat_main import db
 from aat_main.models.question_models import Question
+from aat_main.models.question_models import QuestionData
+from aat_main.utils.api_exception_helper import NotFoundException
 
-question_bp = Blueprint('question_bp', __name__, template_folder='../views/question')
-# TODO this has the same name as the blueprint in create_question_controller. fix this
-# question_bp = Blueprint('question_bp', __name__, template_folder='../views/question', url_prefix='/questions')
-
-
-@question_bp.route('/question/management/')
-def question_page():
-    try:
-        return render_template('question_management.html')
-    except TemplateError:
-        raise NotFoundException()
+question_bp = Blueprint('question_bp', __name__, template_folder='../views/question', url_prefix='/question')
 
 
+@question_bp.route('/management/')
+def manage_questions():
+    # TODO this is just to test functionality. implement it properly so that is only shows questions that the lecturer
+    #   should see (questions from their module)
+    questions = db.session.query(Question).all()
+    return render_template('question_management.html', questions=questions)
 
-@question_bp.route('/question/management/data/', methods=['GET'])
+
+@question_bp.route('/management/data/', methods=['GET'])
 def question_data():
     try:
         origin_data = QuestionData.search_all()
@@ -45,10 +41,10 @@ def question_data():
         raise NotFoundException()
 
 
-@question_bp.route('/question/management/data/', methods=['POST'])
+@question_bp.route('/management/data/', methods=['POST'])
 def delete_question_data():
     try:
-        for k,v in request.form.items():
+        for k, v in request.form.items():
             QuestionData.delete_question_by_id(k)
         return 'delete successful'
     except:
@@ -127,14 +123,7 @@ def edit_type_two_question_remove():
         raise NotFoundException()
 
 
-@question_bp.route('/completed/')
+@question_bp.route('/review_completed')
 def completed_questions():
     questions = current_user.get_completed_questions()
     return render_template('completed_questions.html', questions=questions)
-
-
-@question_bp.route('/manage')
-def manage_questions():
-    # TODO this is just to test functionality. implement it properly
-    questions = db.session.query(Question).all()
-    return render_template('question_management.html', questions=questions)
