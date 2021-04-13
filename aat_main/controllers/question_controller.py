@@ -7,7 +7,6 @@ from aat_main.models.question_models import QuestionData
 from aat_main.utils.api_exception_helper import NotFoundException, InterServerErrorException
 from aat_main import db
 from aat_main.models.question_models import Question
-<<<<<<< aat_main/controllers/question_controller.py
 from aat_main.models.question_models import QuestionData
 from aat_main.utils.api_exception_helper import NotFoundException
 
