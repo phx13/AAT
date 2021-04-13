@@ -19,16 +19,16 @@ def assessment_page():
 
 @question_blueprint.route('/course/assessment/<int:assessment_id>/multiplechoice<question_id>', methods=['GET', 'POST'])
 def type_one_question_page(question_id):
-    question = MultipleChoice.search_question_by_id(question_id)
     try:
+        question = MultipleChoice.search_question_by_id(question_id)
         return render_template('type_one_question.html', question = question)
     except TemplateError:
         raise NotFoundException()
 
 @question_blueprint.route('/course/assessment/<int:assessment_id>/fillinblank<question_id>', methods=['GET', 'POST'])
 def type_two_question_page(question_id):
-    question = FillinBlank.search_question_by_id(question_id)
     try:
+        question = FillinBlank.search_question_by_id(question_id)
         return render_template('type_two_question.html', question = question)
     except TemplateError:
         raise NotFoundException()
@@ -38,40 +38,33 @@ def edit_type_one_question_edit_page(question_id):
     form = type_one_question_form()
     if form.validate_on_submit():
         MultipleChoice.update_question(id=question_id, question=form.question, answer=form.answer, options=form.options)
-    try:
-        return render_template('type_one_question_edit.html', form = form)
-    except TemplateError:
-        raise NotFoundException()
+        return redirect(url_for('type_one_question_page'))
+    return render_template('type_one_question_edit.html', form = form)
+
 
 @question_blueprint.route('/course/assessment/<int:assessment_id>/fillinblank<question_id>/edit', methods=['GET', 'POST'])
 def edit_type_two_question_edit_page(question_id):
     form = type_two_question_form()
     if form.validate_on_submit():
         FillinBlank.update_question(id=question_id, question=form.question, answer=form.answer, caseSensetive=form.caseSensitive)
-    try:
-        return render_template('type_two_question_edit.html', form = form)
-    except TemplateError:
-        raise NotFoundException()
+        return redirect(url_for('type_two_question_page'))
+    return render_template('type_two_question_edit.html', form = form)
 
 @question_blueprint.route('/course/assessment/<int:assessment_id>/new_multiplechoice', methods=['GET', 'POST'])
 def edit_type_one_question():
     form = type_one_question_form()
-    try:
-        if form.validate_on_submit():
-            MultipleChoice.create_question(question=form.question, answer=form.answer, options=form.options)
-            return render_template('type_one_question.html', form=form)
-    except TemplateError:
-        raise NotFoundException()
+    if form.validate_on_submit():
+        MultipleChoice.create_question(question=form.question, answer=form.answer, options=form.options)
+        return redirect(url_for('type_one_question_page'))
+    return render_template('type_one_question.html', form=form)
 
 @question_blueprint.route('/course/assessment/<int:assessment_id>/new_fillinblank', methods=['GET', 'POST'])
 def save_type_two_question():
     form = type_two_question_form()
-    try:
-        if form.validate_on_submit():
-            FillinBlank.create_question(question=form.question, answer=form.answer, caseSensetive=form.caseSensitive)
-            return render_template('type_two_question.html', form = form)
-    except TemplateError:
-        raise NotFoundException()
+    if form.validate_on_submit():
+        FillinBlank.create_question(question=form.question, answer=form.answer, caseSensetive=form.caseSensitive)
+        return redirect(url_for('type_two_question_page'))
+    return render_template('type_two_question.html', form = form)
 
 @question_blueprint.route('/course/assessment/<int:assessment_id>/multiplechoice<question_id>/remove', methods=['GET', 'POST'])
 def edit_type_one_question_remove(question_id):
