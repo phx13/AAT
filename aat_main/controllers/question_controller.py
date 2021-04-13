@@ -1,9 +1,13 @@
 from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from flask_login import current_user
 from jinja2 import TemplateError
+from sqlalchemy.exc import SQLAlchemyError
 
+from aat_main.models.question_models import QuestionData
+from aat_main.utils.api_exception_helper import NotFoundException, InterServerErrorException
 from aat_main import db
 from aat_main.models.question_models import Question
+<<<<<<< aat_main/controllers/question_controller.py
 from aat_main.models.question_models import QuestionData
 from aat_main.utils.api_exception_helper import NotFoundException
 
@@ -123,7 +127,11 @@ def edit_type_two_question_remove():
         raise NotFoundException()
 
 
+<<<<<<< aat_main/controllers/question_controller.py
 @question_bp.route('/review_completed')
+=======
+@question_bp.route('/completed/')
+>>>>>>> aat_main/controllers/question_controller.py
 def completed_questions():
     questions = current_user.get_completed_questions()
     return render_template('completed_questions.html', questions=questions)

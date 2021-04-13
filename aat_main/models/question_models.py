@@ -49,6 +49,7 @@ class QuestionData(db.Model):
     course: varchar(64)
     """
 
+
     @staticmethod
     def search_all():
         return db.session.query(QuestionData).all()
