@@ -14,7 +14,7 @@ create_question_blueprint = Blueprint('create_question_blueprint', __name__, tem
 def create_question():
     form = question_form()
     if form.validate_on_submit():
-        Question.create_question(form.name.data, form.course.data, form.description.data)
+        Question.create_question(form.name.data, form.description.data, form.course.data)
         return redirect(url_for('course_bp.assessments'))
 
     return render_template("create_question.html", form=form)
