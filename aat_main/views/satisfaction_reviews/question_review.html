@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <p>This is a review for {{ assessment.name }}</p>
+    <p>This is a review for the question: <span style="font-style:italic;">{{ question.description }}</span></p>
+    <p>Please indicate your level of agreement with each of statements below.</p>
     <form action="" method="post">
         {{ form.csrf_token() }}
 
-        <div>
-            <p>{{ form.statement1.label }}</p>
+        <div class="review-statement-box">
+            <p>1. {{ form.statement1.label }}</p>
             {% for option in form.statement1 %}
                 {{ option }}
                 {{ option.label }}
             {% endfor %}
-
         </div>
 
-        <div>
-            <p>{{ form.statement2.label }}</p>
+        <div class="review-statement-box">
+            <p>2. {{ form.statement2.label }}</p>
             {% for option in form.statement2 %}
                 {{ option }}
                 {{ option.label }}

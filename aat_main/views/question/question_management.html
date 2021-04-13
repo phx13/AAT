@@ -4,6 +4,18 @@
 {% endblock %}
 
 {% block content %}
+    <h1>Question Management</h1>
+    <ul>
+        {% for question in questions %}
+            {% set module = question.get_module() %}
+            <li>
+                {{ question.name }} from {{ module.code }} {{ module.name }} -
+                <a href="#">Edit</a>
+                <a href="#">Delete</a>
+                <a href="{{ url_for('satisfaction_result_bp.question_review_result', id=question.id) }}">View reviews</a>
+            </li>
+        {% endfor %}
+    </ul>
     <div class="container">
         <h1>Question Management</h1>
         <div class="dropdown">

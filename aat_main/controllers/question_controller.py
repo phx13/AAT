@@ -1,11 +1,16 @@
-from flask import Blueprint, render_template, flash, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, redirect, url_for, request, jsonify
+from flask_login import current_user
 from jinja2 import TemplateError
 from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main.models.question_models import QuestionData
 from aat_main.utils.api_exception_helper import NotFoundException, InterServerErrorException
+from aat_main import db
+from aat_main.models.question_models import Question
 
 question_bp = Blueprint('question_bp', __name__, template_folder='../views/question')
+# TODO this has the same name as the blueprint in create_question_controller. fix this
+# question_bp = Blueprint('question_bp', __name__, template_folder='../views/question', url_prefix='/questions')
 
 
 @question_bp.route('/question/management/')
@@ -14,6 +19,7 @@ def question_page():
         return render_template('question_management.html')
     except TemplateError:
         raise NotFoundException()
+
 
 
 @question_bp.route('/question/management/data/', methods=['GET'])
@@ -119,3 +125,16 @@ def edit_type_two_question_remove():
         return redirect(url_for('assessment_page'))
     except TemplateError:
         raise NotFoundException()
+
+
+@question_bp.route('/completed/')
+def completed_questions():
+    questions = current_user.get_completed_questions()
+    return render_template('completed_questions.html', questions=questions)
+
+
+@question_bp.route('/manage')
+def manage_questions():
+    # TODO this is just to test functionality. implement it properly
+    questions = db.session.query(Question).all()
+    return render_template('question_management.html', questions=questions)
