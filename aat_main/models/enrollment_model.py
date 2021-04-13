@@ -4,12 +4,12 @@ from aat_main import db
 
 
 class StudentEnrolment(db.Model):
-    __tablename__ = 'course'
+    __tablename__ = 'student_enrolment'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
     """
     id: int, primary key, auto_increment
     student_id: int, foreign key
-    module_id: int, foreign key
+    module_code: varchar(8), foreign key
     """
 
     @staticmethod

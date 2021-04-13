@@ -11,7 +11,7 @@ summative_blueprint = Blueprint('summative_blueprint', __name__, template_folder
 
 @summative_blueprint.route('/assessments/assessments_management/summative/', methods=['GET', 'POST'])
 def summative():
-    questions = Question.get_questions()
+    questions = Question.get_all()
     form = assessment_form()
     added_questions = []
     if form.validate_on_submit():
