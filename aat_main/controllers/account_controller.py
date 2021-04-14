@@ -7,7 +7,7 @@ from jinja2 import TemplateError
 from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main.models.account_model import AccountModel
-from aat_main.models.enrollment_model import StudentEnrolment
+from aat_main.models.enrollment_models import StudentEnrolment
 from aat_main.utils.api_exception_helper import InterServerErrorException, NotFoundException
 from aat_main.utils.base64_helper import Base64Helper
 
