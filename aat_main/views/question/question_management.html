@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block heads %}
+    <link rel="stylesheet" href="/css/import_css/bootstrap-table.min.css">
+{% endblock %}
 
 {% block content %}
     <h1>Question Management</h1>
@@ -13,4 +16,104 @@
             </li>
         {% endfor %}
     </ul>
+
+    <div class="container">
+        <h1>Question Management</h1>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                Course
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">CMT119</a>
+                <a class="dropdown-item" href="#">CMT120</a>
+                <a class="dropdown-item" href="#">CMT313</a>
+            </div>
+            <button type="button" class="btn btn-secondary">Sort by time</button>
+            <button type="button" class="btn btn-secondary">Create new question</button>
+            <button type="button" class="btn btn-danger" onclick="deleteQuestion()">Delete question</button>
+        </div>
+
+        <table id="btTable" data-toggle="table"></table>
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript" src="/js/import_js/bootstrap-table.min.js"></script>
+    <script>
+        $('#btTable').bootstrapTable({
+            url: '/question/management/data/',  // 请求数据源的路由
+            dataType: "json",
+            pagination: true, //前端处理分页
+            singleSelect: false,//是否只能单选
+            search: true, //显示搜索框，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+            {#toolbar: '#toolbar-' + courseid, //工具按钮用哪个容器#}
+            striped: true, //是否显示行间隔色
+            cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pageNumber: 1, //初始化加载第10页，默认第一页
+            pageSize: 10, //每页的记录行数（*）
+            pageList: [10, 20, 50, 100], //可供选择的每页的行数（*）
+            strictSearch: true,//设置为 true启用 全匹配搜索，false为模糊搜索
+            // showColumns: true, //显示内容列下拉框
+            // showRefresh: true, //显示刷新按钮
+            minimumCountColumns: 2, //当列数小于此值时，将隐藏内容列下拉框
+            // clickToSelect: true, //设置true， 将在点击某行时，自动勾选rediobox 和 checkbox
+            // height: 500, //表格高度，如果没有设置height属性，表格自动根据记录条数决定表格高度
+            uniqueId: "id", //每一行的唯一标识，一般为主键列
+            showToggle: true, //是否显示详细视图和列表视图的切换按钮
+            // cardView: true, //是否显示详细视图
+            // detailView: true, //是否显示父子表，设置为 true 可以显示详细页面模式,在每行最前边显示+号#}
+            sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+            columns: [
+                {
+                    title: "selectAll",
+                    field: "select",
+                    checkbox: true,
+                    align: "center"
+                },
+                {
+                    field: 'id',
+                    title: 'Id'
+                }, {
+                    field: 'module',
+                    title: 'Module'
+                }, {
+                    field: 'question',
+                    title: 'Question'
+                }, {
+                    field: 'option',
+                    title: 'Option'
+                }, {
+                    field: 'answer',
+                    title: 'Answer'
+                }, {
+                    field: 'release_time',
+                    title: 'Release Time'
+                }, {
+                    field: 'operation',
+                    title: 'Operation',
+                    formatter: function () {
+                        return '<a href="#">edit</a>'
+                    }
+                }]
+        });
+
+        function deleteQuestion() {
+            let datas = $('#btTable').bootstrapTable('getSelections');
+            let param = "";
+            datas.forEach(function (item) {
+                param += item["id"] + "=id&";
+            })
+            param = param.substring(0, param.length - 1);
+            $.post('/question/management/data/', param, function (data) {
+                if (!jQuery.isEmptyObject(data)) {
+                    alert(data);
+                    $('#btTable').bootstrapTable('refresh')
+                }
+            })
+        }
+    </script>
 {% endblock %}
