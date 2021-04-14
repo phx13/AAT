@@ -2,7 +2,6 @@ from sqlalchemy import MetaData, Table, or_
 from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main import db
-from aat_main.models.enrollment_models import StaffEnrolment
 from aat_main.models.module_model import Module
 from aat_main.models.satisfaction_review_model import QuestionReview
 from aat_main.utils.serialization_helper import SerializationHelper
@@ -29,11 +28,11 @@ class Question(db.Model):
     def get_question_by_id(id):
         return db.session.query(Question).get(id)
 
-    @staticmethod
-    def get_question_by_module(staff_id):
-        modules = StaffEnrolment.get_enrolled_modules(staff_id)
-        conditions = [Question.module_code == mc.module_code for mc in modules]
-        return db.session.query(Question).filter(or_(*conditions)).all()
+    # @staticmethod
+    # def get_question_by_module(staff_id):
+    #     modules = StaffEnrolment.get_enrolled_modules(staff_id)
+    #     conditions = [Question.module_code == mc.module_code for mc in modules]
+    #     return db.session.query(Question).filter(or_(*conditions)).all()
 
     @staticmethod
     def create_question(name, description, module_code):
@@ -56,4 +55,8 @@ class Question(db.Model):
         ).first()
 
     def get_reviews(self):
-        return db.session.query(QuestionReview).filter_by(question_id=self.id)
+        return db.session.query(
+            QuestionReview
+        ).filter_by(
+            question_id=self.id
+        ).all()

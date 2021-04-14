@@ -12,7 +12,8 @@ question_bp = Blueprint('question_bp', __name__, template_folder='../views/quest
 def manage_questions():
     # TODO this is just to test functionality. implement it properly so that is only shows questions that the lecturer
     #   should see (questions from their module)
-    questions = Question.get_question_by_module(current_user.id)
+    questions = current_user.get_available_questions()
+    # questions = Question.get_all()
     return render_template('question_management.html', questions=questions)
 
 
