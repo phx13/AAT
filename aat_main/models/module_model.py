@@ -12,6 +12,10 @@ class Module(db.Model):
     """
 
     @staticmethod
+    def get_all():
+        return db.session.query(Module).all()
+
+    @staticmethod
     def get_module_by_id(id):
         return db.session.query(Module).get(id)
 

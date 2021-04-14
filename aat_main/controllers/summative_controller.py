@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, render_template, redirect, url_for, request
 from jinja2 import TemplateError
 
@@ -13,16 +14,23 @@ summative_blueprint = Blueprint('summative_blueprint', __name__, template_folder
 def summative():
     questions = Question.get_all()
     form = assessment_form()
-    added_questions = []
     if form.validate_on_submit():
-        
+        added_questions = []
+        # Checks if checkbox is active. If yes, adds value to added questions.
         for question in questions:
-            question_id = ""
-            question_id = question_id + str(question.id)
-            added_questions.append(request.form.get(question_id))
+            question_id = request.form.get(str(question.id))
+            if question_id:
+                added_questions.append(question_id)
 
-        added_questions_string = Assessment.generate_question_string(added_questions)
-        Assessment.create_assessment(form.title.data, added_questions_string, form.description.data, form.course.data)
+        #Gets module code
+        module_code = form.module.data[:6]
+
+        #Convert Datetime's
+        start_datetime = Assessment.convert_datetime(form.start_date.data, form.start_time.data)
+        end_datetime = Assessment.convert_datetime(form.end_date.data, form.end_time.data)
+    
+        added_questions = json.dumps(added_questions)
+        Assessment.create_assessment(form.title.data, added_questions, form.description.data, module_code, start_datetime, end_datetime)
         return redirect(url_for('course_bp.assessments'))
 
     return render_template("summative.html", form=form, questions=questions)

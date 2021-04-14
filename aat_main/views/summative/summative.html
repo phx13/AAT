@@ -5,14 +5,21 @@
     </h2>
     <form action="" method="post">
         {{ form.csrf_token() }}
-        {{ form.title.label }} {{ form.title }}
+        {{ form.title.label }} {{ form.title }} <br>
+        <!-- <input type="date" id="start_date" name="start_date" value="YYYY-MM-DD", min="" max="2099-12-31"required></input>
+        <input type="time" id="start_time" name="start_time" min="09:00" max="17:00" required></input> -->
+
+        <!-- <input type="date" id="end_date" name="end_date" value="YYYY-MM-DD", min="" max="2099-12-31" required></input>
+        <input type="time" id="end_time" name="end_time" min="09:00" max="17:00" required></input> -->
+
+        {{ form.start_date.label }} {{ form.start_date}}
+        {{ form.start_time.label }} {{ form.start_time }}
+
+        {{ form.end_date.label }} {{ form.end_date }}
+        {{ form.end_time.label }} {{ form.end_time }}
+
         
-        <!-- <select name="questions_form" id="questions_form" class="form-control selectpicker" data-live-search="true" multiple>
-            {% for question in questions %}
-                <Option name="{{ question.id }}" value="{{ question.id }}">{{ question.name }}</Option>
-            {% endfor %}
-        </select> -->
-        
+        <!-- Question check boxes -->
         <table class="table">
             <thead>
                 <tr>
@@ -37,9 +44,10 @@
             </tbody>
 
         </table>
-        
-        {{ form.course.lable }} {{ form.course }}
-        {{ form.description.label }} {{ form.description }}
+        <!-- Module selection -->
+        {{ form.module.label }} {{ form.module }}<br>
+        <!-- Date/time selections -->
+        {{ form.description.label }} {{ form.description }}<br>
         {{ form.submit.label }} {{ form.submit }}
     </form>
 {% endblock %}
