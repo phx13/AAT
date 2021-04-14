@@ -2,7 +2,6 @@
 
 {% block content %}
     <h1>Assessments</h1>
-    <p style="color:greenyellow;background-color: red">change this so only assessments for modules the lecturer belongs to are shown</p>
     <p><a href="{{ url_for('course_bp.assessments_management') }}">Assessments Management</a></p>
     <ul>
         {% for assessment in assessments %}

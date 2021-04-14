@@ -5,6 +5,8 @@ from sqlalchemy import MetaData, Table, and_
 
 from aat_main import db, login_manager
 from aat_main.models.assessment_models import Assessment, AssessmentCompletion
+from aat_main.models.enrolment_models import ModuleEnrolment
+from aat_main.models.module_model import Module
 from aat_main.models.question_models import Question
 from aat_main.models.satisfaction_review_model import AssessmentReview, AATReview, QuestionReview
 
@@ -22,6 +24,8 @@ class AccountModel(db.Model, UserMixin):
     profile: tinytext(0)
     time: datetime
     """
+
+    DAYS_BETWEEN_AAT_REVIEWS = 7
 
     @staticmethod
     def search_all():
@@ -95,12 +99,61 @@ class AccountModel(db.Model, UserMixin):
             return False
         else:
             time_elapsed = datetime.now() - last_review.date
-            return time_elapsed.days < 7
+            return time_elapsed.days < self.DAYS_BETWEEN_AAT_REVIEWS
 
     def get_days_until_next_aat_review(self):
         last_review_date = self.get_last_aat_review().date
         time_elapsed = datetime.now() - last_review_date
-        return 7 - time_elapsed.days
+        return self.DAYS_BETWEEN_AAT_REVIEWS - time_elapsed.days
+
+    def get_enrolled_modules(self):
+        return db.session.query(
+            Module
+        ).join(
+            ModuleEnrolment,
+            ModuleEnrolment.module_code == Module.code
+        ).filter(
+            ModuleEnrolment.account_id == self.id
+        ).all()
+
+    def get_enrolled_module_codes(self):
+        # reference 14 April https://stackoverflow.com/questions/11530196/flask-sqlalchemy-query-specify-column-names
+        module_codes = db.session.query(
+            Module.code
+        ).join(
+            ModuleEnrolment,
+            ModuleEnrolment.module_code == Module.code
+        ).filter(
+            ModuleEnrolment.account_id == self.id
+        ).all()
+        # x[0] represents the first (and only) column in each tuple in the list of results (this is the 'code' column)
+        return [x[0] for x in module_codes]
+
+    def get_available_questions(self):
+        if self.role == 'student':
+            print('ERROR: Something has gone wrong. Student account shouldn\'t be calling get_available_questions()')
+            return None
+        module_codes = self.get_enrolled_module_codes()
+        print(f'codes {module_codes}')
+        # reference 14 April https://stackoverflow.com/questions/887388/is-there-support-for-the-in-operator-in-the-sql-expression-language-used-in-sq/887402#887402
+        return db.session.query(
+            Question
+        ).filter(
+            Question.module_code.in_(
+                module_codes
+            )
+        )
+
+    def get_available_assessments(self):
+        module_codes = self.get_enrolled_module_codes()
+        # reference 14 April https://stackoverflow.com/questions/887388/is-there-support-for-the-in-operator-in-the-sql-expression-language-used-in-sq/887402#887402
+        return db.session.query(
+            Assessment
+        ).filter(
+            Assessment.module.in_(
+                module_codes
+            )
+        ).all()
 
 
 @login_manager.user_loader

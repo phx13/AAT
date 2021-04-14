@@ -1,6 +1,7 @@
 from sqlalchemy import MetaData, Table
 
 from aat_main import db
+from aat_main.models.enrolment_models import ModuleEnrolment
 
 
 class Module(db.Model):
@@ -23,3 +24,25 @@ class Module(db.Model):
     def create_module(code, name):
         db.session.add(Module(code=code, name=name))
         db.session.commit()
+
+    def get_enrolled_all(self):
+        # This import is inside the function to avoid a circular import (since account_model.py tries to import this
+        # file)
+        from aat_main.models.account_model import AccountModel
+
+        return db.session.query(
+            AccountModel
+        ).join(
+            ModuleEnrolment,
+            ModuleEnrolment.account_id == AccountModel.id,
+        ).filter(
+            ModuleEnrolment.module_code == self.code
+        ).all()
+
+    def get_enrolled_students(self):
+        all_enrolled_accounts = self.get_enrolled_all()
+        return [account for account in all_enrolled_accounts if account.role == 'student']
+
+    def get_enrolled_staff(self):
+        all_enrolled_accounts = self.get_enrolled_all()
+        return [account for account in all_enrolled_accounts if account.role == 'staff']
