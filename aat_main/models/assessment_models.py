@@ -11,8 +11,9 @@ class Assessment(db.Model):
     id: int, auto_increment, primary
     name: varchar(64)
     description: text
-    course: varchar(64)
+    module: varchar(8), foreign key references module(code)
     questions: varchar(256)
+    time_created: datetime, default now()
     """
 
     @staticmethod

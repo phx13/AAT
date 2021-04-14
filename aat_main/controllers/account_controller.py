@@ -22,7 +22,7 @@ def before_request():
 @account_bp.route('/account/')
 def account_page():
     try:
-        courses = StudentEnrolment.get_enrolled_modules(current_user.id)
+        courses = current_user.get_enrolled_module_codes()
         return render_template('account_base.html', current_account=current_user, courses=courses, student_stat_status=0)
     except TemplateError:
         raise NotFoundException()
