@@ -39,7 +39,7 @@ def assessment_review(assessment_id):
     return render_template('assessment_review.html', assessment=assessment, form=form)
 
 
-@satisfaction_review_bp.route('/assessment/complete')
+@satisfaction_review_bp.route('/assessment/review-complete')
 def assessment_review_complete():
     check_if_authorized(authorized_role)
     return render_template('assessment_review_complete.html')
@@ -91,7 +91,7 @@ def question_review(question_id):
     return render_template('question_review.html', question=question, form=form)
 
 
-@satisfaction_review_bp.route('/question/complete')
+@satisfaction_review_bp.route('/question/review-complete')
 def question_review_complete():
     check_if_authorized(authorized_role)
     return render_template('question_review_complete.html')

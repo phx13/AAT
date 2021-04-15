@@ -1,3 +1,4 @@
+from ast import literal_eval
 from datetime import datetime
 
 from flask_login import UserMixin
@@ -76,8 +77,28 @@ class AccountModel(db.Model, UserMixin):
         ).first()
 
     def get_completed_questions(self):
-        # TODO implement this properly
-        return db.session.query(Question).all()
+        # TODO check if this works after changes to tables are made
+        completed_assessments = db.session.query(
+            Assessment
+        ).join(
+            AssessmentCompletion,
+            AssessmentCompletion.assessment_id == Assessment.id
+        ).filter(
+            AssessmentCompletion.student_id == self.id
+        ).all()
+
+        completed_question_ids = {}
+        for assessment in completed_assessments:
+            question_set = literal_eval(assessment.questions)
+            completed_question_ids.update(question_set)
+
+        return db.session.query(
+            Question
+        ).filter(
+            Question.id.in_(completed_question_ids)
+        )
+
+        # return db.session.query(Question).all()
 
     def has_reviewed_question(self, id):
         return db.session.query(

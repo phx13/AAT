@@ -1,7 +1,6 @@
-import json
 from sqlalchemy import MetaData, Table
-from aat_main import db
 
+from aat_main import db
 from aat_main.models.satisfaction_review_model import AssessmentReview
 
 
@@ -14,6 +13,8 @@ class Assessment(db.Model):
     description: text
     module: varchar(8), foreign key references module(code)
     questions: varchar(256)
+    availability_date: datetime
+    due_date: datetime
     time_created: datetime, default now()
     """
 
@@ -27,16 +28,12 @@ class Assessment(db.Model):
     def convert_datetime(date, time):
         return str(date) + " " + str(time)
 
-
     def create_assessment(title, questions, description, module, start_datetime, end_datetime):
         # question_string = generate_question_string(questions)
-        db.session.add(Assessment(name=title, questions=questions, description=description, module=module, availability_date=start_datetime, due_date=end_datetime))
+        db.session.add(Assessment(name=title, questions=questions, description=description, module=module,
+                                  availability_date=start_datetime, due_date=end_datetime))
         db.session.commit()
 
-
-
-
-        
 
 class AssessmentCompletion(db.Model):
     __tablename__ = 'assessment_completion'
