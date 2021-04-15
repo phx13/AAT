@@ -31,7 +31,7 @@ def summative():
             end_datetime = Assessment.convert_datetime(form.end_date.data, form.end_time.data)
         
             added_questions = json.dumps(added_questions)
-            Assessment.create_assessment(form.title.data, added_questions, form.description.data, module_code, start_datetime, end_datetime)
+            Assessment.create_assessment(form.title.data, added_questions, form.description.data, module_code, start_datetime, end_datetime, form.timelimit.data)
             return redirect(url_for('course_bp.assessments'))
 
 

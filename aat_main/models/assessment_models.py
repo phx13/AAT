@@ -14,6 +14,9 @@ class Assessment(db.Model):
     description: text
     module: varchar(8), foreign key references module(code)
     questions: varchar(256)
+    availability_date: datetime
+    due_date: datetime
+    timelimit: int
     time_created: datetime, default now()
     """
 
@@ -28,9 +31,9 @@ class Assessment(db.Model):
         return str(date) + " " + str(time)
 
 
-    def create_assessment(title, questions, description, module, start_datetime, end_datetime):
+    def create_assessment(title, questions, description, module, start_datetime, end_datetime, timelimit):
         # question_string = generate_question_string(questions)
-        db.session.add(Assessment(name=title, questions=questions, description=description, module=module, availability_date=start_datetime, due_date=end_datetime))
+        db.session.add(Assessment(name=title, questions=questions, description=description, module=module, availability_date=start_datetime, due_date=end_datetime, timelimit=timelimit))
         db.session.commit()
 
 
