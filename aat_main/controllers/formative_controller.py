@@ -11,12 +11,12 @@ formative_blueprint = Blueprint('formative_blueprint', __name__, template_folder
 
 @formative_blueprint.route('/assessments/assessments_management/formative/', methods=['GET', 'POST'])
 def formative():
-    form = assessment_form()
-    if form.validate_on_submit():
-        Assessment.create_assessment(form.title.data)
-        return redirect(url_for('course_bp.assessments'))
+    # form = assessment_form()
+    # if form.validate_on_submit():
+    #     Assessment.create_assessment(form.title.data)
+    #     return redirect(url_for('course_bp.assessments'))
 
-    return render_template("formative.html", form=form)
+    return render_template("formative.html")
 
 
 @formative_blueprint.route('/course/assessment/')
