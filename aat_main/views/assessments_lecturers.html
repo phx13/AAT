@@ -6,7 +6,7 @@
     <ul>
         {% for assessment in assessments %}
             <li>
-                {{ assessment.name }}
+                {{ assessment.title }}
                 <a href="{{ url_for('satisfaction_result_bp.assessment_review_results', id=assessment.id) }}">
                     View satisfaction review results
                 </a>
