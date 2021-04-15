@@ -15,3 +15,10 @@ main {
     margin: 1vh 0;
     box-shadow: 2px 2px 5px black;
 }
+
+#datetime {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 50vw;
+}

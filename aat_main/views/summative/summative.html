@@ -1,23 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>
-        This is content in summative html
+        New Assessment
     </h2>
     <form action="" method="post">
         {{ form.csrf_token() }}
-        {{ form.title.label }} {{ form.title }} <br>
-        <!-- <input type="date" id="start_date" name="start_date" value="YYYY-MM-DD", min="" max="2099-12-31"required></input>
-        <input type="time" id="start_time" name="start_time" min="09:00" max="17:00" required></input> -->
+        {{ form.title(class="form-control", placeholder="Please Enter a Title") }}<br>
 
-        <!-- <input type="date" id="end_date" name="end_date" value="YYYY-MM-DD", min="" max="2099-12-31" required></input>
-        <input type="time" id="end_time" name="end_time" min="09:00" max="17:00" required></input> -->
+        <div id="datetime">
+        <!-- Date/time selections -->
+            <div id="date_form">
+                {{ form.start_date.label }} {{ form.start_date(class="input-group date") }}
+            </div>
+            <div id="time_form">
+                {{ form.start_time.label }} {{ form.start_time(class="form-control timepicker") }}
+            </div>
+            <br>
+            <div id="date_form">
+                {{ form.end_date.label }} {{ form.end_date(class="input-group date") }}
+            </div>
+            <div id="time_form">
+                {{ form.end_time.label }} {{ form.end_time(class="form-control timepicker") }}
+            </div>
 
-        {{ form.start_date.label }} {{ form.start_date}}
-        {{ form.start_time.label }} {{ form.start_time }}
-
-        {{ form.end_date.label }} {{ form.end_date }}
-        {{ form.end_time.label }} {{ form.end_time }}
-
+        </div> <br>
         
         <!-- Question check boxes -->
         <table class="table">
@@ -45,10 +51,13 @@
 
         </table>
         <!-- Module selection -->
-        {{ form.module.label }} {{ form.module }}<br>
-        <!-- Date/time selections -->
-        {{ form.description.label }} {{ form.description }}<br>
-        {{ form.submit.label }} {{ form.submit }}
+        {{ form.module(class="custom-select", placeholder="Please Choose a Module") }}
+        {% for error in form.module.errors %}
+           <span style="color: red;">[ {{ error }} ]</span><br>
+        {% endfor %}
+        
+        <br>{{ form.description(class="form-control", placeholder="Please Enter a Description") }}<br>
+        {{ form.submit(class="btn btn-secondary") }}
     </form>
 {% endblock %}
 
