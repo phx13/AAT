@@ -3,9 +3,9 @@
     <h2>
         New Assessment
     </h2>
-    <form action="" method="post">
+    <form action="" method="post", id=summative_form>
         {{ form.csrf_token() }}
-        {{ form.title(class="form-control", placeholder="Please Enter a Title") }}<br>
+        {{ form.title(class="form-control", maxlength="64", placeholder="Please Enter a Title") }}<br>
 
         <div id="datetime">
         <!-- Date/time selections -->
@@ -26,7 +26,7 @@
         </div> <br>
         
         <!-- Question check boxes -->
-        <table class="table">
+        <table class="table table-bordered table-hover">
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -54,9 +54,13 @@
         {{ form.module(class="custom-select", placeholder="Please Choose a Module") }}
         {% for error in form.module.errors %}
            <span style="color: red;">[ {{ error }} ]</span><br>
-        {% endfor %}
-        
-        <br>{{ form.description(class="form-control", placeholder="Please Enter a Description") }}<br>
+        {% endfor %} 
+
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon3">Minutes</span>
+            {{ form.timelimit(class="form-control", min=0, max=300, type="number", placeholder="0-300") }}
+        </div>
+        <br>{{ form.description(class="form-control", maxlength="512", placeholder="Please Enter a Description") }}<br>
         {{ form.submit(class="btn btn-secondary") }}
     </form>
 {% endblock %}
