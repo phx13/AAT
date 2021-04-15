@@ -16,6 +16,15 @@ main {
     box-shadow: 2px 2px 5px black;
 }
 
+/* Summative form CSS elements */
+#summative_form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 90vw;
+    margin: auto;
+}
+
 #datetime {
     display: flex;
     flex-direction: row;

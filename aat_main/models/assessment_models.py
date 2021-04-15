@@ -10,7 +10,7 @@ class Assessment(db.Model):
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
     """
     id: int, auto_increment, primary
-    name: varchar(64)
+    title: varchar(64)
     description: text
     module: varchar(8), foreign key references module(code)
     questions: varchar(256)
@@ -33,7 +33,7 @@ class Assessment(db.Model):
 
     def create_assessment(title, questions, description, module, start_datetime, end_datetime, timelimit):
         # question_string = generate_question_string(questions)
-        db.session.add(Assessment(name=title, questions=questions, description=description, module=module, availability_date=start_datetime, due_date=end_datetime, timelimit=timelimit))
+        db.session.add(Assessment(title=title, questions=questions, description=description, module=module, availability_date=start_datetime, due_date=end_datetime, timelimit=timelimit))
         db.session.commit()
 
 
