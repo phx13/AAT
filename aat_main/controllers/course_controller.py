@@ -24,7 +24,7 @@ def course_assessment_page():
     return render_template('assessment.html')
 
 
-@course_bp.route('/completed_assessments/')
+@course_bp.route('/assessments/completed/')
 def completed_assessments():
     assessments = current_user.get_completed_assessments()
     print(assessments)

@@ -66,15 +66,20 @@ class AccountModel(db.Model, UserMixin):
             AssessmentCompletion.student_id == self.id
         ).all()
 
-    def has_reviewed_assessment(self, id):
+    def has_reviewed_assessment(self, assessment_id):
         return db.session.query(
             AssessmentReview
         ).filter(
             and_(
                 AssessmentReview.student_id == self.id,
-                AssessmentReview.assessment_id == id
+                AssessmentReview.assessment_id == assessment_id
             )
         ).first()
+
+    def has_reviewed_all_questions(self, assessment_id):
+        assessment = db.session.query(Assessment).filter_by(id=assessment_id).first()
+        questions = assessment.get_all_questions()
+
 
     def get_completed_questions(self):
         # TODO check if this works after changes to tables are made

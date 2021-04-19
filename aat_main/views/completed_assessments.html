@@ -6,14 +6,33 @@
         {% for assessment in assessments %}
             <li>
                 {{ assessment.title }} -
-                {% if current_user.has_reviewed_assessment(assessment.id) %}
-                    You have reviewed this assessement
-                {% else %}
-                    <a href="{{ url_for('satisfaction_review_bp.assessment_review', assessment_id=assessment.id) }}">
-                        Review
-                    </a>
-                {% endif %}
+                <ul>
+                    <li>
+                        {% if current_user.has_reviewed_assessment(assessment.id) %}
+                            <span>
+                                You have reviewed this assessement
+                            </span>
+                        {% else %}
+                            <a href="{{ url_for('satisfaction_review_bp.assessment_review', assessment_id=assessment.id) }}">
+                                Review
+                            </a>
+                        {% endif %}
+
+                        <span>|</span>
+
+                        {% if current_user.has_reviewed_all_questions(assessment.id) %}
+                            <span>
+                                You have reviewed all questions for this assessment
+                            </span>
+                        {% else %}
+                            <a>
+                                Review questions
+                            </a>
+                        {% endif %}
+                    </li>
+                </ul>
             </li>
+
         {% endfor %}
     </ul>
 {% endblock %}
