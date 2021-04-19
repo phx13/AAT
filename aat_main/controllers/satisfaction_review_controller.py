@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import current_user
 
 from aat_main.forms.satisfaction_forms import AssessmentReviewForm, AATReviewForm, QuestionReviewForm
@@ -35,7 +35,7 @@ def assessment_review(assessment_id):
     else:
         for error in form.errors.values():
             flash(error)
-    assessment = Assessment.get_assessment_by_id(id)
+    assessment = Assessment.get_assessment_by_id(assessment_id)
     return render_template('assessment_review.html', assessment=assessment, form=form)
 
 
@@ -82,7 +82,9 @@ def question_review(question_id):
             }
         )
         QuestionReview.create_review(current_user.id, question_id, statement_response_map, form.comment.data)
-        return redirect(url_for('satisfaction_review_bp.question_review_complete'))
+
+        assessment_id = request.args.get('assessment_id')
+        return redirect(url_for('satisfaction_review_bp.question_review_complete', assessment_id=assessment_id))
     else:
         for error in form.errors.values():
             flash(error)
@@ -94,4 +96,6 @@ def question_review(question_id):
 @satisfaction_review_bp.route('/question/review-complete')
 def question_review_complete():
     check_if_authorized(authorized_role)
-    return render_template('question_review_complete.html')
+    assessment_id = request.args.get('assessment_id')
+    assessment = Assessment.get_assessment_by_id(assessment_id)
+    return render_template('question_review_complete.html', assessment=assessment)

@@ -40,17 +40,9 @@ class Assessment(db.Model):
 
     def get_questions(self):
         questions = db.session.query(Assessment.questions).filter_by(id=self.id).first()
-
-        # questions = literal_eval(questions[0])
-        # print(f'{self.title}: {questions}')
-        print(questions)
         questions_ids = ast.literal_eval(questions[0])
 
         return db.session.query(Question).filter(Question.id.in_(questions_ids)).all()
-        # print(type(t))
-        # print(t == '[1,2]')
-        # print(ast.literal_eval('[1,2]'))
-        # print(ast.literal_eval(t))
 
 
 class AssessmentCompletion(db.Model):
