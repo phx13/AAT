@@ -10,7 +10,6 @@
         {% else %}
             <p><a href="{{ url_for('satisfaction_review_bp.aat_review') }}">Leave a review for the AAT</a></p>
         {% endif %}
-{#        <p><a href="{{ url_for('question_bp.completed_questions') }}">Leave a review for completed question</a></p>#}
     {% elif current_user.role == 'lecturer' %}
         <a href="{{ url_for('satisfaction_result_bp.aat_review_results') }}">View AAT review results</a>
     {% endif %}

@@ -138,7 +138,9 @@ class AccountModel(db.Model, UserMixin):
     def get_days_until_next_aat_review(self):
         last_review_date = self.get_last_aat_review().date
         time_elapsed = datetime.now() - last_review_date
-        return self.DAYS_BETWEEN_AAT_REVIEWS - time_elapsed.days
+        # The min() is needed below because time_elapsed.days==-1 immediately after the review is made, making days
+        # remaining until next review == 8
+        return min(self.DAYS_BETWEEN_AAT_REVIEWS, self.DAYS_BETWEEN_AAT_REVIEWS - time_elapsed.days)
 
     def get_enrolled_modules(self):
         return db.session.query(
