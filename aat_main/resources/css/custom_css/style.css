@@ -11,6 +11,7 @@ footer div {
     border-radius: 5px;
 }
 
+/* Styles for review pages*/
 .review-results-title {
     text-align: center;
 }
@@ -18,11 +19,25 @@ footer div {
 .review-statement-box {
     margin-bottom: 5vh;
     background-color: lightgray;
+    padding: 1vh 1vw;
+    border-radius: 5px;
+    width: 60vw;
 }
 
 .review-comment {
     margin: 1vh 0;
     box-shadow: 2px 2px 5px black;
+}
+
+.review-complete-statement {
+    font-style: italic;
+}
+
+.review-comment-input {
+    width: 60vw;
+    height: 10vh;
+    min-height: 10vh;
+    max-height: 10vh;
 }
 
 /* Summative form CSS elements */
@@ -41,6 +56,3 @@ footer div {
     width: 50vw;
 }
 
-.review-complete-statement {
-    font-style: italic;
-}

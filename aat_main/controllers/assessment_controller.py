@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, url_for
 from flask_login import current_user, login_required
 
 from aat_main.models.assessment_models import Assessment
@@ -24,13 +24,14 @@ def assessments():
 
     return render_template('base.html')
 
-@course_bp.route('/upcoming_assessments')
+
+@assessment_bp.route('/upcoming/')
 def upcoming_assessments():
     if current_user.role == 'student':
         assessments = Assessment.get_all()
         return render_template('upcoming_assessments.html', assessments=assessments)
-    else:
-        return redirect(url_for('course_bp.assessments'))
+
+    return redirect(url_for('assessment_bp.assessments'))
 
 
 @assessment_bp.route('/completed/')
