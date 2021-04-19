@@ -78,7 +78,7 @@ class AccountModel(db.Model, UserMixin):
 
     def has_reviewed_all_questions(self, assessment_id):
         assessment = db.session.query(Assessment).filter_by(id=assessment_id).first()
-        questions = assessment.get_all_questions()
+        questions = assessment.get_questions()
 
 
     def get_completed_questions(self):

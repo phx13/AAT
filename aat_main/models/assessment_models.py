@@ -4,6 +4,7 @@ import ast
 from sqlalchemy import MetaData, Table
 
 from aat_main import db
+from aat_main.models.question_models import Question
 from aat_main.models.satisfaction_review_model import AssessmentReview
 
 
@@ -37,16 +38,19 @@ class Assessment(db.Model):
                                   availability_date=start_datetime, due_date=end_datetime, timelimit=timelimit))
         db.session.commit()
 
-    def get_all_questions(self):
+    def get_questions(self):
         questions = db.session.query(Assessment.questions).filter_by(id=self.id).first()
 
         # questions = literal_eval(questions[0])
-        print(f'{self.title}: {questions}')
-        t = questions[0]
-        print(type(t))
-        print(t == '[1,2]')
-        print(ast.literal_eval('[1,2]'))
-        print(ast.literal_eval(t))
+        # print(f'{self.title}: {questions}')
+        print(questions)
+        questions_ids = ast.literal_eval(questions[0])
+
+        return db.session.query(Question).filter(Question.id.in_(questions_ids)).all()
+        # print(type(t))
+        # print(t == '[1,2]')
+        # print(ast.literal_eval('[1,2]'))
+        # print(ast.literal_eval(t))
 
 
 class AssessmentCompletion(db.Model):

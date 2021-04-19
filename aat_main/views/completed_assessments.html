@@ -25,7 +25,7 @@
                                 You have reviewed all questions for this assessment
                             </span>
                         {% else %}
-                            <a>
+                            <a href="{{ url_for('assessment_bp.assessment_questions', assessment_id=assessment.id) }}">
                                 Review questions
                             </a>
                         {% endif %}
