@@ -25,7 +25,7 @@ class assessment_form(FlaskForm):
     start_time = TimeField("Start Time", validators=[DataRequired()])
     end_date = DateField("End Date", format='%Y-%m-%d', validators=[DataRequired()])
     end_time = TimeField("End Time", validators=[DataRequired()])
-    timelimit = IntegerField("Minutes", validators=[Length(min=0, max=3)])
+    timelimit = IntegerField("Minutes")
     submit = SubmitField()
 
 

@@ -42,6 +42,14 @@ def assessments():
 
     return render_template('base.html')
 
+@course_bp.route('/upcoming_assessments')
+def upcoming_assessments():
+    if current_user.role == 'student':
+        assessments = Assessment.get_all()
+        return render_template('upcoming_assessments.html', assessments=assessments)
+    else:
+        return redirect(url_for('course_bp.assessments'))
+
 
 # Assessments Management page (Matt)
 @course_bp.route('/assessments/assessments_management/')
