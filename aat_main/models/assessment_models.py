@@ -16,11 +16,14 @@ class Assessment(db.Model):
     questions: varchar(256)
     availability_date: datetime
     due_date: datetime
-    timelimit: int
+    timelimit: int, default(0)
     time_created: datetime, default now()
     """
 
     @staticmethod
+    def get_all():
+        return db.session.query(Assessment).all()
+
     def get_assessment_by_id(id):
         return db.session.query(Assessment).get(id)
 
@@ -29,7 +32,6 @@ class Assessment(db.Model):
 
     def convert_datetime(date, time):
         return str(date) + " " + str(time)
-
 
     def create_assessment(title, questions, description, module, start_datetime, end_datetime, timelimit):
         # question_string = generate_question_string(questions)
