@@ -32,7 +32,7 @@ def summative():
         
             added_questions = json.dumps(added_questions)
             Assessment.create_assessment(form.title.data, added_questions, form.description.data, module_code, start_datetime, end_datetime, form.timelimit.data)
-            return redirect(url_for('course_bp.assessments'))
+            return redirect(url_for('assessment_bp.assessments'))
 
 
     return render_template("summative.html", form=form, questions=questions)
