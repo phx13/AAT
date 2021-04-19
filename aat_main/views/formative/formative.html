@@ -1,13 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>
-        This is content in summative html
-    </h2>
-    <form action="" method="post">
-        {{ form.csrf_token() }}
-        {{ form.title.label }} {{ form.title }}
-        {{ form.submit.label }} {{ form.submit }}
-    </form>
+{#    <h2>#}
+{#        This is content in summative html#}
+{#    </h2>#}
+{#    <form action="" method="post">#}
+{#        {{ form.csrf_token() }}#}
+{#        {{ form.title.label }} {{ form.title }}#}
+{#        {{ form.submit.label }} {{ form.submit }}#}
+{#    </form>#}
+
+
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-current-tab" data-toggle="tab" href="#nav-current" role="tab"
+               aria-controls="nav-current" aria-selected="false">Current Assessments</a>
+            <a class="nav-item nav-link" id="nav-pass-tab" data-toggle="tab" href="#nav-pass" role="tab"
+               aria-controls="nav-pass" aria-selected="false">Passed Assessments</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-current" role="tabpanel" aria-labelledby="nav-current-tab">
+            <br>
+            <button type="button" class="btn btn-success">New Assessment</button>
+        </div>
+        <div class="tab-pane fade" id="nav-pass" role="tabpanel" aria-labelledby="nav-pass-tab">
+            222222
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block scripts %}
