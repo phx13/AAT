@@ -1,26 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <p>This is a review for the AAT</p>
+    <p>This is a review for the AAT.</p>
     <form action="" method="post">
         {{ form.csrf_token() }}
 
-        <div>
+        <div class="review-statement-box">
             <p>{{ form.statement1.label }}</p>
             {% for option in form.statement1 %}
                 {{ option }}
                 {{ option.label }}
             {% endfor %}
-
         </div>
 
-        <div>
+        <div class="review-statement-box">
             <p>{{ form.statement2.label }}</p>
             {% for option in form.statement2 %}
                 {{ option }}
                 {{ option.label }}
             {% endfor %}
-
         </div>
 
         <div>
