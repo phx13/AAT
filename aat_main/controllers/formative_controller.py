@@ -1,22 +1,28 @@
-from flask import Blueprint, render_template, redirect, url_for
+import json
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from jinja2 import TemplateError
 
-from aat_main.forms.formative_forms import assessment_form
+from aat_main.forms.formative_forms import module_choice_form
 from aat_main.models.assessment_models import Assessment
 from aat_main.utils.api_exception_helper import NotFoundException
-
+from aat_main.models.module_model import Module
 
 formative_blueprint = Blueprint('formative_blueprint', __name__, template_folder='../views/formative')
 
 
 @formative_blueprint.route('/assessments/assessments_management/formative/', methods=['GET', 'POST'])
 def formative():
-    # form = assessment_form()
-    # if form.validate_on_submit():
-    #     Assessment.create_assessment(form.title.data)
-    #     return redirect(url_for('course_bp.assessments'))
+    form = module_choice_form()
+    message = 'Nothing Now'
+    if request.method == "POST":
+        if form.validate_on_submit():
+            # Gets module code
+            module_code = form.module.data[:6]
+            message = module_code
 
-    return render_template("formative.html")
+            return message
+
+    return render_template("formative.html", form=form, message=message)
 
 
 @formative_blueprint.route('/course/assessment/')

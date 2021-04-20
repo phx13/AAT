@@ -8,7 +8,15 @@
 {#        {{ form.title.label }} {{ form.title }}#}
 {#        {{ form.submit.label }} {{ form.submit }}#}
 {#    </form>#}
-
+    {{ message }}
+<form action="" method="post", id=module_choice_form>
+    <!-- Module selection -->
+    {{ form.module(class="custom-select", placeholder="Please Choose a Module") }}
+    {{ form.submit(class="btn btn-secondary") }}
+    {% for error in form.module.errors %}
+       <span style="color: red;">[ {{ error }} ]</span><br>
+    {% endfor %}
+</form>
 
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
