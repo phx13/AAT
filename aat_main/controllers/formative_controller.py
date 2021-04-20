@@ -14,7 +14,7 @@ def formative():
     # form = assessment_form()
     # if form.validate_on_submit():
     #     Assessment.create_assessment(form.title.data)
-    #     return redirect(url_for('course_bp.assessments'))
+    #     return redirect(url_for('assessment_bp.assessments'))
 
     return render_template("formative.html")
 

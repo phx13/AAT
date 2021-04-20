@@ -2,5 +2,7 @@
 
 {% block content %}
     <h1>Thank you for completing a review!</h1>
-    <a href="{{ url_for('question_bp.completed_questions') }}">Return to Completed Questions</a>
+    <a href="{{ url_for('assessment_bp.assessment_questions', assessment_id=assessment.id) }}">
+        Return to Completed Questions for {{ assessment.title }}
+    </a>
 {% endblock %}
