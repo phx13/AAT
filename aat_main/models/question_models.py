@@ -1,3 +1,4 @@
+from flask_login import current_user
 from sqlalchemy import MetaData, Table, or_
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -28,11 +29,11 @@ class Question(db.Model):
     def get_question_by_id(id):
         return db.session.query(Question).get(id)
 
-    # @staticmethod
-    # def get_question_by_module(staff_id):
-    #     modules = StaffEnrolment.get_enrolled_modules(staff_id)
-    #     conditions = [Question.module_code == mc.module_code for mc in modules]
-    #     return db.session.query(Question).filter(or_(*conditions)).all()
+    @staticmethod
+    def get_question_by_module():
+        modules = current_user.get_enrolled_modules()
+        conditions = [Question.module_code == mc.code for mc in modules]
+        return db.session.query(Question).filter(or_(*conditions)).all()
 
     @staticmethod
     def create_question(name, description, module_code):

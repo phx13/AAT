@@ -23,6 +23,7 @@ class AccountModel(db.Model, UserMixin):
     role: varchar(16) (either student, lecturer, or admin)
     avatar: varchar(64)
     profile: tinytext(0)
+    credit: int
     time: datetime
     """
 
@@ -190,6 +191,11 @@ class AccountModel(db.Model, UserMixin):
                 module_codes
             )
         ).all()
+
+    def update_credit(self, email, credit):
+        result = self.search_account_by_email(email)
+        result.credit = int(result.credit) + credit
+        db.session.commit()
 
 
 @login_manager.user_loader

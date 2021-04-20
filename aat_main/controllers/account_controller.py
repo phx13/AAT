@@ -7,8 +7,10 @@ from jinja2 import TemplateError
 from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main.models.account_model import AccountModel
+from aat_main.models.credit_model import CreditModel
 from aat_main.utils.api_exception_helper import InterServerErrorException, NotFoundException
 from aat_main.utils.base64_helper import Base64Helper
+from aat_main.utils.serialization_helper import SerializationHelper
 
 account_bp = Blueprint('account_bp', __name__, template_folder='../views/account_management')
 
@@ -65,4 +67,9 @@ def stat_attainment(course):
 
 @account_bp.route('/account/stat/engagement/<string:course>/')
 def stat_engagement(course):
-    return render_template('account_base.html', current_account=current_user, course=course, student_stat_status=3)
+    credit_types = CreditModel.get_types_by_email(current_user.email)
+    credit_dic = {}
+    for ctype in credit_types:
+        dic = {ctype[0]: str(CreditModel.get_credit_by_email_and_type(current_user.email, ctype[0]).scalar())}
+        credit_dic.update(dic)
+    return render_template('account_base.html', current_account=current_user, course=course, credit_dic=credit_dic, student_stat_status=3)
