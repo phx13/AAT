@@ -18,6 +18,8 @@
     <link href="/css/import_css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="/css/import_css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="/css/import_css/normalize.css" rel="stylesheet" type="text/css">
+    {% block heads %}
+    {% endblock %}
 
     <!-- Site CSS -->
     <link href="/css/custom_css/style.css" rel="stylesheet" type="text/css">
@@ -46,21 +48,20 @@
                                 Home
                             </a>
                         </li>
+{#                        <li class="nav-item">#}
+{#                            <a class="nav-link" href="/course/">#}
+{#                                Course#}
+{#                            </a>#}
+{#                        </li>#}
                         <li class="nav-item">
-                            <a class="nav-link" href="/course/">
-                                Course
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('course_bp.assessments') }}">
+                            <a class="nav-link" href="{{ url_for('assessment_bp.assessments') }}">
                                 Assessments
                             </a>
                         </li>
-                        {% if current_user.role == 'student' %}
-                        {% else %}
+                        {% if current_user.role == 'lecturer' %}
                             <li class="nav-item">
-                                <a class="nav-link" href="/course/">
-                                    Question
+                                <a class="nav-link" href="{{ url_for('question_bp.manage_questions') }}">
+                                    Questions
                                 </a>
                             </li>
                         {% endif %}
@@ -71,7 +72,7 @@
                         </li>
                         <li class="nav-item">
                             <span class="navbar-text">
-                                Logged in as {{ current_user.name }}
+                                Logged in as <span style="font-weight:bold;">{{ current_user.name }}</span>
                             </span>
                         </li>
                         <li class="nav-item">
@@ -98,7 +99,7 @@
 </main>
 
 <footer>
-    <div style="font-style: italic">
+    <div>
         This is page footer in base html
     </div>
 </footer>
