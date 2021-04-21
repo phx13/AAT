@@ -20,18 +20,22 @@ def manage_questions():
 @question_bp.route('/management/data/', methods=['GET'])
 def question_data():
     try:
-        origin_data = current_user.get_enrolled_modules()
+        origin_data = Question.get_question_by_module()
+        print(origin_data)
         data = []
+        print(data)
         for od in origin_data:
             dic = {
                 'id': od.id,
                 'module': od.module_code,
-                'question': od.question,
+                'question': od.description,
                 'option': od.option,
                 'answer': od.answer,
                 'release_time': od.release_time
             }
             data.append(dic)
+            print(data)
+
         if request.method == 'GET':
             info = request.values
             limit = info.get('limit', 10)
@@ -58,7 +62,6 @@ def delete_question_data():
 def completed_questions():
     questions = current_user.get_completed_questions()
     return render_template('completed_questions.html', questions=questions)
-
 
 # @question_bp.route('/course/assessment/<int:assessment_id>')
 # def assessment_page():
