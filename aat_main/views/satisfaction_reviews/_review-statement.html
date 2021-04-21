@@ -1,0 +1,7 @@
+<div class="review-statement-box">
+    <p>{{ statement.label }}</p>
+    {% for option in statement %}
+        {{ option }}
+        {{ option.label }}
+    {% endfor %}
+</div>

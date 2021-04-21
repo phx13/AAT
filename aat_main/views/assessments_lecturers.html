@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Assessments</h1>
+    <p><a href="{{ url_for('assessment_bp.assessments_management') }}">Assessments Management</a></p>
+    <ul>
+        {% for assessment in assessments %}
+            <li>
+                {{ assessment.title }}
+                <a href="{{ url_for('satisfaction_result_bp.assessment_review_results', id=assessment.id) }}">
+                    View satisfaction review results
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

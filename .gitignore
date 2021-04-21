@@ -2,6 +2,7 @@
 *.tmp
 
 aat_main_venv/
+venv/
 
 *.pyc
 __pycache__/
