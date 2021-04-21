@@ -21,9 +21,7 @@ def manage_questions():
 def question_data():
     try:
         origin_data = Question.get_question_by_module()
-        print(origin_data)
         data = []
-        print(data)
         for od in origin_data:
             dic = {
                 'id': od.id,
@@ -34,7 +32,6 @@ def question_data():
                 'release_time': od.release_time
             }
             data.append(dic)
-            print(data)
 
         if request.method == 'GET':
             info = request.values
