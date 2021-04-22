@@ -44,6 +44,7 @@
     {{ super() }}
     <script type="text/javascript" src="/js/import_js/bootstrap-table.min.js"></script>
     <script>
+
         $('#btTable').bootstrapTable({
             url: '/question/management/data/',  // 请求数据源的路由
             dataType: "json",
@@ -102,7 +103,8 @@
                     field: 'review',
                     title: 'Review',
                     formatter: function (value, row, index) {
-                        return '<a href="/question/review/' + row.id + '">review</a>'
+                        let reviewUrl = "{{ url_for('satisfaction_result_bp.question_review_result',id='questionId' ) }}".replace('questionId', row.id);
+                        return '<a href="' + reviewUrl + '">review</a>'
                     }
                 }]
         });

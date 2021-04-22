@@ -56,7 +56,7 @@ def aat_review_results():
                            responses=responses)
 
 
-@satisfaction_result_bp.route('/question/review/<id>')
+@satisfaction_result_bp.route('/question/<id>')
 def question_review_result(id):
     question = Question.get_question_by_id(id)
     reviews = question.get_reviews()
