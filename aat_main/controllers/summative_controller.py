@@ -1,4 +1,6 @@
 import json
+from datetime import datetime
+
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from jinja2 import TemplateError
 
@@ -23,17 +25,17 @@ def summative():
                 if question_id:
                     added_questions.append(question_id)
 
-            #Gets module code
+            # Gets module code
             module_code = form.module.data[:6]
 
-            #Convert Datetime's
+            # Convert Datetime's
             start_datetime = Assessment.convert_datetime(form.start_date.data, form.start_time.data)
             end_datetime = Assessment.convert_datetime(form.end_date.data, form.end_time.data)
-        
-            added_questions = json.dumps(added_questions)
-            Assessment.create_assessment(form.title.data, added_questions, form.description.data, module_code, start_datetime, end_datetime, form.timelimit.data)
-            return redirect(url_for('course_bp.assessments'))
 
+            added_questions = json.dumps(added_questions)
+            Assessment.create_assessment(form.title.data, added_questions, form.description.data, module_code, 1, 0, 1,
+                                         start_datetime, end_datetime, form.timelimit.data, datetime.now())
+            return redirect(url_for('course_bp.assessments'))
 
     return render_template("summative.html", form=form, questions=questions)
     # try:

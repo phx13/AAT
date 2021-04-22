@@ -29,17 +29,16 @@ def formative():
 def assessment_data(status, module):
     try:
         current_time = datetime.now()
-        if status=='current':
+        if status == 'current':
             if module == 'Please Choose a Module':
                 origin_data = Assessment.get_all_current(current_time)
             else:
-                origin_data = Assessment.get_all_current_by_module(module,current_time)
+                origin_data = Assessment.get_all_current_by_module(module, current_time)
         else:
             if module == 'Please Choose a Module':
                 origin_data = Assessment.get_all_pass(current_time)
             else:
-                origin_data = Assessment.get_all_pass_by_module(module,current_time)
-
+                origin_data = Assessment.get_all_pass_by_module(module, current_time)
 
         data = []
         for od in origin_data:
@@ -62,15 +61,31 @@ def assessment_data(status, module):
         return 'server error'
 
 
-@formative_blueprint.route('/assessments/assessments_management/formative/pass/')
-def pass_data():
+@formative_blueprint.route('/assessments/assessments_management/formative/create/', methods=['POST'])
+def create_assessment_data():
     try:
-        return render_template('assessment.html')
-    except TemplateError:
-        raise NotFoundException()
+        # Assessment.create_assessment(1, 1, 1, 1, 1, 1, 1, datetime.now(), datetime.now(), 1)
+        assessment = {}
+        for k, v in request.form.items():
+            assessment[k] = v
+        formativeTitle = assessment['formativeTitle']
+        releaseTime = assessment['releaseTime']
+        dueDate = assessment['dueDate']
+        countIn = assessment['countIn']
+        attemptTime = assessment['attemptTime']
+        timeLimit = assessment['timeLimit']
+        description = assessment['description']
+        module = assessment['module']
+
+        Assessment.create_assessment(formativeTitle, '', description, module, 0, countIn, attemptTime, releaseTime,
+                                     dueDate, timeLimit, datetime.now())
+
+        return 'create successful'
+    except:
+        return 'Server error'
 
 
-@formative_blueprint.route('/assessments/assessments_management/formative/data/', methods=['POST'])
+@formative_blueprint.route('/assessments/assessments_management/formative/delete/', methods=['POST'])
 def delete_assessment_data():
     try:
         for k, v in request.form.items():
