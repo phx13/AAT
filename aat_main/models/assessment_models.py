@@ -1,5 +1,7 @@
 import json
 from sqlalchemy import MetaData, Table
+from sqlalchemy.exc import SQLAlchemyError
+
 from aat_main import db
 
 from aat_main.models.satisfaction_review_model import AssessmentReview
@@ -21,6 +23,9 @@ class Assessment(db.Model):
     """
 
     @staticmethod
+    def get_all():
+        return db.session.query(Assessment).all()
+    @staticmethod
     def get_assessment_by_id(id):
         return db.session.query(Assessment).get(id)
 
@@ -35,6 +40,33 @@ class Assessment(db.Model):
         # question_string = generate_question_string(questions)
         db.session.add(Assessment(title=title, questions=questions, description=description, module=module, availability_date=start_datetime, due_date=end_datetime, timelimit=timelimit))
         db.session.commit()
+
+    @staticmethod
+    def get_all_current(time):
+        return db.session.query(Assessment).filter(Assessment.due_date > time).all()
+        # return db.session.query(Assessment).filter.all()
+
+    @staticmethod
+    def get_all_pass(time):
+        return db.session.query(Assessment).filter(Assessment.due_date < time).all()
+
+    @staticmethod
+    def get_all_current_by_module(module,time):
+        return db.session.query(Assessment).filter(Assessment.module==module,Assessment.due_date>time).all()
+
+    @staticmethod
+    def get_all_pass_by_module(module, time):
+        return db.session.query(Assessment).filter(Assessment.module == module, Assessment.due_date < time).all()
+        #
+        # return db.session.query(Assessment).filter(Assessment.module == module).all()
+
+    @staticmethod
+    def delete_assessment_by_id(id):
+        try:
+            db.session.query(Assessment).filter_by(id=id).delete()
+            db.session.commit()
+        except SQLAlchemyError:
+            return 'Server error'
 
 
 

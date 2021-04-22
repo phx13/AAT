@@ -8,6 +8,7 @@ from aat_main.models.module_model import Module
 class module_choice_form(FlaskForm):
     MODULE_CHOICES = {}
     MODULE_CHOICES["Please Choose a Module"] = 0
+    #belongs to current account
     modules = Module.get_all()
     for module in modules:
         MODULE_CHOICES[module.code + "  :  " + module.name] = module.code
