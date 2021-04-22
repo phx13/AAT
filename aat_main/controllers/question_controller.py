@@ -1,9 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for, request, jsonify
+from flask import Blueprint, render_template, request, jsonify
 from flask_login import current_user
-from jinja2 import TemplateError
 
 from aat_main.models.question_models import Question
-from aat_main.utils.api_exception_helper import NotFoundException
 
 question_bp = Blueprint('question_bp', __name__, template_folder='../views/question', url_prefix='/question')
 
@@ -12,15 +10,19 @@ question_bp = Blueprint('question_bp', __name__, template_folder='../views/quest
 def manage_questions():
     # TODO this is just to test functionality. implement it properly so that is only shows questions that the lecturer
     #   should see (questions from their module)
-    questions = current_user.get_available_questions()
+    # questions = current_user.get_available_questions()
     # questions = Question.get_all()
-    return render_template('question_management.html', questions=questions)
+    modules = current_user.get_enrolled_modules()
+    return render_template('question_management.html', modules=modules)
 
 
-@question_bp.route('/management/data/', methods=['GET'])
-def question_data():
+@question_bp.route('/management/data/<string:module>', methods=['GET'])
+def question_data(module):
     try:
-        origin_data = Question.get_question_by_module()
+        if module == 'All':
+            origin_data = Question.get_question_by_all_module()
+        else:
+            origin_data = Question.get_question_by_module(module)
         data = []
         for od in origin_data:
             dic = {
@@ -45,14 +47,34 @@ def question_data():
         return 'Server error'
 
 
-@question_bp.route('/management/data/', methods=['POST'])
-def delete_question_data():
+@question_bp.route('/management/data/delete/', methods=['POST'])
+def delete_question():
     try:
         for k, v in request.form.items():
             Question.delete_question_by_id(k)
         return 'delete successful'
     except:
         return 'Server error'
+
+
+@question_bp.route('/management/data/create/', methods=['POST'])
+def create_question():
+    try:
+        question = {}
+        for k, v in request.form.items():
+            question[k] = v
+        Question.create_question_management(question['module_code'], question['description'], question['option'], question['answer'])
+        return 'create successful'
+    except:
+        return 'server error'
+
+
+@question_bp.route('/management/data/edit/', methods=['POST'])
+def edit_question():
+    try:
+        return 'edit successful'
+    except:
+        return 'server error'
 
 
 @question_bp.route('/completed/')
