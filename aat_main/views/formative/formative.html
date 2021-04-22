@@ -8,22 +8,117 @@
     {#        {{ form.title.label }} {{ form.title }}#}
     {#        {{ form.submit.label }} {{ form.submit }}#}
     {#    </form>#}
-{#    {{ message }}#}
+    {#    {{ message }}#}
     <div class="container">
         <form action="" method="post" id="module_choice_form" class="row">
             <p id="courseTitle" class="col-8 display-4"></p>
             {{ form.module(class="custom-select col-4", placeholder="Please Choose a Module") }}
-{#            {% for error in form.module.errors %}#}
-{#                <span style="color: red;">[ {{ error }} ]</span><br>#}
-{#            {% endfor %}#}
+            {#            {% for error in form.module.errors %}#}
+            {#                <span style="color: red;">[ {{ error }} ]</span><br>#}
+            {#            {% endfor %}#}
             <!-- Module selection -->
 
         </form>
         <div>
-            <button type="button" class="btn btn-success">New Assessment</button>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#assessmentDetail">
+                New Assessment
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="assessmentDetail" data-backdrop="static" data-keyboard="false" tabindex="-1"
+                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="pills-formative-tab" data-toggle="pill"
+                                       href="#pills-formative"
+                                       role="tab" aria-controls="pills-formative" aria-selected="true">Formative</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="pills-summative-tab" data-toggle="pill"
+                                       href="#pills-summative"
+                                       role="tab" aria-controls="pills-summative" aria-selected="false">Summative</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade show active" id="pills-formative" role="tabpanel"
+                                     aria-labelledby="pills-formative-tab">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="formativeTitle">Title</label>
+                                            <input type="text" class="form-control" id="formativeTitle"
+                                                   placeholder="Title">
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col">
+                                                <label for="releaseTime">Release Time</label>
+                                                <input type="text" class="form-control" id="releaseTime"
+                                                       placeholder="Release Time">
+                                            </div>
+                                            <div class="form-group col">
+                                                <label for="dueDate">Due Date</label>
+                                                <input type="text" class="form-control" id="dueDate"
+                                                       placeholder="Due Date">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col">
+                                                <label for="countIn">Count In</label>
+                                                <input type="text" class="form-control" id="countIn"
+                                                       placeholder="Count In">
+                                            </div>
+                                            <div class="form-group col">
+                                                <label for="attemptTime">Attempt Times</label>
+                                                <input type="text" class="form-control" id="attemptTime"
+                                                       placeholder="attemptTime">
+                                                <div class="custom-control custom-checkbox custom-control-inline">
+                                                    <input type="checkbox" class="custom-control-input"
+                                                           id="attemptTimeCheckbox">
+                                                    <label class="custom-control-label" for="attemptTimeCheckbox">Unlimited</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col">
+                                                <label for="timeLimit">Time Limit</label>
+                                                <input type="text" class="form-control" id="timeLimit"
+                                                       placeholder="Time Limit">
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <textarea class="form-control"
+                                                      id="description"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade" id="pills-summative" role="tabpanel"
+                                     aria-labelledby="pills-summative-tab">
+                                    summative
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                    onclick="createAssessment()">Create
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <button type="button" class="btn btn-danger" onclick="deleteQuestion()">Delete Assessment</button>
         </div>
         <hr>
+
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <a class="nav-item nav-link active" id="nav-current-tab" data-toggle="tab" href="#nav-current"
@@ -35,12 +130,36 @@
         </nav>
         <table id="assessmentTable" data-toggle="table"></table>
     </div>
+
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript" src="/js/import_js/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="/js/import_js/laydate.js"></script>
     <script>
+        function createAssessment() {
+            let formativeTitle = $.trim($('#formativeTitle').val());
+            let releaseTime = $.trim($('#releaseTime').val());
+            let dueDate = $.trim($('#dueDate').val());
+            let countIn = $.trim($('#countIn').val());
+            let attemptTime = $.trim($('#attemptTime').val());
+            let timeLimit = $.trim($('#timeLimit').val());
+            let description = $.trim($('#description').val());
+            let module = $.trim($("#module").val().split(":")[0]);
+
+            let param = "formativeTitle=" + formativeTitle + "&releaseTime=" + releaseTime + "&dueDate=" + dueDate + "&countIn=" + countIn + "&attemptTime=" + attemptTime + "&timeLimit=" + timeLimit + "&description=" + description + "&module=" + module;
+            $.post('/assessments/assessments_management/formative/create/', param, function (data) {
+                if (!jQuery.isEmptyObject(data)) {
+                    alert(data);
+                    let status = $("#nav-tab").children(".active")[0].id == 'nav-current-tab' ? 'current/' : 'pass/';
+                    $("#assessmentTable").bootstrapTable('refresh', {
+                        url: '/assessments/assessments_management/formative/' + status + $.trim($("#module").val().split(":")[0])
+                    });
+                }
+            })
+        }
+
         $('#assessmentTable').bootstrapTable({
             url: '/assessments/assessments_management/formative/current/' + $.trim($("#module").val().split(":")[0]),  // 请求数据源的路由
             dataType: "json",
@@ -92,24 +211,35 @@
                 }]
         });
 
+        laydate.render({
+            elem: '#releaseTime',
+            lang: 'en',
+            type: 'datetime'
+        });
+        laydate.render({
+            elem: '#dueDate',
+            lang: 'en',
+            type: 'datetime'
+        });
+
         $("#module").on('change', function () {
             $("#courseTitle").text(this.value.split(':')[1]);
-            let status = $("#nav-tab").children(".active")[0].id == 'nav-current-tab'?'current':'pass';
+            let status = $("#nav-tab").children(".active")[0].id == 'nav-current-tab' ? 'current' : 'pass';
 
             $("#assessmentTable").bootstrapTable('refresh', {
-                url: '/assessments/assessments_management/formative/'+status +'/'+ $.trim($("#module").val().split(":")[0])
+                url: '/assessments/assessments_management/formative/' + status + '/' + $.trim($("#module").val().split(":")[0])
             });
         })
 
-        $("#nav-current-tab").on('click',function () {
+        $("#nav-current-tab").on('click', function () {
             $("#assessmentTable").bootstrapTable('refresh', {
-                url: '/assessments/assessments_management/formative/'+'current/' + $.trim($("#module").val().split(":")[0])
+                url: '/assessments/assessments_management/formative/' + 'current/' + $.trim($("#module").val().split(":")[0])
             });
         })
 
-        $("#nav-pass-tab").on('click',function () {
+        $("#nav-pass-tab").on('click', function () {
             $("#assessmentTable").bootstrapTable('refresh', {
-                url: '/assessments/assessments_management/formative/' +'pass/'+ $.trim($("#module").val().split(":")[0])
+                url: '/assessments/assessments_management/formative/' + 'pass/' + $.trim($("#module").val().split(":")[0])
             });
         })
 
@@ -123,11 +253,14 @@
             $.post('/assessments/assessments_management/formative/data/', param, function (data) {
                 if (!jQuery.isEmptyObject(data)) {
                     alert(data);
-                    $("#currentTable").bootstrapTable('refresh', {
-                        url: '/assessments/assessments_management/formative/current/' + $.trim($("#module").val().split(":")[0])
+                    let status = $("#nav-tab").children(".active")[0].id == 'nav-current-tab' ? 'current/' : 'pass/';
+                    $("#assessmentTable").bootstrapTable('refresh', {
+                        url: '/assessments/assessments_management/formative/' + status + $.trim($("#module").val().split(":")[0])
                     });
                 }
             })
         }
+
+
     </script>
 {% endblock %}
