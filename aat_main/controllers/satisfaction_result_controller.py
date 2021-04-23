@@ -2,7 +2,8 @@ from flask import Blueprint, render_template
 from flask_login import login_required
 
 from aat_main.models.assessment_models import Assessment
-from aat_main.models.satisfaction_review_models import AATReview
+from aat_main.models.question_models import Question
+from aat_main.models.satisfaction_review_model import AATReview
 from aat_main.utils.authorization_helper import check_if_authorized
 from aat_main.utils.serialization_helper import SerializationHelper
 
@@ -25,7 +26,7 @@ def before_request():
     check_if_authorized(authorized_role)
 
 
-@satisfaction_result_bp.route('/assessment/<id>', methods=['GET', 'POST'])
+@satisfaction_result_bp.route('/assessment/<id>')
 def assessment_review_results(id):
     assessment = Assessment.get_assessment_by_id(id)
     reviews = assessment.get_reviews()
@@ -39,7 +40,7 @@ def assessment_review_results(id):
                            comments=comments, responses=responses)
 
 
-@satisfaction_result_bp.route('/aat', methods=['GET', 'POST'])
+@satisfaction_result_bp.route('/aat')
 def aat_review_results():
     # reference https://stackoverflow.com/questions/455612/limiting-floats-to-two-decimal-points/455634#455634. 22 March
     # means = ['{:.2f}'.format(mean(answers)) for answers in statement_answers]
@@ -53,3 +54,17 @@ def aat_review_results():
 
     return render_template('aat_review_result.html', results=statement_response_counts, comments=comments,
                            responses=responses)
+
+
+@satisfaction_result_bp.route('/question/<id>')
+def question_review_result(id):
+    question = Question.get_question_by_id(id)
+    reviews = question.get_reviews()
+
+    statement_response_counts = SerializationHelper.decode(reviews, responses)
+
+    # TODO maybe add mentimeter-style visualization (including mean?)
+    comments = [review.comment for review in reviews if review.comment]
+
+    return render_template('question_review_result.html', question=question, results=statement_response_counts,
+                           comments=comments, responses=responses)

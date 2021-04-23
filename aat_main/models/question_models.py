@@ -1,6 +1,11 @@
-from sqlalchemy import MetaData, Table
+from flask_login import current_user
+from sqlalchemy import MetaData, Table, or_
+from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main import db
+from aat_main.models.module_model import Module
+from aat_main.models.satisfaction_review_model import QuestionReview
+
 
 # type one question
 class MultipleChoice(db.Model):
@@ -38,24 +43,60 @@ class FillinBlank(db.Model):
 
     """
     id: int, auto_increment, primary
-    question: varchar(256)
-    answer: varchar(256)
-    caseSenstive: Boolean
+    name: varchar(128)
+    description: varchar(256)
+    module_code: varchar, foreign key
+    question: mediumtext
+    option: varchar(128)
+    answer: varchar(128)
+    release_time: datetime
     """
 
     @staticmethod
-    def search_question_by_id(id):
-        return db.session.query(FillinBlank).filter_by(id=id).first()
+    def get_all():
+        return db.session.query(Question).all()
+
+    def get_question_by_id(id):
+        return db.session.query(Question).get(id)
 
     @staticmethod
-    def create_question(question, answer, caseSensetive):
-        db.session.add(FillinBlank(question=question, answer=answer, caseSensetive=caseSensetive))
+    def get_question_by_module(module):
+        return db.session.query(Question).filter(Question.module_code == module).all()
+
+    @staticmethod
+    def get_question_by_all_module():
+        modules = current_user.get_enrolled_modules()
+        conditions = [Question.module_code == mc.code for mc in modules]
+        return db.session.query(Question).filter(or_(*conditions)).all()
+
+    @staticmethod
+    def create_question(name, description, module_code):
+        db.session.add(Question(name=name, description=description, module_code=module_code))
         db.session.commit()
 
-    def update_question(self, id, question, answer, caseSensetive):
-        self.search_question_by_id(id).update({'question': question, 'answer': answer, 'caseSensetive': caseSensetive})
+    @staticmethod
+    def create_question_management(module_code, description, option, answer):
+        db.session.add(Question(module_code=module_code, description=description, option=option, answer=answer))
         db.session.commit()
 
-    def delete_question(self, id):
-        self.search_question_by_id(id).delete()
-        db.session.commit()
+    @staticmethod
+    def delete_question_by_id(id):
+        try:
+            db.session.query(Question).filter_by(id=id).delete()
+            db.session.commit()
+        except SQLAlchemyError:
+            return 'Server error'
+
+    def get_module(self):
+        return db.session.query(
+            Module
+        ).filter_by(
+            code=self.module_code
+        ).first()
+
+    def get_reviews(self):
+        return db.session.query(
+            QuestionReview
+        ).filter_by(
+            question_id=self.id
+        ).all()

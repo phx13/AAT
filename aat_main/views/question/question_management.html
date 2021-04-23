@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% block heads %}
+    <link rel="stylesheet" href="/css/import_css/bootstrap-table.min.css">
+{% endblock %}
+
+{% block content %}
+    {#    <h1>Question Management</h1>#}
+    {#    <ul>#}
+    {#        {% for question in questions %}#}
+    {#            {% set module = question.get_module() %}#}
+    {#            <li>#}
+    {#                {{ question.name }} from {{ module.code }} {{ module.name }} -#}
+    {#                <a href="#">Edit</a>#}
+    {#                <a href="#">Delete</a>#}
+    {#                <a href="{{ url_for('satisfaction_result_bp.question_review_result', id=question.id) }}">View reviews</a>#}
+    {#            </li>#}
+    {#        {% endfor %}#}
+    {#    </ul>#}
+
+    <div class="container">
+        <h1>Question Management</h1>
+
+        <div class="row" style="margin: 0;">
+            <select id="moduleDropdown" class="form-control col-3" style="margin-right: 10px;">
+                <option>All</option>
+                {% for m in modules %}
+                    <option>{{ m.code }}</option>
+                {% endfor %}
+            </select>
+            {#            <select id="sortDropdown" class="form-control col-3" style="margin-right: 10px;">#}
+            {#                <option>Sort by id</option>#}
+            {#                <option>Sort by time asc</option>#}
+            {#                <option>Sort by time desc</option>#}
+            {#                <option>Sort by module</option>#}
+            {#            </select>#}
+            <!-- Button trigger modal -->
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionDetail" style="margin-right: 10px;">
+                Create Question
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="questionDetail" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Question Detail</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="moduleDetail">Module</label>
+                                    <select id="moduleDetail" class="form-control">
+                                        {% for m in modules %}
+                                            <option>{{ m.code }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="questionNameDetail">Question Name</label>
+                                    <input type="text" class="form-control" id="questionNameDetail" placeholder="Question Name Detail">
+                                </div>
+                                <div class="form-group">
+                                    <label for="questionDescriptionDetail">Question Description</label>
+                                    <input type="text" class="form-control" id="questionDescriptionDetail" placeholder="Question Description Detail">
+                                </div>
+                                <div class="form-group"><label for="optionDetail">Question Options</label></div>
+                                <div class="form-group">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="optionDetail" id="optionDetail1" value="option1">
+                                        <label class="form-check-label" for="optionDetail1">1</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="optionDetail" id="optionDetail2" value="option2">
+                                        <label class="form-check-label" for="optionDetail2">2</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="optionDetail" id="optionDetail3" value="option3">
+                                        <label class="form-check-label" for="optionDetail3">3</label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-secondary" onclick="addQuestionOption()">Add Option</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="createQuestion()">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-danger" style="margin-right: 10px;" onclick="deleteQuestion()">Delete question</button>
+        </div>
+
+        <table id="btTable" data-toggle="table"></table>
+
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript" src="/js/import_js/bootstrap-table.min.js"></script>
+    <script>
+        $('#btTable').bootstrapTable({
+            url: '/question/management/data/All',  // 请求数据源的路由
+            dataType: "json",
+            pagination: true, //前端处理分页
+            singleSelect: false,//是否只能单选
+            search: true, //显示搜索框，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+            {#toolbar: '#toolbar-' + courseid, //工具按钮用哪个容器#}
+            striped: true, //是否显示行间隔色
+            cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pageNumber: 1, //初始化加载第10页，默认第一页
+            pageSize: 10, //每页的记录行数（*）
+            pageList: [10, 20, 50, 100], //可供选择的每页的行数（*）
+            strictSearch: true,//设置为 true启用 全匹配搜索，false为模糊搜索
+            // showColumns: true, //显示内容列下拉框
+            // showRefresh: true, //显示刷新按钮
+            minimumCountColumns: 2, //当列数小于此值时，将隐藏内容列下拉框
+            // clickToSelect: true, //设置true， 将在点击某行时，自动勾选rediobox 和 checkbox
+            // height: 500, //表格高度，如果没有设置height属性，表格自动根据记录条数决定表格高度
+            uniqueId: "id", //每一行的唯一标识，一般为主键列
+            showToggle: true, //是否显示详细视图和列表视图的切换按钮
+            // cardView: true, //是否显示详细视图
+            // detailView: true, //是否显示父子表，设置为 true 可以显示详细页面模式,在每行最前边显示+号#}
+            sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+            columns: [
+                {
+                    title: "selectAll",
+                    field: "select",
+                    checkbox: true,
+                    align: "center"
+                },
+                {
+                    field: 'id',
+                    title: 'Id'
+                }, {
+                    field: 'module',
+                    title: 'Module'
+                }, {
+                    field: 'question',
+                    title: 'Question'
+                }, {
+                    field: 'option',
+                    title: 'Option'
+                }, {
+                    field: 'answer',
+                    title: 'Answer'
+                }, {
+                    field: 'release_time',
+                    title: 'Release Time'
+                }, {
+                    field: 'operation',
+                    title: 'Operation',
+                    formatter: function () {
+                        return '<a href="#">edit</a>'
+                    }
+                }, {
+                    field: 'review',
+                    title: 'Review',
+                    formatter: function (value, row, index) {
+                        let reviewUrl = "{{ url_for('satisfaction_result_bp.question_review_result',id='questionId' ) }}".replace('questionId', row.id);
+                        return '<a href="' + reviewUrl + '">review</a>'
+                    }
+                }]
+        });
+
+        $("#moduleDropdown").on("change", function () {
+            let questionDataUrl = "{{ url_for('question_bp.question_data',module='All' ) }}".replace("All", this.value);
+            $("#btTable").bootstrapTable('refresh', {url: questionDataUrl});
+        });
+
+        function createQuestion() {
+            let param = "";
+            param += 'module_code=' + $("#moduleDetail").val();
+            param += '&description=' + $("#questionDescriptionDetail").val();
+            let options = "{'option1': 1, 'option2': 2, 'option3': 3}";
+            param += '&option=' + options;
+            if ($("input[name='optionDetail']:checked")[0] != undefined) {
+                let answer = $("input[name='optionDetail']:checked")[0].value;
+                param += '&answer=' + answer;
+            }
+
+            $.post('{{ url_for('question_bp.create_question') }}', param, function (data) {
+                if (!jQuery.isEmptyObject(data)) {
+                    alert(data);
+                    $('#btTable').bootstrapTable('refresh');
+                }
+            })
+        }
+
+        function addQuestionOption() {
+
+        }
+
+        function deleteQuestion() {
+            let datas = $('#btTable').bootstrapTable('getSelections');
+            let param = "";
+            datas.forEach(function (item) {
+                param += item["id"] + "=id&";
+            })
+            param = param.substring(0, param.length - 1);
+            $.post('{{ url_for('question_bp.delete_question') }}', param, function (data) {
+                if (!jQuery.isEmptyObject(data)) {
+                    alert(data);
+                    $('#btTable').bootstrapTable('refresh');
+                }
+            })
+        }
+    </script>
+{% endblock %}
