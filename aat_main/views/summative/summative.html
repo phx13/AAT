@@ -4,11 +4,53 @@
         New Assessment
     </h2>
     <form action="" method="post", id=summative_form>
+        {% if 'csrf_token' in form %}
         {{ form.csrf_token() }}
+        {% endif %}
+
         {{ form.title(class="form-control", maxlength="64", placeholder="Please Enter a Title") }}<br>
 
+        <!-- Module selection -->
+        {{ form.module(class="custom-select", placeholder="Please Choose a Module", onclick="returnClick(this.value)" ) }}
+        {% for error in form.module.errors %}
+           <span style="color: red;">[ {{ error }} ]</span><br>
+        {% endfor %}
+
+        
+        <!-- Question check boxes -->
+
+        <!-- FINISH THIS LATER. FORM NEEDS TO UPDATE WITH MODULE SELECTION. DISCUSS WITH PHEONIX -->
+        <div id="question_table_div" value="Please Enter a Title">
+            <table id="question_table" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Add Question?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    {% for question in questions %}
+                            <tr id="{{ question.module_code }}" class="question_table_row">
+                                <th scope="row">{{ question.id }}</th>
+                                <td>{{ question.name }}</td>
+                                <td>{{ question.description }}</td>
+                                <td>
+                                    <input type="checkbox" name="{{ question.id }}" value="{{ question.id }}">
+
+                                </td>
+                            </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+         
         <div id="datetime">
-        <!-- Date/time selections -->
+            <!-- Date/time selections -->
             <div id="date_form">
                 {{ form.start_date.label }} {{ form.start_date(class="input-group date") }}
             </div>
@@ -24,37 +66,6 @@
             </div>
 
         </div> <br>
-        
-        <!-- Question check boxes -->
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Add Question?</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for question in questions %}
-                    <tr>
-                        <th scope="row">{{ question.id }}</th>
-                        <td>{{ question.name }}</td>
-                        <td>{{ question.description }}</td>
-                        <td>
-                            <input type="checkbox" id="{{ question.id }}" name="{{ question.id }}" value="{{ question.id }}">
-
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-
-        </table>
-        <!-- Module selection -->
-        {{ form.module(class="custom-select", placeholder="Please Choose a Module") }}
-        {% for error in form.module.errors %}
-           <span style="color: red;">[ {{ error }} ]</span><br>
-        {% endfor %} 
 
         <div class="input-group">
             <span class="input-group-text" id="basic-addon3">Minutes</span>
@@ -63,8 +74,15 @@
         <br>{{ form.description(class="form-control", maxlength="512", placeholder="Please Enter a Description") }}<br>
         {{ form.submit(class="btn btn-secondary") }}
     </form>
-{% endblock %}
 
+    
+{% endblock %}
 {% block scripts %}
     {{ super() }}
+    <script>
+
+    </script>
+    
+    
+
 {% endblock %}

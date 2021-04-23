@@ -1,5 +1,6 @@
 # from ast import literal_eval
 import ast
+import datetime
 
 from sqlalchemy import MetaData, Table
 from sqlalchemy.exc import SQLAlchemyError
@@ -41,6 +42,7 @@ class Assessment(db.Model):
     def convert_datetime(date, time):
         return str(date) + " " + str(time)
 
+
     @staticmethod
     def create_assessment(title, questions, description, module, type, count_in, attempt, start_datetime, end_datetime,
                           timelimit, time):
@@ -50,6 +52,15 @@ class Assessment(db.Model):
                 Assessment(title=title, questions=questions, description=description, module=module, type=type,
                            count_in=count_in, attempt=attempt, availability_date=start_datetime,
                            due_date=end_datetime, timelimit=timelimit, time_created=time))
+            db.session.commit()
+        except SQLAlchemyError:
+            raise SQLAlchemyError
+
+    @staticmethod
+    def update_assessment(title, questions, description, module, start_datetime, end_datetime, timelimit, assessment_id):
+        try:
+            assessment = db.session.query(Assessment).filter_by(id=assessment_id).first()
+            assessment(title=title, questions=questions, description=description, availability_date=start_datetime, due_date=end_datetime, timelimit=timelimit)
             db.session.commit()
         except SQLAlchemyError:
             raise SQLAlchemyError
