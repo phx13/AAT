@@ -5,7 +5,6 @@ from sqlalchemy.exc import SQLAlchemyError
 from aat_main import db
 from aat_main.models.module_model import Module
 from aat_main.models.satisfaction_review_model import QuestionReview
-from aat_main.utils.serialization_helper import SerializationHelper
 
 
 class Question(db.Model):
@@ -30,7 +29,11 @@ class Question(db.Model):
         return db.session.query(Question).get(id)
 
     @staticmethod
-    def get_question_by_module():
+    def get_question_by_module(module):
+        return db.session.query(Question).filter(Question.module_code == module).all()
+
+    @staticmethod
+    def get_question_by_all_module():
         modules = current_user.get_enrolled_modules()
         conditions = [Question.module_code == mc.code for mc in modules]
         return db.session.query(Question).filter(or_(*conditions)).all()
@@ -38,6 +41,11 @@ class Question(db.Model):
     @staticmethod
     def create_question(name, description, module_code):
         db.session.add(Question(name=name, description=description, module_code=module_code))
+        db.session.commit()
+
+    @staticmethod
+    def create_question_management(module_code, description, option, answer):
+        db.session.add(Question(module_code=module_code, description=description, option=option, answer=answer))
         db.session.commit()
 
     @staticmethod
