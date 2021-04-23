@@ -14,7 +14,7 @@ function fileChange(element) {
 }
 
 function updateProfile() {
-    if ($("#inputPasswordVerification").html() == "Valid password" && $("#confirmPasswordVerification").html() == "Valid password" && $("#inputNicknameVerification").html() == "Valid name") {
+    if ($("#inputPasswordVerification").attr("class") != "invalid-feedback" && $("#confirmPasswordVerification").attr("class") != "invalid-feedback" && $("#inputNicknameVerification").attr("class") != "invalid-feedback") {
         let name = $("#inputNickname").val();
         let password = $("#inputPassword").val();
         let profile = $("#inputProfile").val();

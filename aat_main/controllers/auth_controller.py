@@ -6,6 +6,7 @@ from flask_login import current_user, login_user, logout_user
 
 from aat_main.forms.auth_forms import LoginForm
 from aat_main.models.account_model import AccountModel
+from aat_main.models.credit_model import CreditModel
 from aat_main.utils.pillow_helper import ImageCaptchaHelper
 from aat_main.utils.random_helper import RandomHelper
 from aat_main.utils.smtp_helper import EmailHelper
@@ -33,6 +34,17 @@ def login():
             return render_template('login.html', title='Log In', form=form)
 
         login_user(user, remember=True)
+
+        create_time = time.strftime('%Y-%m-%d %H:%M:%S')
+        start_time = time.strftime('%Y-%m-%d 00:00:00')
+        end_time = time.strftime('%Y-%m-%d 23:59:59')
+
+        if len(CreditModel.check_credit_by_time(current_user.email, 'login', start_time, end_time)) == 0:
+            CreditModel.insert_credit(current_user.email, 'login', 'today\'s first login', 0, 5, create_time)
+            AccountModel().update_credit(current_user.email, 5)
+            flash('Success (Server) : Today\'s first login, credit +5')
+        else:
+            flash('Success (Server) : Login successful')
 
         if next_url := request.args.get('next'):
             return redirect(next_url)

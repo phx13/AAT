@@ -11,19 +11,19 @@
         <div class="col-sm-12 col-md-12 col-lg-4">
             <div>
                 <p class="lead font-italic">Total Credit</p>
-                <p class="display-4 font-italic">150</p>
+                <p class="display-4 font-italic">{{ current_account.credit }}</p>
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg">
                         <p class="lead">Formative</p>
-                        <h3>40</h3>
+                        <h3>{{ credit_dic['formative'] }}</h3>
                         <p class="lead">Summative</p>
-                        <h3>30</h3>
+                        <h3>{{ credit_dic['summative'] }}</h3>
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg">
                         <p class="lead">Feedback</p>
-                        <h3>20</h3>
+                        <h3>{{ credit_dic['feedback'] }}</h3>
                         <p class="lead">Collection</p>
-                        <h3>10</h3>
+                        <h3>{{ credit_dic['collection'] }}</h3>
                     </div>
                 </div>
             </div>
@@ -79,6 +79,7 @@
 
 <script type="text/javascript" src="/js/import_js/echarts.js"></script>
 <script>
+    let data = {{ credit_dic|tojson }};
     //engagement pie chart
     let engagementPieChart = echarts.init(document.getElementById("engagementPieChart"));
     let engagementPieChartOption = {
@@ -107,11 +108,11 @@
                     borderRadius: 10
                 },
                 data: [
-                    {value: 50, name: 'login'},
-                    {value: 40, name: 'formative'},
-                    {value: 30, name: 'summative'},
-                    {value: 20, name: 'feedback'},
-                    {value: 10, name: 'collection'}
+                    {value: data['login'], name: 'login'},
+                    {value: data['formative'], name: 'formative'},
+                    {value: data['summative'], name: 'summative'},
+                    {value: data['feedback'], name: 'feedback'},
+                    {value: data['collection'], name: 'collection'}
                 ]
             }
         ]
