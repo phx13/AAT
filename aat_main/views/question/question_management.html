@@ -41,7 +41,7 @@
 
             <!-- Modal -->
             <div class="modal fade" id="questionDetail" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">Question Detail</h5>
@@ -51,38 +51,51 @@
                         </div>
                         <div class="modal-body">
                             <form>
-                                <div class="form-group">
-                                    <label for="moduleDetail">Module</label>
-                                    <select id="moduleDetail" class="form-control">
-                                        {% for m in modules %}
-                                            <option>{{ m.code }}</option>
-                                        {% endfor %}
-                                    </select>
+                                <div class="row">
+                                    <div class="form-group col">
+                                        <label for="moduleDetail">Module</label>
+                                        <select id="moduleDetail" class="form-control">
+                                            {% for m in modules %}
+                                                <option>{{ m.code }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label for="typeDetail">Type</label>
+                                        <select id="typeDetail" class="form-control">
+                                            <option>formative-type-one</option>
+                                            <option>formative-type-two</option>
+                                            <option>summative</option>
+                                        </select>
+                                    </div>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="questionNameDetail">Question Name</label>
                                     <input type="text" class="form-control" id="questionNameDetail" placeholder="Question Name Detail">
                                 </div>
                                 <div class="form-group">
                                     <label for="questionDescriptionDetail">Question Description</label>
-                                    <input type="text" class="form-control" id="questionDescriptionDetail" placeholder="Question Description Detail">
+                                    <textarea type="text" class="form-control" id="questionDescriptionDetail" placeholder="Question Description Detail"></textarea>
                                 </div>
-                                <div class="form-group"><label for="optionDetail">Question Options</label></div>
-                                <div class="form-group">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="optionDetail" id="optionDetail1" value="option1">
-                                        <label class="form-check-label" for="optionDetail1">1</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="optionDetail" id="optionDetail2" value="option2">
-                                        <label class="form-check-label" for="optionDetail2">2</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="optionDetail" id="optionDetail3" value="option3">
-                                        <label class="form-check-label" for="optionDetail3">3</label>
+                                <div class="form-group" id="optionDetailGroup">
+                                    <label for="optionDetail">Question Options</label>
+                                    <div class="row">
+                                        <div class="col" id="optionGroup">
+                                        </div>
+                                        <div class="col" id="addOptionGroup">
+                                            <button type="button" class="btn btn-primary" onclick="addQuestionOption(this)" id="addQuestionBtn">Add Option</button>
+                                            <button type="button" class="btn btn-primary" onclick="createQuestionOption(this)" style="display: none;" id="createOptionBtn">Create
+                                                Option
+                                            </button>
+                                            <input type="text" class="form-control" placeholder="" id="optionInput" style="display: none;">
+                                        </div>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-secondary" onclick="addQuestionOption()">Add Option</button>
+                                <div class="form-group" id="questionAnswerDetailGroup" style="display: none">
+                                    <label for="questionAnswerDetail">Answer</label>
+                                    <input type="text" class="form-control" id="questionAnswerDetail" placeholder="Answer">
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -97,7 +110,6 @@
 
         <table id="btTable" data-toggle="table"></table>
 
-
     </div>
 {% endblock %}
 
@@ -105,6 +117,7 @@
     {{ super() }}
     <script type="text/javascript" src="/js/import_js/bootstrap-table.min.js"></script>
     <script>
+
         $('#btTable').bootstrapTable({
             url: '/question/management/data/All',  // 请求数据源的路由
             dataType: "json",
@@ -134,8 +147,7 @@
                     field: "select",
                     checkbox: true,
                     align: "center"
-                },
-                {
+                }, {
                     field: 'id',
                     title: 'Id'
                 }, {
@@ -144,6 +156,12 @@
                 }, {
                     field: 'question',
                     title: 'Question'
+                }, {
+                    field: 'description',
+                    title: 'Description'
+                }, {
+                    field: 'type',
+                    title: 'Type'
                 }, {
                     field: 'option',
                     title: 'Option'
@@ -173,13 +191,29 @@
             let questionDataUrl = "{{ url_for('question_bp.question_data',module='All' ) }}".replace("All", this.value);
             $("#btTable").bootstrapTable('refresh', {url: questionDataUrl});
         });
+        $("#typeDetail").on("change", function () {
+            if ($("#typeDetail").get(0).selectedIndex == 0) {
+                $("#questionAnswerDetailGroup")[0].style.display = 'none';
+                $("#optionDetailGroup")[0].style.display = 'block';
+            } else {
+                $("#questionAnswerDetailGroup")[0].style.display = 'block';
+                $("#optionDetailGroup")[0].style.display = 'none';
+            }
+        });
 
         function createQuestion() {
             let param = "";
             param += 'module_code=' + $("#moduleDetail").val();
+            param += '&name=' + $("#questionNameDetail").val();
+            param += '&type=' + $("#typeDetail").get(0).selectedIndex;
             param += '&description=' + $("#questionDescriptionDetail").val();
-            let options = "{'option1': 1, 'option2': 2, 'option3': 3}";
-            param += '&option=' + options;
+            {#let options = "{'option1': 1, 'option2': 2, 'option3': 3}";#}
+            let options = $("#optionGroup")[0].children
+            let optionStr = '';
+            for (let i = 0; i < options.length; i++) {
+                optionStr += '{' + options[i].children[0].id + ':' + options[i].children[0].value + '}';
+            }
+            param += '&option=' + optionStr;
             if ($("input[name='optionDetail']:checked")[0] != undefined) {
                 let answer = $("input[name='optionDetail']:checked")[0].value;
                 param += '&answer=' + answer;
@@ -193,8 +227,24 @@
             })
         }
 
-        function addQuestionOption() {
+        function addQuestionOption(e) {
+            let optionCount = $("#optionGroup")[0].children.length + 1;
+            $('#optionInput')[0].style.display = 'block';
+            $('#optionInput').attr('placeholder', 'Option' + optionCount);
+            $('#optionInput').val('');
+            e.disabled = true;
+            $('#createOptionBtn')[0].style.display = 'block';
+        }
 
+        function createQuestionOption(e) {
+            let optionCount = $("#optionGroup")[0].children.length + 1;
+            $('#optionGroup').append('<div class="form-check">\n' +
+                '<input class="form-check-input" type="radio" name="optionDetail" id="optionDetail' + optionCount + '" value="' + $('#optionInput').val() + '">\n' +
+                '<label class="form-check-label" for="optionDetail' + optionCount + '">' + $('#optionInput').val() + '</label>\n' +
+                '</div>')
+            e.style.display = 'none';
+            $('#optionInput')[0].style.display = 'none';
+            $('#addQuestionBtn')[0].disabled = false;
         }
 
         function deleteQuestion() {

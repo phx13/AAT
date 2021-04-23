@@ -24,11 +24,14 @@ def question_data(module):
         else:
             origin_data = Question.get_question_by_module(module)
         data = []
+        type_dic = {0: 'formative-type-one', 1: 'formative-type-two', 2: 'summative'}
         for od in origin_data:
             dic = {
                 'id': od.id,
                 'module': od.module_code,
-                'question': od.description,
+                'question': od.name,
+                'description': od.description,
+                'type': type_dic[od.type],
                 'option': od.option,
                 'answer': od.answer,
                 'release_time': od.release_time
@@ -63,7 +66,7 @@ def create_question():
         question = {}
         for k, v in request.form.items():
             question[k] = v
-        Question.create_question_management(question['module_code'], question['description'], question['option'], question['answer'])
+        Question.create_question_management(question['module_code'], question['name'], int(question['type']), question['description'], question['option'], question['answer'])
         return 'create successful'
     except:
         return 'server error'
