@@ -14,8 +14,8 @@ class Question(db.Model):
     id: int, auto_increment, primary
     name: varchar(128)
     description: varchar(256)
-    module_code: varchar, foreign key
-    question: mediumtext
+    module_code: varchar, foreign key\
+    type: int, formative-multiple choice:0; formative-fill in blank:1; summative:2
     option: varchar(128)
     answer: varchar(128)
     release_time: datetime
@@ -44,8 +44,8 @@ class Question(db.Model):
         db.session.commit()
 
     @staticmethod
-    def create_question_management(module_code, description, option, answer):
-        db.session.add(Question(module_code=module_code, description=description, option=option, answer=answer))
+    def create_question_management(module_code, name, type, description, option, answer):
+        db.session.add(Question(module_code=module_code, name=name, type=type, description=description, option=option, answer=answer))
         db.session.commit()
 
     @staticmethod

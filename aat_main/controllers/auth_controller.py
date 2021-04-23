@@ -41,7 +41,7 @@ def login():
 
         if len(CreditModel.check_credit_by_time(current_user.email, 'login', start_time, end_time)) == 0:
             CreditModel.insert_credit(current_user.email, 'login', 'today\'s first login', 0, 5, create_time)
-            AccountModel.update_credit(current_user.email, 5)
+            AccountModel().update_credit(current_user.email, 5)
             flash('Success (Server) : Today\'s first login, credit +5')
         else:
             flash('Success (Server) : Login successful')
