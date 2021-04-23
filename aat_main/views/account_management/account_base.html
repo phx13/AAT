@@ -36,7 +36,14 @@
                                 {% include 'student_stat_engagement.html' %}
                             {% endif %}
                         {% else %}
-                            Staff stat
+{#                            {% if staff_stat_status == 0 %}#}
+{#                                {% include 'staff_stat_base.html' %}#}
+{#                            {% elif staff_stat_status == 1 %}#}
+{#                                {% include 'staff_stat_attempt.html' %}#}
+{#                            {% elif staff_stat_status == 2 %}#}
+{#                                {% include 'staff_stat_attainment.html' %}#}
+{#                            {% elif staff_stat_status == 3 %}#}
+{#                                {% include 'staff_stat_engagement.html' %}#}
                         {% endif %}
                     </div>
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
