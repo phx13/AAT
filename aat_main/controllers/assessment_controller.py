@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import current_user, login_required
+import json
 
 from aat_main.models.assessment_models import Assessment
 
@@ -54,3 +55,14 @@ def assessment_questions(assessment_id):
     assessment = Assessment.get_assessment_by_id(assessment_id)
     questions = assessment.get_questions()
     return render_template('assessment_questions.html', assessment=assessment, questions=questions)
+
+@assessment_bp.route('/<assessment_id>/start')
+def start_assessment(assessment_id):
+    assessment = Assessment.get_assessment_by_id(assessment_id)
+    questions = json.loads(assessment.questions)
+    question_num = 0
+    for question in questions:
+        question_num += 1
+
+
+    return render_template('assessment_start.html', assessment=assessment, question_num=question_num)

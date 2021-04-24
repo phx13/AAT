@@ -16,7 +16,7 @@
             <tbody>
                 {% for assessment in assessments %}
                     <tr>
-                        <th scope="row">{{ assessment.title }}</th>
+                        <th scope="row"><a href="{{ url_for('assessment_bp.start_assessment', assessment_id = assessment.id) }}">{{ assessment.title }}</a></th>
                         <td>{{ assessment.description }}</td>
                         <td>{{ assessment.module }}</td>
                         <td>{{ assessment.due_date}}</td>
