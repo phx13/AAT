@@ -5,13 +5,13 @@
     </h2>
     <form action="" method="post", id=summative_form>
         {{ form.csrf_token() }}
-        <input name="title_form" type="text" class="form-control" maxlength="64" value="{{ assessment.title }}"<br>
+        <input name="title_form" type="text" class="form-control" maxlength="64" value="{{ assessment.title }}"><br>
 
         <!-- Question check boxes -->
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">Module</th>
                     <th scope="col">Name</th>
                     <th scope="col">Description</th>
                     <th scope="col">Add Question?</th>
@@ -22,7 +22,7 @@
                     {% if question.module_code == assessment.module %}
                         {% if question.id|string in added_questions %}
                             <tr>
-                                <th scope="row">{{ question.id }}</th>
+                                <th scope="row">{{ question.module_code }}</th>
                                 <td>{{ question.name }}</td>
                                 <td>{{ question.description }}</td>
                                 <td>
@@ -42,10 +42,7 @@
                     {% endif %}
                 {% endfor %}
             </tbody>
-        </table>
-
-        <p>{{added_questions}}</p>
-         
+        </table>         
         <div id="datetime">
             <!-- Date/time selections -->
             <div id="date_form">

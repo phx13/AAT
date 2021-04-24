@@ -1,88 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>
-        New Assessment
-    </h2>
-    <form action="" method="post", id=summative_form>
-        {% if 'csrf_token' in form %}
-        {{ form.csrf_token() }}
-        {% endif %}
 
-        {{ form.title(class="form-control", maxlength="64", placeholder="Please Enter a Title") }}<br>
+<h2>Summative Assessments</h2>
 
-        <!-- Module selection -->
-        {{ form.module(class="custom-select", placeholder="Please Choose a Module", onclick="returnClick(this.value)" ) }}
-        {% for error in form.module.errors %}
-           <span style="color: red;">[ {{ error }} ]</span><br>
-        {% endfor %}
+<a class="btn btn-success" href="{{ url_for('summative_blueprint.summative_create')}}">Create New Assessment</a><br>
 
-        
-        <!-- Question check boxes -->
-
-        <!-- FINISH THIS LATER. FORM NEEDS TO UPDATE WITH MODULE SELECTION. DISCUSS WITH PHEONIX -->
-        <div id="question_table_div" value="Please Enter a Title">
-            <table id="question_table" class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Add Question?</th>
+<div id="question_table_div" value="Please Enter a Title">
+    <table id="question_table" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Module</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Edit/Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            {% for assessment in assessments %}
+                    <tr id="{{ assessment.id }}" class="summative_assessments_table">
+                        <th scope="row">{{ assessment.module }}</th>
+                        <td>{{ assessment.title }}</td>
+                        <td>{{ assessment.description }}</td>
+                        <td>
+                            <a class="btn btn-primary" href="{{ url_for('summative_blueprint.summative_edit', assessment_id = assessment.id) }}">EDIT</a> / <a class="btn btn-danger" href="{{ url_for('summative_blueprint.summative_delete_action', assessment_id  = assessment.id, action='delete') }}">DELETE</a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    
-                    {% for question in questions %}
-                            <tr id="{{ question.module_code }}" class="question_table_row">
-                                <th scope="row">{{ question.id }}</th>
-                                <td>{{ question.name }}</td>
-                                <td>{{ question.description }}</td>
-                                <td>
-                                    <input type="checkbox" name="{{ question.id }}" value="{{ question.id }}">
+            {% endfor %}
+        </tbody>
 
-                                </td>
-                            </tr>
-                    {% endfor %}
-                </tbody>
+    </table>
+</div>
 
-            </table>
-        </div>
-
-         
-        <div id="datetime">
-            <!-- Date/time selections -->
-            <div id="date_form">
-                {{ form.start_date.label }} {{ form.start_date(class="input-group date") }}
-            </div>
-            <div id="time_form">
-                {{ form.start_time.label }} {{ form.start_time(class="form-control timepicker") }}
-            </div>
-            <br>
-            <div id="date_form">
-                {{ form.end_date.label }} {{ form.end_date(class="input-group date") }}
-            </div>
-            <div id="time_form">
-                {{ form.end_time.label }} {{ form.end_time(class="form-control timepicker") }}
-            </div>
-
-        </div> <br>
-
-        <div class="input-group">
-            <span class="input-group-text" id="basic-addon3">Minutes</span>
-            {{ form.timelimit(class="form-control", min=0, max=300, type="number", placeholder="0-300") }}
-        </div>
-        <br>{{ form.description(class="form-control", maxlength="512", placeholder="Please Enter a Description") }}<br>
-        {{ form.submit(class="btn btn-secondary") }}
-    </form>
-
-    
 {% endblock %}
 {% block scripts %}
     {{ super() }}
-    <script>
-
-    </script>
-    
-    
-
 {% endblock %}
