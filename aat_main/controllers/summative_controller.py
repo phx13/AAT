@@ -60,7 +60,7 @@ def summative():
     # except TemplateError:
     #     raise NotFoundException()
 
-@summative_blueprint.route('/assessments/assessment_management/<int:assessment_id>')
+@summative_blueprint.route('/assessments/assessment_management/<int:assessment_id>', methods=['GET', 'POST'])
 def summative_edit(assessment_id):
     assessment = Assessment.query.get_or_404(assessment_id)
     form = summative_edit_form()
@@ -89,8 +89,8 @@ def summative_edit(assessment_id):
 
             # Convert Datetime's
             
-            start_datetime = Assessment.convert_datetime(start_date = request.form.get("start_date"), start_time = request.form.get("start_time"))
-            end_datetime = Assessment.convert_datetime(end_date = request.form.get("end_date"), end_time = request.form.get("end_time") )
+            start_datetime = Assessment.convert_datetime(request.form.get("start_date"), request.form.get("start_time"))
+            end_datetime = Assessment.convert_datetime(request.form.get("end_date"), request.form.get("end_time"))
 
             title = request.form.get("title_form")
 
@@ -100,11 +100,7 @@ def summative_edit(assessment_id):
 
             assessment_id = assessment.id
 
-            type = 1
-            count_in = 0
-            attempts = 1
-            Assessment.update_assessment(title, added_questions, description, module_code, type, count_in, attempts,
-                                         start_datetime, end_datetime, timelimit, datetime.now(), asssessment_id)
+            Assessment.update_assessment(title, added_questions, description, start_datetime, end_datetime, timelimit, assessment_id)
             return redirect(url_for('assessment_bp.assessments'))
     
     return render_template("summative_edit.html", assessment=assessment, form=form, 

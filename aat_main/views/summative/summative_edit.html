@@ -5,7 +5,7 @@
     </h2>
     <form action="" method="post", id=summative_form>
         {{ form.csrf_token() }}
-        <input id="title_form" type="text" class="form-control" maxlength="64" value="{{ assessment.title }}"<br>
+        <input name="title_form" type="text" class="form-control" maxlength="64" value="{{ assessment.title }}"<br>
 
         <!-- Question check boxes -->
         <table class="table table-bordered table-hover">

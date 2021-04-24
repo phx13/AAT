@@ -57,13 +57,16 @@ class Assessment(db.Model):
             raise SQLAlchemyError
 
     @staticmethod
-    def update_assessment(title, questions, description, module, start_datetime, end_datetime, timelimit, assessment_id):
-        try:
-            assessment = db.session.query(Assessment).filter_by(id=assessment_id).first()
-            assessment(title=title, questions=questions, description=description, availability_date=start_datetime, due_date=end_datetime, timelimit=timelimit)
-            db.session.commit()
-        except SQLAlchemyError:
-            raise SQLAlchemyError
+    def update_assessment(title, questions, description, start_datetime, end_datetime, timelimit, assessment_id):
+        assessment = Assessment.query.filter_by(id=assessment_id).first()
+        assessment.title = title
+        assessment.questions = questions
+        assessment.description = description
+        assessment.availability_date = start_datetime
+        assessment.due_date = end_datetime
+        assessment.timelimit = timelimit
+        # (title=title, questions=questions, description=description, availability_date=start_datetime, due_date=end_datetime, timelimit=timelimit)
+        db.session.commit()
 
     @staticmethod
     def get_all_current(time):
