@@ -68,18 +68,20 @@ def create_assessment_data():
         assessment = {}
         for k, v in request.form.items():
             assessment[k] = v
+            print(k,'\t',v)
         formativeTitle = assessment['formativeTitle']
-        releaseTime = assessment['releaseTime']
-        dueDate = assessment['dueDate']
-        countIn = assessment['countIn']
-        attemptTime = assessment['attemptTime']
-        timeLimit = assessment['timeLimit']
+        releaseTime = datetime.fromisoformat(assessment['releaseTime'])
+        dueDate = datetime.fromisoformat(assessment['dueDate'])
+        countIn = int(assessment['countIn'])
+        attemptTime = int(assessment['attemptTime'])
+        timeLimit = int(assessment['timeLimit'])
         description = assessment['description']
         module = assessment['module']
 
         Assessment.create_assessment(formativeTitle, '', description, module, 0, countIn, attemptTime, releaseTime,
                                      dueDate, timeLimit, datetime.now())
-
+        # Assessment.create_assessment(formativeTitle, '', description, module, 0, countIn, attemptTime, datetime.now(),
+        #                              datetime.now(), timeLimit, datetime.now())
         return 'create successful'
     except:
         return 'Server error'

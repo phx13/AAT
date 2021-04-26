@@ -21,7 +21,8 @@
         </form>
         <div>
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#assessmentDetail">
+            <button type="button" class="btn btn-success" id="newAssessmentButton" data-toggle="modal"
+                    data-target="#assessmentDetail" disabled>
                 New Assessment
             </button>
 
@@ -115,7 +116,7 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-danger" onclick="deleteQuestion()">Delete Assessment</button>
+            <button type="button" class="btn btn-danger" onclick="deleteAssessment()">Delete Assessment</button>
         </div>
         <hr>
 
@@ -143,10 +144,18 @@
             let releaseTime = $.trim($('#releaseTime').val());
             let dueDate = $.trim($('#dueDate').val());
             let countIn = $.trim($('#countIn').val());
-            let attemptTime = $.trim($('#attemptTime').val());
+
+            let attemptTime = 0
+            if ($('#attemptTimeCheckbox').is(':checked') == true) {
+                attemptTime = '-1';
+            } else {
+                attemptTime = $.trim($('#attemptTime').val());
+            }
+
             let timeLimit = $.trim($('#timeLimit').val());
             let description = $.trim($('#description').val());
             let module = $.trim($("#module").val().split(":")[0]);
+
 
             let param = "formativeTitle=" + formativeTitle + "&releaseTime=" + releaseTime + "&dueDate=" + dueDate + "&countIn=" + countIn + "&attemptTime=" + attemptTime + "&timeLimit=" + timeLimit + "&description=" + description + "&module=" + module;
             $.post('/assessments/assessments_management/formative/create/', param, function (data) {
@@ -222,7 +231,17 @@
             type: 'datetime'
         });
 
+        $("#attemptTimeCheckbox").on('change', function () {
+            $("#attemptTimeCheckbox").is(':checked') ? $("#attemptTime").prop("readonly", true) : $("#attemptTime").prop('readonly', false);
+        })
+
         $("#module").on('change', function () {
+            if (this.value != 'Please Choose a Module') {
+                $("#newAssessmentButton").prop("disabled", false);
+            } else {
+                $("#newAssessmentButton").prop("disabled", true);
+            }
+
             $("#courseTitle").text(this.value.split(':')[1]);
             let status = $("#nav-tab").children(".active")[0].id == 'nav-current-tab' ? 'current' : 'pass';
 
@@ -243,7 +262,7 @@
             });
         })
 
-        function deleteQuestion() {
+        function deleteAssessment() {
             let datas = $('#currentTable').bootstrapTable('getSelections');
             let param = "";
             datas.forEach(function (item) {
