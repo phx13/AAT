@@ -45,7 +45,8 @@ def completed_assessments():
 @assessment_bp.route('/manage')
 @login_required
 def assessments_management():
-    return render_template('assessments_management.html')
+    assessments = Assessment.get_all()
+    return render_template('assessments_management.html', assessments=assessments)
 
 
 @assessment_bp.route('/<assessment_id>/questions')

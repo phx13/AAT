@@ -1,7 +1,7 @@
 from ast import literal_eval
 from datetime import datetime
 
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from sqlalchemy import MetaData, Table, and_
 
 from aat_main import db, login_manager
@@ -196,8 +196,15 @@ class AccountModel(db.Model, UserMixin):
         result = self.search_account_by_email(email)
         result.credit = int(result.credit) + credit
         db.session.commit()
+        
+    @staticmethod
+    def get_current_user():
+        return current_user.id
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return db.session.query(AccountModel).get(int(user_id))
+
+
+
