@@ -30,14 +30,16 @@ def before_request():
 def assessment_review_results(id):
     assessment = Assessment.get_assessment_by_id(id)
     reviews = assessment.get_reviews()
+    # TODO handle case where there are no reviews
 
     statement_response_counts = SerializationHelper.decode(reviews, responses)
 
     # TODO maybe add mentimeter-style visualization (including mean?)
     comments = [review.comment for review in reviews if review.comment]
 
-    return render_template('assessment_review_result.html', assessment=assessment, results=statement_response_counts,
-                           comments=comments, responses=responses)
+    return render_template('assessment_review_result.html', assessment=assessment,
+                           results=statement_response_counts, comments=comments,
+                           responses=responses)
 
 
 @satisfaction_result_bp.route('/aat')
@@ -46,13 +48,16 @@ def aat_review_results():
     # means = ['{:.2f}'.format(mean(answers)) for answers in statement_answers]
 
     reviews = AATReview.get_all_reviews()
+    # TODO handle case where there are no reviews
+
     statement_response_counts = SerializationHelper.decode(reviews, responses)
 
     # TODO maybe add mentimeter-style visualization (including mean?)
 
     comments = [review.comment for review in reviews if review.comment]
 
-    return render_template('aat_review_result.html', results=statement_response_counts, comments=comments,
+    return render_template('aat_review_result.html', results=statement_response_counts,
+                           comments=comments,
                            responses=responses)
 
 
@@ -60,11 +65,13 @@ def aat_review_results():
 def question_review_result(id):
     question = Question.get_question_by_id(id)
     reviews = question.get_reviews()
+    # TODO handle case where there are no reviews
 
     statement_response_counts = SerializationHelper.decode(reviews, responses)
 
     # TODO maybe add mentimeter-style visualization (including mean?)
     comments = [review.comment for review in reviews if review.comment]
 
-    return render_template('question_review_result.html', question=question, results=statement_response_counts,
+    return render_template('question_review_result.html', question=question,
+                           results=statement_response_counts,
                            comments=comments, responses=responses)
