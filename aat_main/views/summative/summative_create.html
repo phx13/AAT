@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>
+        New Assessment
+    </h2>
+    <form action="" method="post", id=summative_form>
+        {% if 'csrf_token' in form %}
+        {{ form.csrf_token() }}
+        {% endif %}
+
+        {{ form.title(class="form-control", maxlength="64", placeholder="Please Enter a Title") }}<br>
+
+        <!-- Module selection -->
+        {{ form.module(class="custom-select", onclick="disableQuestions(); enableQuestions(this.value)" ) }}
+        {% for error in form.module.errors %}
+           <span style="color: red;">[ {{ error }} ]</span><br>
+        {% endfor %}
+
+        
+        <!-- Question check boxes -->
+
+        <!-- FINISH THIS LATER. FORM NEEDS TO UPDATE WITH MODULE SELECTION. DISCUSS WITH PHEONIX -->
+        <div id="question_table_div" value="Please Enter a Title">
+            <table id="question_table" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Module</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Add Question?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    {% for question in questions %}
+                            <tr class="question_options" name="{{ question.module_code }}">
+                                <th scope="row">{{ question.module_code }}</th>
+                                <td>{{ question.name }}</td>
+                                <td>{{ question.description }}</td>
+                                <td>
+                                    <input class="{{ question.module_code }}" id="{{ question.id }}" type="checkbox" name="{{ question.id }}" value="{{ question.id }}">
+                                </td>
+                            </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+         
+        <div id="datetime">
+            <!-- Date/time selections -->
+            <div id="date_form">
+                {{ form.start_date.label }} {{ form.start_date(class="input-group date") }}
+            </div>
+            <div id="time_form">
+                {{ form.start_time.label }} {{ form.start_time(class="form-control timepicker") }}
+            </div>
+            <br>
+            <div id="date_form">
+                {{ form.end_date.label }} {{ form.end_date(class="input-group date") }}
+            </div>
+            <div id="time_form">
+                {{ form.end_time.label }} {{ form.end_time(class="form-control timepicker") }}
+            </div>
+
+        </div> <br>
+
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon3">Minutes</span>
+            {{ form.timelimit(class="form-control", min=0, max=300, type="number", placeholder="0-300") }}
+        </div>
+        <br>{{ form.description(class="form-control", maxlength="512", placeholder="Please Enter a Description") }}<br>
+        {{ form.submit(class="btn btn-secondary") }}
+    </form>
+
+    
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        function disableQuestions(question_id) {
+            question_ids = JSON.parse({{ question_id | tojson }})
+            for (i = 0; i < question_ids.length; i++) {
+                x = document.getElementById(question_ids[i])
+                x.setAttribute("disabled", "true")
+                console.log(x)
+                c = document.getElementsByClassName("question_options")
+                console.log(c)
+                for (j = 0; j < c.length; j++) {
+                    c[j].style.color="red"
+                }
+                    
+            }
+            };
+            // x = document.getElementsByClassName(class_);
+            // for (i = 0; i < x.length; i++){
+            //     x[i].setAttribute("disabled", "true");
+            //     x[i].
+
+        function enableQuestions(module) {
+            // console.log(module)
+            x = document.getElementsByClassName(module);
+            c = document.getElementsByName(module)
+            for (i = 0; i < x.length; i++){
+                x[i].removeAttribute("disabled")
+                console.log(x[i])
+            }
+            for (j = 0; j < c.length; j++) {
+                c[j].style.color="green"
+                console.log(c[j])
+            }
+        }
+
+
+    </script>
+    
+    
+
+{% endblock %}
