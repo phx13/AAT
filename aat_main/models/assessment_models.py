@@ -1,6 +1,6 @@
 # from ast import literal_eval
 import ast
-import datetime
+from datetime import datetime
 
 from sqlalchemy import MetaData, Table
 from sqlalchemy.exc import SQLAlchemyError
@@ -27,6 +27,8 @@ class Assessment(db.Model):
     timelimit: int, default(0)
     time_created: datetime, default now()
     """
+    # TODO maybe add percentage completed on 'Available Assessments' page to get the distinction
+    #  criteria for going beyond expectations
 
     @staticmethod
     def get_all():
@@ -106,14 +108,21 @@ class Assessment(db.Model):
         except SQLAlchemyError:
             return 'Server error'
 
-
     def get_questions(self):
         questions = db.session.query(Assessment.questions).filter_by(id=self.id).first()
         questions_ids = ast.literal_eval(questions[0])
 
         return db.session.query(Question).filter(Question.id.in_(questions_ids)).all()
 
-        
+    # @staticmethod
+    # def is_due(assessment):
+    #     return assessment.availability_date < datetime.now() < assessment.due_date
+
+    @staticmethod
+    def is_due(availability_date, due_date):
+        return availability_date < datetime.now() < due_date
+
+
 
 class AssessmentCompletion(db.Model):
     __tablename__ = 'assessment_completion'
