@@ -29,6 +29,10 @@ class Question(db.Model):
         return db.session.query(Question).get(id)
 
     @staticmethod
+    def get_question_management_by_id(id):
+        return db.session.query(Question).filter(Question.id == id).first()
+
+    @staticmethod
     def get_question_by_module(module):
         return db.session.query(Question).filter(Question.module_code == module).all()
 

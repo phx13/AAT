@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, jsonify
 from flask_login import current_user
 
 from aat_main.models.question_models import Question
+from aat_main.utils.serialization_helper import SerializationHelper
 
 question_bp = Blueprint('question_bp', __name__, template_folder='../views/question', url_prefix='/question')
 
@@ -72,10 +73,19 @@ def create_question():
         return 'server error'
 
 
-@question_bp.route('/management/data/edit/', methods=['POST'])
-def edit_question():
+@question_bp.route('/management/data/update/', methods=['POST'])
+def update_question():
     try:
-        return 'edit successful'
+        return 'update successful'
+    except:
+        return 'server error'
+
+
+@question_bp.route('/management/data/edit/<id>', methods=['GET'])
+def edit_question(id):
+    try:
+        question = Question.get_question_management_by_id(id)
+        return jsonify(SerializationHelper.model_to_list([question]))
     except:
         return 'server error'
 
