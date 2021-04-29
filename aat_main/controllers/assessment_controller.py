@@ -26,11 +26,12 @@ def assessments():
     return render_template('base.html')
 
 
-@assessment_bp.route('/upcoming/')
-def upcoming_assessments():
+@assessment_bp.route('/available/')
+def available_assessments():
     if current_user.role == 'student':
-        assessments = Assessment.get_all()
-        return render_template('upcoming_assessments.html', assessments=assessments)
+        assessments = current_user.get_available_assessments_student()
+
+        return render_template('available_assessments.html', assessments=assessments)
 
     return redirect(url_for('assessment_bp.assessments'))
 

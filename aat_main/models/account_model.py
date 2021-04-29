@@ -57,6 +57,23 @@ class AccountModel(db.Model, UserMixin):
         self.search_account_by_id(id).delete()
         db.session.commit()
 
+    def get_available_assessments_student(self):
+        module_codes = self.get_enrolled_module_codes()
+
+        time_now = str(datetime.now())
+
+        return db.session.query(
+            Assessment
+        ).filter(
+            and_(
+                Assessment.module.in_(module_codes),
+                and_(
+                    Assessment.availability_date <= time_now,
+                    time_now <= Assessment.due_date
+                )
+            )
+        ).all()
+
     def get_completed_assessments(self):
         return db.session.query(
             Assessment
@@ -125,7 +142,13 @@ class AccountModel(db.Model, UserMixin):
         ).first()
 
     def get_last_aat_review(self):
-        return db.session.query(AATReview).filter_by(student_id=self.id).order_by(AATReview.date.desc()).first()
+        return db.session.query(
+            AATReview
+        ).filter_by(
+            student_id=self.id
+        ).order_by(
+            AATReview.date.desc()
+        ).first()
 
     # reference https://stackoverflow.com/questions/46046136/find-out-if-a-date-is-more-than-30-days-old/46046182#46046182
     # 21 March
@@ -155,6 +178,12 @@ class AccountModel(db.Model, UserMixin):
 
     def get_enrolled_module_codes(self):
         # reference 14 April https://stackoverflow.com/questions/11530196/flask-sqlalchemy-query-specify-column-names
+        # module_codes = db.session.query(
+        #     Module.code
+        # ).join(
+        #     ModuleEnrolment,
+        #     ModuleEnrolment.module_code == Module.code
+        # ).all()
         module_codes = db.session.query(
             Module.code
         ).join(
@@ -181,7 +210,7 @@ class AccountModel(db.Model, UserMixin):
             )
         )
 
-    def get_available_assessments(self):
+    def get_available_assessments_lecturer(self):
         module_codes = self.get_enrolled_module_codes()
         # reference 14 April https://stackoverflow.com/questions/887388/is-there-support-for-the-in-operator-in-the-sql-expression-language-used-in-sq/887402#887402
         return db.session.query(
