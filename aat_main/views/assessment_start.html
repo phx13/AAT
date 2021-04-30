@@ -14,8 +14,7 @@
 <p>You will have <b>{{ assessment.timelimit }}</b> minutes.</p>
 
 <p>Would you like to start the assessment?</p>
-<a class="btn btn-primary" href="{{ url_for('assessment_bp.question_in_assessment', assessment_id = assessment.id, 
-current_question=current_question, assessment_questions=assessment_questions), }}">Start</a>
+<a class="btn btn-primary" href="{{ url_for('assessment_bp.answer_questions', assessment_id = assessment.id) }}">Start</a>
 
 {% for question in assessment_questions %}
 {{ question }}

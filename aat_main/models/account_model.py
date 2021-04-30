@@ -59,6 +59,7 @@ class AccountModel(db.Model, UserMixin):
 
     def get_available_assessments_student(self):
         module_codes = self.get_enrolled_module_codes()
+        completed = self.get_completed_assessments()
 
         time_now = str(datetime.now())
 
