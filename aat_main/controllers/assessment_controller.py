@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import current_user, login_required
+import json
+import random
 
 from aat_main.models.assessment_models import Assessment
 
@@ -19,7 +21,7 @@ def assessments():
         return render_template('assessments_students.html')
     elif current_user.role == 'lecturer':
         # assessments = db.session.query(Assessment).all()
-        assessments = current_user.get_available_assessments()
+        assessments = current_user.get_available_assessments_lecturer()
         return render_template('assessments_lecturers.html', assessments=assessments)
 
     return render_template('base.html')
@@ -50,8 +52,30 @@ def assessments_management():
     return render_template('assessments_management.html', assessments=assessments)
 
 
-@assessment_bp.route('/<assessment_id>/questions')
-def assessment_questions(assessment_id):
+# @assessment_bp.route('/<assessment_id>/questions')
+# def assessment_questions(assessment_id):
+#     assessment = Assessment.get_assessment_by_id(assessment_id)
+#     questions = assessment.get_questions()
+#     return render_template('assessment_questions.html', assessment=assessment, questions=questions)
+
+@assessment_bp.route('/<assessment_id>/start')
+def start_assessment(assessment_id):
     assessment = Assessment.get_assessment_by_id(assessment_id)
-    questions = assessment.get_questions()
-    return render_template('assessment_questions.html', assessment=assessment, questions=questions)
+    assessment_questions = json.loads(assessment.questions)
+    question_num = 0
+    for question in assessment_questions:
+        question_num += 1
+
+    random.shuffle(assessment_questions)
+    current_question = assessment_questions[0]
+
+    return render_template('assessment_start.html', assessment=assessment,
+     assessment_questions=assessment_questions, current_question=current_question)
+
+# @assessment_bp.route('/<assessment_id>/<current_question>')
+# def questions_assessment(assessment_id, current_question, assessment_questions):
+#     assessment_questions = request.args.get('assessment_questions', None)
+#     # on submit, render update db/data_string. render assessment_questions passing data_string, question ids, current questions etc and assessment. 
+#     # on submit, if question id = last in list, commit question data to db. Render assessment done page.
+
+#     return render_template('question_in_assessment.html', assessment_id=assessment_id, current_question=current_question, assessment_questions=assessment_questions)
