@@ -57,15 +57,22 @@ def delete_question():
 
 @question_bp.route('/management/data/create/', methods=['POST'])
 def create_question():
-    try:
-        question = {}
-        for k, v in request.form.items():
-            question[k] = v
-        Question.create_question_management(question['module_code'], question['name'], int(question['type']), question['description'], question['option'], question['answer'],
-                                            question['feedback'])
-        return 'create successful'
-    except:
-        return 'server error'
+    # You should use this -> question = {k: v for k, v in request.form.items()}
+    question = {}
+    for k, v in request.form.items():
+        question[k] = v
+
+    Question.create_question_management(
+        question['module_code'],
+        question['name'],
+        int(question['type']),
+        question['description'],
+        question['option'],
+        question['answer'],
+        question['feedback']
+    )
+    return 'create successful'
+
 
 
 @question_bp.route('/management/data/update/', methods=['POST'])
