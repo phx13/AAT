@@ -5,16 +5,21 @@
 
 <p>Pleae note that you are about to start your assessment.</p>
 {% if assessment.type == 1 %}
-    <p>This assessment is a <b>summative</b> assessment.</p>
+    <p>This is a <b>summative</b> assessment.</p>
 {% elif assessment.type == 0 %}
-    <p>This assessment is a <b>formative</b> assessment.</p>
+    <p>This is a <b>formative</b> assessment.</p>
 {% endif %}
 <p>There are <b>{{ question_num }}</b> questions in this assessment.</p>
 <p>You may attempt this <b>{{ assessment.attempt }}</b> times.</p>
 <p>You will have <b>{{ assessment.timelimit }}</b> minutes.</p>
 
 <p>Would you like to start the assessment?</p>
-<a class="btn btn-primary" href="">Start</a>
+<a class="btn btn-primary" href="{{ url_for('assessment_bp.question_in_assessment', assessment_id = assessment.id, 
+current_question=current_question, assessment_questions=assessment_questions), }}">Start</a>
+
+{% for question in assessment_questions %}
+{{ question }}
+{% endfor %}
 
 
 {% endblock %}

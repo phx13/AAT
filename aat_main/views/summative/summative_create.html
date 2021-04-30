@@ -27,6 +27,8 @@
                         <th scope="col">Module</th>
                         <th scope="col">Name</th>
                         <th scope="col">Description</th>
+                        <th scope="col">Options</th>
+                        <th scope="col">Answer</th>
                         <th scope="col">Add Question?</th>
                     </tr>
                 </thead>
@@ -37,6 +39,8 @@
                                 <th scope="row">{{ question.module_code }}</th>
                                 <td>{{ question.name }}</td>
                                 <td>{{ question.description }}</td>
+                                <td>{{ question.option }}</td>
+                                <td>{{ question.answer }}</td>
                                 <td>
                                     <input class="{{ question.module_code }}" id="{{ question.id }}" type="checkbox" name="{{ question.id }}" value="{{ question.id }}">
                                 </td>
