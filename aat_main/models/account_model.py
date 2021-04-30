@@ -210,7 +210,7 @@ class AccountModel(db.Model, UserMixin):
             )
         )
 
-    def get_available_assessments(self):
+    def get_available_assessments_lecturer(self):
         module_codes = self.get_enrolled_module_codes()
         # reference 14 April https://stackoverflow.com/questions/887388/is-there-support-for-the-in-operator-in-the-sql-expression-language-used-in-sq/887402#887402
         return db.session.query(
