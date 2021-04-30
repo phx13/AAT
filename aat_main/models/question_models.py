@@ -50,10 +50,10 @@ class Question(db.Model):
         db.session.commit()
 
     @staticmethod
-    def create_question_management(module_code, name, type, description, option, answer,feedback):
+    def create_question_management(module_code, name, type, description, option, answer, feedback, time):
         db.session.add(
             Question(module_code=module_code, name=name, type=type, description=description,
-                     option=option, answer=answer, feedback=feedback))
+                     option=option, answer=answer, feedback=feedback, release_time=time))
         db.session.commit()
 
     @staticmethod
