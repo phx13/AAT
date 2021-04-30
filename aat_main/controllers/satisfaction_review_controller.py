@@ -3,7 +3,8 @@ import json
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import current_user
 
-from aat_main.forms.satisfaction_forms import AssessmentReviewForm, AATReviewForm, QuestionReviewForm
+from aat_main.forms.satisfaction_forms import AssessmentReviewForm, AATReviewForm, \
+    QuestionReviewForm
 from aat_main.models.assessment_models import Assessment
 from aat_main.models.question_models import Question
 from aat_main.models.satisfaction_review_model import AssessmentReview, AATReview, QuestionReview
@@ -38,14 +39,11 @@ def assessment_review(assessment_id):
     else:
         for error in form.errors.values():
             flash(error)
+
     assessment = Assessment.get_assessment_by_id(assessment_id)
-    return render_template('assessment_review.html', assessment=assessment, form=form)
-
-
-@satisfaction_review_bp.route('/assessment/review-complete')
-def assessment_review_complete():
-    check_if_authorized(authorized_role)
-    return render_template('assessment_review_complete.html')
+    title = f'This is a review for {assessment.title}.'
+    return render_template('satisfaction-review.html', assessment=assessment, form=form,
+                           page_title=title)
 
 
 @satisfaction_review_bp.route('/aat', methods=['GET', 'POST'])
@@ -70,7 +68,9 @@ def aat_review():
     else:
         for error in form.errors.values():
             flash(error)
-    return render_template('aat_review.html', form=form)
+
+    title = 'This is a review for the AAT.'
+    return render_template('satisfaction-review.html', form=form, page_title=title)
 
 
 @satisfaction_review_bp.route('/question/<question_id>', methods=['GET', 'POST'])
@@ -95,7 +95,15 @@ def question_review(question_id):
             flash(error)
 
     question = Question.get_question_by_id(question_id)
-    return render_template('question_review.html', question=question, form=form)
+    title = f'This is a review for the question: {question.description}'
+    return render_template('satisfaction-review.html', question=question, form=form,
+                           page_title=title)
+
+
+@satisfaction_review_bp.route('/assessment/review-complete')
+def assessment_review_complete():
+    check_if_authorized(authorized_role)
+    return render_template('assessment_review_complete.html')
 
 
 @satisfaction_review_bp.route('/question/review-complete')

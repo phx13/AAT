@@ -38,7 +38,7 @@ def assessment_review_results(id):
     comments = [review.comment for review in reviews if review.comment]
 
     title = f'Results of Reviews for {assessment.title}'
-    return render_template('review_results.html', assessment=assessment,
+    return render_template('satisfaction_results/review-results.html', assessment=assessment,
                            results=statement_response_counts, comments=comments,
                            responses=responses, page_title=title)
 
@@ -59,7 +59,7 @@ def aat_review_results():
 
     title = 'Results of AAT Reviews'
 
-    return render_template('review_results.html', results=statement_response_counts,
+    return render_template('satisfaction_results/review-results.html', results=statement_response_counts,
                            comments=comments, responses=responses,
                            page_title=title)
 
@@ -76,6 +76,6 @@ def question_review_result(id):
     comments = [review.comment for review in reviews if review.comment]
 
     title = f'Results of reviews for {question.name}'
-    return render_template('review_results.html', question=question,
+    return render_template('satisfaction_results/review-results.html', question=question,
                            results=statement_response_counts, comments=comments,
                            responses=responses, page_title=title)
