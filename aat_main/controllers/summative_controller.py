@@ -27,7 +27,7 @@ def summative_create():
     questions = Question.get_all()
     form = assessment_form()
     module_db = Module.get_all()
- 
+    # https://www.youtube.com/watch?v=I2dJuNwlIH0&ab_channel=PrettyPrinted
     module_choices = [(mod.code, (f'{mod.code}  :  {mod.name}')
         ) for mod in db.session.query(
         Module).join(ModuleEnrolment,Module.code == ModuleEnrolment.module_code
