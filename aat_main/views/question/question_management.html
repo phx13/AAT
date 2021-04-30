@@ -174,8 +174,8 @@
                 }, {
                     field: 'operation',
                     title: 'Operation',
-                    formatter: function () {
-                        return '<a href="#">edit</a>'
+                    formatter: function (value, row, index) {
+                        return '<button class="btn btn-outline-primary" data-toggle="modal" data-target="#questionDetail" onclick="editQuestion(' + row.id + ')">edit</button>'
                     }
                 }, {
                     field: 'review',
@@ -245,6 +245,33 @@
             e.style.display = 'none';
             $('#optionInput')[0].style.display = 'none';
             $('#addQuestionBtn')[0].disabled = false;
+        }
+
+        function editQuestion(id) {
+            $.get('{{ url_for('question_bp.edit_question',id='id') }}'.replace("id", id), "", function (data) {
+                if (!jQuery.isEmptyObject(data)) {
+                    let modules = $("#moduleDetail")[0].children;
+                    modules.forEach(function (module) {
+                        module.selected = 'false';
+                    });
+                    modules.forEach(function (module) {
+                        if (module.text == data[0]['module_code']) {
+                            module.selected = 'selected';
+                        }
+                    });
+                    let types = $("#typeDetail")[0].children;
+                    types.forEach(function (type) {
+                        type.selected = 'false';
+                    });
+                    types.forEach(function (type) {
+                        if (type.index == data[0]['type']) {
+                            type.selected = 'selected';
+                        }
+                    });
+                    $("#questionNameDetail").val(data[0]['name']);
+                    $("#questionDescriptionDetail").val(data[0]['description']);
+                }
+            })
         }
 
         function deleteQuestion() {
