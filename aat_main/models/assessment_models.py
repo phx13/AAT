@@ -131,4 +131,27 @@ class AssessmentCompletion(db.Model):
     id: int, auto_increment
     student_id: foreign key, references account(id)
     assessment_id: foreign key, references assessment(id)
+    results: json (dict of question.id + true/false or quest ans)
+    mark: int
     """
+
+
+    @staticmethod 
+    def create_assessment_completion(student_id, assessment_id, results, mark):
+        try:
+            db.session.add(
+                AssessmentCompletion(student_id=student_id,
+                assessment_id=assessment_id, results=results, mark=mark))
+            db.session.commit()
+        except SQLAlchemyError:
+            raise SQLAlchemyError
+
+    @staticmethod
+    def get_completed_assessments_by_user_id(id):
+        output = db.session.query(AssessmentCompletion).filter_by(student_id=id).all()
+        return output
+
+    @staticmethod
+    def get_results_by_id(stu_id, ass_id):
+        return db.session.query(AssessmentCompletion).filter(AssessmentCompletion.student_id=='stu_id', AssessmentCompletion.assessment_id=='ass_id').all()
+
