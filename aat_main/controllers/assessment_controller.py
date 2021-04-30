@@ -21,7 +21,7 @@ def assessments():
         return render_template('assessments_students.html')
     elif current_user.role == 'lecturer':
         # assessments = db.session.query(Assessment).all()
-        assessments = current_user.get_available_assessments()
+        assessments = current_user.get_available_assessments_lecturer()
         return render_template('assessments_lecturers.html', assessments=assessments)
 
     return render_template('base.html')

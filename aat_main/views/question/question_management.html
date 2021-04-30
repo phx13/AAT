@@ -63,9 +63,9 @@
                                     <div class="form-group col">
                                         <label for="typeDetail">Type</label>
                                         <select id="typeDetail" class="form-control">
-                                            <option>formative-type-one</option>
-                                            <option>formative-type-two</option>
-                                            <option>summative</option>
+                                            <option>Multiple choice</option>
+                                            <option>Fill in blank</option>
+                                            <option>Summative</option>
                                         </select>
                                     </div>
                                 </div>
@@ -77,6 +77,10 @@
                                 <div class="form-group">
                                     <label for="questionDescriptionDetail">Question Description</label>
                                     <textarea type="text" class="form-control" id="questionDescriptionDetail" placeholder="Question Description Detail"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="questionFeedback">Question Feedback</label>
+                                    <textarea type="text" class="form-control" id="questionFeedback" placeholder="Question Feedback"></textarea>
                                 </div>
                                 <div class="form-group" id="optionDetailGroup">
                                     <label for="optionDetail">Question Options</label>
@@ -174,8 +178,8 @@
                 }, {
                     field: 'operation',
                     title: 'Operation',
-                    formatter: function () {
-                        return '<a href="#">edit</a>'
+                    formatter: function (value, row, index) {
+                        return '<button class="btn btn-outline-primary" data-toggle="modal" data-target="#questionDetail" onclick="editQuestion(' + row.id + ')">edit</button>'
                     }
                 }, {
                     field: 'review',
@@ -207,17 +211,23 @@
             param += '&name=' + $("#questionNameDetail").val();
             param += '&type=' + $("#typeDetail").get(0).selectedIndex;
             param += '&description=' + $("#questionDescriptionDetail").val();
+            param += '&feedback=' + $("#questionFeedback").val();
             {#let options = "{'option1': 1, 'option2': 2, 'option3': 3}";#}
-            let options = $("#optionGroup")[0].children
-            let optionStr = '';
-            for (let i = 0; i < options.length; i++) {
-                optionStr += '{' + options[i].children[0].id + ':' + options[i].children[0].value + '}';
+            let optionStr = "";
+            let answer = "";
+            if ($("#typeDetail").get(0).selectedIndex == 0) {
+                let options = $("#optionGroup")[0].children
+                for (let i = 0; i < options.length; i++) {
+                    optionStr += '{' + options[i].children[0].id + ':' + options[i].children[0].value + '}';
+                }
+                if ($("input[name='optionDetail']:checked")[0] != undefined) {
+                    answer = $("input[name='optionDetail']:checked")[0].value;
+                }
+            }else{
+                answer = $("#questionAnswerDetail").val();
             }
             param += '&option=' + optionStr;
-            if ($("input[name='optionDetail']:checked")[0] != undefined) {
-                let answer = $("input[name='optionDetail']:checked")[0].value;
-                param += '&answer=' + answer;
-            }
+            param += '&answer=' + answer;
 
             $.post('{{ url_for('question_bp.create_question') }}', param, function (data) {
                 if (!jQuery.isEmptyObject(data)) {
@@ -245,6 +255,35 @@
             e.style.display = 'none';
             $('#optionInput')[0].style.display = 'none';
             $('#addQuestionBtn')[0].disabled = false;
+        }
+
+        function editQuestion(id) {
+            $.get('{{ url_for('question_bp.edit_question',id='id') }}'.replace("id", id), "", function (data) {
+                if (!jQuery.isEmptyObject(data)) {
+                    let modules = $("#moduleDetail")[0].children;
+                    modules.forEach(function (module) {
+                        module.selected = 'false';
+                    });
+                    modules.forEach(function (module) {
+                        if (module.text == data[0]['module_code']) {
+                            module.selected = 'selected';
+                        }
+                    });
+                    let types = $("#typeDetail")[0].children;
+                    types.forEach(function (type) {
+                        type.selected = 'false';
+                    });
+                    types.forEach(function (type) {
+                        if (type.index == data[0]['type']) {
+                            type.selected = 'selected';
+                        }
+                    });
+                    $("#questionNameDetail").val(data[0]['name']);
+                    $("#questionDescriptionDetail").val(data[0]['description']);
+                    $("#questionFeedback").val(data[0]['feedback']);
+                    $("#questionAnswerDetail").val(data[0]['answer']);
+                }
+            })
         }
 
         function deleteQuestion() {

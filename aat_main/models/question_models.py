@@ -6,6 +6,7 @@ from aat_main import db
 from aat_main.models.module_model import Module
 from aat_main.models.satisfaction_review_model import QuestionReview
 
+
 class Question(db.Model):
     __tablename__ = 'question'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
@@ -16,6 +17,7 @@ class Question(db.Model):
     description: varchar(256)
     module_code: varchar, foreign key
     type: int, formative-multiple choice:0; formative-fill in blank:1; summative:2
+    feedback: text
     option: varchar(128)
     answer: varchar(128)
     release_time: datetime
@@ -27,6 +29,10 @@ class Question(db.Model):
 
     def get_question_by_id(id):
         return db.session.query(Question).get(id)
+
+    @staticmethod
+    def get_question_management_by_id(id):
+        return db.session.query(Question).filter(Question.id == id).first()
 
     @staticmethod
     def get_question_by_module(module):
@@ -44,19 +50,16 @@ class Question(db.Model):
         db.session.commit()
 
     @staticmethod
-    def create_question_management(module_code, name, type, description, option, answer):
+    def create_question_management(module_code, name, type, description, option, answer,feedback):
         db.session.add(
             Question(module_code=module_code, name=name, type=type, description=description,
-                     option=option, answer=answer))
+                     option=option, answer=answer, feedback=feedback))
         db.session.commit()
 
     @staticmethod
     def delete_question_by_id(id):
-        try:
-            db.session.query(Question).filter_by(id=id).delete()
-            db.session.commit()
-        except SQLAlchemyError:
-            return 'Server error'
+        db.session.query(Question).filter_by(id=id).delete()
+        db.session.commit()
 
     def get_module(self):
         return db.session.query(
