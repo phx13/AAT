@@ -16,6 +16,7 @@ authorized_role = 'student'
 
 
 # TODO add validation for all reviews
+# TODO add download as PDF button
 @satisfaction_review_bp.route('/assessment/<assessment_id>', methods=['GET', 'POST'])
 def assessment_review(assessment_id):
     check_if_authorized(authorized_role)
@@ -31,7 +32,8 @@ def assessment_review(assessment_id):
             }
         )
 
-        AssessmentReview.create_review(current_user.id, assessment_id, statement_response_map, form.comment.data)
+        AssessmentReview.create_review(current_user.id, assessment_id, statement_response_map,
+                                       form.comment.data)
         return redirect(url_for('satisfaction_review_bp.assessment_review_complete'))
     else:
         for error in form.errors.values():
@@ -82,10 +84,12 @@ def question_review(question_id):
                 form.statement2.label.text: form.statement2.data
             }
         )
-        QuestionReview.create_review(current_user.id, question_id, statement_response_map, form.comment.data)
+        QuestionReview.create_review(current_user.id, question_id, statement_response_map,
+                                     form.comment.data)
 
         assessment_id = request.args.get('assessment_id')
-        return redirect(url_for('satisfaction_review_bp.question_review_complete', assessment_id=assessment_id))
+        return redirect(url_for('satisfaction_review_bp.question_review_complete',
+                                assessment_id=assessment_id))
     else:
         for error in form.errors.values():
             flash(error)
