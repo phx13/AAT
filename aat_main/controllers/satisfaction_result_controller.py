@@ -37,9 +37,10 @@ def assessment_review_results(id):
     # TODO maybe add mentimeter-style visualization (including mean?)
     comments = [review.comment for review in reviews if review.comment]
 
-    return render_template('assessment_review_result.html', assessment=assessment,
+    title = f'Results of Reviews for {assessment.title}'
+    return render_template('satisfaction_results/review-results.html', assessment=assessment,
                            results=statement_response_counts, comments=comments,
-                           responses=responses)
+                           responses=responses, page_title=title)
 
 
 @satisfaction_result_bp.route('/aat')
@@ -56,9 +57,11 @@ def aat_review_results():
 
     comments = [review.comment for review in reviews if review.comment]
 
-    return render_template('aat_review_result.html', results=statement_response_counts,
-                           comments=comments,
-                           responses=responses)
+    title = 'Results of AAT Reviews'
+
+    return render_template('satisfaction_results/review-results.html', results=statement_response_counts,
+                           comments=comments, responses=responses,
+                           page_title=title)
 
 
 @satisfaction_result_bp.route('/question/<id>')
@@ -72,6 +75,7 @@ def question_review_result(id):
     # TODO maybe add mentimeter-style visualization (including mean?)
     comments = [review.comment for review in reviews if review.comment]
 
-    return render_template('question_review_result.html', question=question,
-                           results=statement_response_counts,
-                           comments=comments, responses=responses)
+    title = f'Results of reviews for {question.name}'
+    return render_template('satisfaction_results/review-results.html', question=question,
+                           results=statement_response_counts, comments=comments,
+                           responses=responses, page_title=title)

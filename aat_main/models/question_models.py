@@ -58,11 +58,8 @@ class Question(db.Model):
 
     @staticmethod
     def delete_question_by_id(id):
-        try:
-            db.session.query(Question).filter_by(id=id).delete()
-            db.session.commit()
-        except SQLAlchemyError:
-            return 'Server error'
+        db.session.query(Question).filter_by(id=id).delete()
+        db.session.commit()
 
     def get_module(self):
         return db.session.query(
