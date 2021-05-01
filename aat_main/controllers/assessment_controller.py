@@ -1,9 +1,16 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import current_user, login_required
+import json
+import random
+from jinja2 import TemplateError
 
-from aat_main.models.assessment_models import Assessment
+from aat_main.models.assessment_models import Assessment, AssessmentCompletion
+from aat_main.models.question_models import Question
+from aat_main.forms.complete_assessment_form import complete_assessment_form
+from aat_main import db
 
-assessment_bp = Blueprint('assessment_bp', __name__, url_prefix='/assessments')
+
+assessment_bp = Blueprint('assessment_bp', __name__, url_prefix='/assessments', template_folder='../views')
 
 
 # Make login required for all endpoints within blueprint
@@ -18,18 +25,32 @@ def assessments():
     if current_user.role == 'student':
         return render_template('assessments_students.html')
     elif current_user.role == 'lecturer':
-        # assessments = db.session.query(Assessment).all()
-        assessments = current_user.get_available_assessments()
+        assessments = current_user.get_available_assessments_lecturer()
         return render_template('assessments_lecturers.html', assessments=assessments)
 
     return render_template('base.html')
 
 
-@assessment_bp.route('/upcoming/')
-def upcoming_assessments():
+@assessment_bp.route('/available/')
+def available_assessments():
     if current_user.role == 'student':
-        assessments = Assessment.get_all()
-        return render_template('upcoming_assessments.html', assessments=assessments)
+        assessments = current_user.get_available_assessments_student()
+        completed = AssessmentCompletion.get_completed_assessments_by_user_id(current_user.id)
+        valid_assessments = []  
+
+        for assessment in assessments:
+            count = 0
+            for comp in completed:
+                if (comp.assessment_id) == (assessment.id):
+                    count += 1
+                else:
+                    continue
+            if count < 1:
+                valid_assessments.append(assessment)
+            else:
+                continue
+
+        return render_template('available_assessments.html', assessments=valid_assessments)
 
     return redirect(url_for('assessment_bp.assessments'))
 
@@ -41,6 +62,13 @@ def completed_assessments():
     return render_template('completed_assessments.html', assessments=assessments)
 
 
+@assessment_bp.route('/<assessment_id>/questions')
+def assessment_questions(assessment_id):
+    assessment = Assessment.get_assessment_by_id(assessment_id)
+    questions = assessment.get_questions()
+    return render_template('assessment_questions.html', assessment=assessment, questions=questions)
+
+
 # Assessments Management page (Matt)
 @assessment_bp.route('/manage')
 @login_required
@@ -49,8 +77,105 @@ def assessments_management():
     return render_template('assessments_management.html', assessments=assessments)
 
 
-@assessment_bp.route('/<assessment_id>/questions')
-def assessment_questions(assessment_id):
+@assessment_bp.route('/start/<assessment_id>')
+def start_assessment(assessment_id):
     assessment = Assessment.get_assessment_by_id(assessment_id)
-    questions = assessment.get_questions()
-    return render_template('assessment_questions.html', assessment=assessment, questions=questions)
+    assessment_questions = json.loads(assessment.questions)
+    question_num = 0
+    for question in assessment_questions:
+        question_num += 1
+    return render_template('assessment_start.html', assessment=assessment, question_num=question_num)
+
+
+@assessment_bp.route('/questions/<assessment_id>', methods=['GET', 'POST'])
+def answer_questions(assessment_id):
+    form = complete_assessment_form()
+    assessment = Assessment.get_assessment_by_id(assessment_id)
+    assessment_questions = json.loads(assessment.questions)
+    random.shuffle(assessment_questions)
+    questions = []
+    question_options = {}
+    mark = 0;
+    
+    for question in assessment_questions:
+        questions.append(Question.get_question_by_id(int(question)))
+
+    # Generates options for each question (Try using json.load. See if that works. This does but its inefficient)
+    for quest in questions:
+        temp_options = []
+        if quest.option != "" or None:
+            q_string = quest.option
+            options = (q_string).split("}{")
+            
+            for opt in options:
+                opt = opt.replace("{", "")
+                opt = opt.replace("}", "")
+                opt = opt.split(":")
+                temp_options.append(opt[1])
+        question_options[quest.id] = temp_options
+    
+    answers = {}
+    if request.method == "POST":
+        for quest in questions:
+            if quest.type == 0:
+                options = question_options[quest.id]
+                if request.form.get(str(quest.id)) == quest.answer:
+                    mark+=1
+                for opt in options:
+                    value = request.form.get(str(quest.id))
+                    if value:
+                        answers[quest.id] = value
+                            
+            elif quest.type == 1:   
+                value = request.form.get(str(quest.id))
+                answers[quest.id] = value
+                if value == quest.answer:
+                    mark+=1
+                
+
+        
+        answers_submit = json.dumps(answers)
+        AssessmentCompletion.create_assessment_completion(current_user.id, assessment.id, answers_submit, mark)
+        return redirect(url_for('assessment_bp.assessment_feedback', assessment_id = assessment.id))
+
+    return render_template('question_in_assessment.html', assessment=assessment, questions=questions, question_options=question_options, form=form)
+
+@assessment_bp.route('/feedback/<assessment_id>')
+def assessment_feedback(assessment_id):
+    results = AssessmentCompletion.get_completed_assessments_by_user_id(current_user.id)
+    assessment = Assessment.get_assessment_by_id(assessment_id)
+    assessment_questions = json.loads(assessment.questions)
+    questions = []
+    question_options = {}
+    valid_result = {}
+    mark = 0
+    outof = 0
+
+    for question in assessment_questions:
+        questions.append(Question.get_question_by_id(int(question)))
+
+    for quest in questions:
+        outof+=1
+        temp_options = []
+        if quest.option != "" or None:
+            q_string = quest.option
+            options = (q_string).split("}{")
+            
+            for opt in options:
+                opt = opt.replace("{", "")
+                opt = opt.replace("}", "")
+                opt = opt.split(":")
+                temp_options.append(opt[1])
+        question_options[quest.id] = temp_options
+
+    for res in results:
+        if res.assessment_id == assessment.id:
+            valid_result = json.loads(res.results)
+            mark = res.mark
+
+    return render_template('submitted_assessment.html',
+     questions=questions, assessment=assessment,
+     question_options=question_options, results=valid_result, 
+     mark=mark, outof=outof)
+    
+

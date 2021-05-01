@@ -35,7 +35,7 @@
             {#            </select>#}
             <!-- Button trigger modal -->
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionDetail" style="margin-right: 10px;">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionDetail" onclick="initQuestionDetail()" style="margin-right: 10px;">
                 Create Question
             </button>
 
@@ -63,9 +63,9 @@
                                     <div class="form-group col">
                                         <label for="typeDetail">Type</label>
                                         <select id="typeDetail" class="form-control">
-                                            <option>formative-type-one</option>
-                                            <option>formative-type-two</option>
-                                            <option>summative</option>
+                                            <option>Multiple choice</option>
+                                            <option>Fill in blank</option>
+                                            <option>Summative</option>
                                         </select>
                                     </div>
                                 </div>
@@ -73,10 +73,17 @@
                                 <div class="form-group">
                                     <label for="questionNameDetail">Question Name</label>
                                     <input type="text" class="form-control" id="questionNameDetail" placeholder="Question Name Detail">
+                                    <h4 id="questionNameDetailVerification"></h4>
                                 </div>
                                 <div class="form-group">
                                     <label for="questionDescriptionDetail">Question Description</label>
                                     <textarea type="text" class="form-control" id="questionDescriptionDetail" placeholder="Question Description Detail"></textarea>
+                                    <h4 id="questionDescriptionDetailVerification"></h4>
+                                </div>
+                                <div class="form-group">
+                                    <label for="questionFeedback">Question Feedback</label>
+                                    <textarea type="text" class="form-control" id="questionFeedback" placeholder="Question Feedback"></textarea>
+                                    <h4 id="questionFeedbackVerification"></h4>
                                 </div>
                                 <div class="form-group" id="optionDetailGroup">
                                     <label for="optionDetail">Question Options</label>
@@ -84,17 +91,20 @@
                                         <div class="col" id="optionGroup">
                                         </div>
                                         <div class="col" id="addOptionGroup">
-                                            <button type="button" class="btn btn-primary" onclick="addQuestionOption(this)" id="addQuestionBtn">Add Option</button>
-                                            <button type="button" class="btn btn-primary" onclick="createQuestionOption(this)" style="display: none;" id="createOptionBtn">Create
+                                            <button type="button" class="btn btn-primary inline-block" onclick="addQuestionOption(this)" id="addQuestionBtn">Add Option</button>
+                                            <button type="button" class="btn btn-success inline-block" onclick="createQuestionOption(this)" style="display: none;"
+                                                    id="createOptionBtn">Create
                                                 Option
                                             </button>
                                             <input type="text" class="form-control" placeholder="" id="optionInput" style="display: none;">
+                                            <h4 id="optionInputVerification"></h4>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group" id="questionAnswerDetailGroup" style="display: none">
                                     <label for="questionAnswerDetail">Answer</label>
                                     <input type="text" class="form-control" id="questionAnswerDetail" placeholder="Answer">
+                                    <h4 id="questionAnswerDetailVerification"></h4>
                                 </div>
                             </form>
                         </div>
@@ -117,6 +127,65 @@
     {{ super() }}
     <script type="text/javascript" src="/js/import_js/bootstrap-table.min.js"></script>
     <script>
+        $(document).ready(function () {
+            $("#questionNameDetail").bind('input propertychange', monitorAccountInput);
+            $("#questionDescriptionDetail").bind('input propertychange', monitorAccountInput);
+            $("#questionFeedback").bind('input propertychange', monitorAccountInput);
+            $("#optionInput").bind('input propertychange', monitorAccountInput);
+            $("#questionAnswerDetail").bind('input propertychange', monitorAccountInput);
+        })
+
+        function monitorAccountInput() {
+            if ($.trim($("#questionNameDetail").val()).length == 0) {
+                $("#questionNameDetail").attr("class", "form-control is-invalid");
+                $("#questionNameDetailVerification").attr("class", "invalid-feedback");
+                $("#questionNameDetailVerification").html("Invalid name");
+            } else {
+                $("#questionNameDetail").attr("class", "form-control is-valid");
+                $("#questionNameDetailVerification").attr("class", "valid-feedback");
+                $("#questionNameDetailVerification").html("Valid name");
+            }
+
+            if ($.trim($("#questionDescriptionDetail").val()).length == 0) {
+                $("#questionDescriptionDetail").attr("class", "form-control is-invalid");
+                $("#questionDescriptionDetailVerification").attr("class", "invalid-feedback");
+                $("#questionDescriptionDetailVerification").html("Invalid description");
+            } else {
+                $("#questionDescriptionDetail").attr("class", "form-control is-valid");
+                $("#questionDescriptionDetailVerification").attr("class", "valid-feedback");
+                $("#questionDescriptionDetailVerification").html("Valid description");
+            }
+
+            if ($.trim($("#questionFeedback").val()).length == 0) {
+                $("#questionFeedback").attr("class", "form-control is-invalid");
+                $("#questionFeedbackVerification").attr("class", "invalid-feedback");
+                $("#questionFeedbackVerification").html("Invalid feedback");
+            } else {
+                $("#questionFeedback").attr("class", "form-control is-valid");
+                $("#questionFeedbackVerification").attr("class", "valid-feedback");
+                $("#questionFeedbackVerification").html("Valid feedback");
+            }
+
+            if ($.trim($("#optionInput").val()).length == 0) {
+                $("#optionInput").attr("class", "form-control is-invalid");
+                $("#optionInputVerification").attr("class", "invalid-feedback");
+                $("#optionInputVerification").html("Invalid option");
+            } else {
+                $("#optionInput").attr("class", "form-control is-valid");
+                $("#optionInputVerification").attr("class", "valid-feedback");
+                $("#optionInputVerification").html("Valid option");
+            }
+
+            if ($.trim($("#questionAnswerDetail").val()).length == 0) {
+                $("#questionAnswerDetail").attr("class", "form-control is-invalid");
+                $("#questionAnswerDetailVerification").attr("class", "invalid-feedback");
+                $("#questionAnswerDetailVerification").html("Invalid answer");
+            } else {
+                $("#questionAnswerDetail").attr("class", "form-control is-valid");
+                $("#questionAnswerDetailVerification").attr("class", "valid-feedback");
+                $("#questionAnswerDetailVerification").html("Valid answer");
+            }
+        }
 
         $('#btTable').bootstrapTable({
             url: '/question/management/data/All',  // 请求数据源的路由
@@ -164,7 +233,10 @@
                     title: 'Type'
                 }, {
                     field: 'option',
-                    title: 'Option'
+                    title: 'Option',
+                    formatter: function (value, row, index) {
+                        return value.split("|").join(" ");
+                    }
                 }, {
                     field: 'answer',
                     title: 'Answer'
@@ -174,15 +246,15 @@
                 }, {
                     field: 'operation',
                     title: 'Operation',
-                    formatter: function () {
-                        return '<a href="#">edit</a>'
+                    formatter: function (value, row, index) {
+                        return '<button class="btn btn-outline-primary" data-toggle="modal" data-target="#questionDetail" onclick="editQuestion(' + row.id + ')">edit</button>'
                     }
                 }, {
                     field: 'review',
                     title: 'Review',
                     formatter: function (value, row, index) {
                         let reviewUrl = "{{ url_for('satisfaction_result_bp.question_review_result',id='questionId' ) }}".replace('questionId', row.id);
-                        return '<a href="' + reviewUrl + '">review</a>'
+                        return '<a class="btn btn-outline-primary" href="' + reviewUrl + '">review</a>'
                     }
                 }]
         });
@@ -191,6 +263,7 @@
             let questionDataUrl = "{{ url_for('question_bp.question_data',module='All' ) }}".replace("All", this.value);
             $("#btTable").bootstrapTable('refresh', {url: questionDataUrl});
         });
+
         $("#typeDetail").on("change", function () {
             if ($("#typeDetail").get(0).selectedIndex == 0) {
                 $("#questionAnswerDetailGroup")[0].style.display = 'none';
@@ -201,30 +274,59 @@
             }
         });
 
-        function createQuestion() {
-            let param = "";
-            param += 'module_code=' + $("#moduleDetail").val();
-            param += '&name=' + $("#questionNameDetail").val();
-            param += '&type=' + $("#typeDetail").get(0).selectedIndex;
-            param += '&description=' + $("#questionDescriptionDetail").val();
-            {#let options = "{'option1': 1, 'option2': 2, 'option3': 3}";#}
-            let options = $("#optionGroup")[0].children
-            let optionStr = '';
-            for (let i = 0; i < options.length; i++) {
-                optionStr += '{' + options[i].children[0].id + ':' + options[i].children[0].value + '}';
-            }
-            param += '&option=' + optionStr;
-            if ($("input[name='optionDetail']:checked")[0] != undefined) {
-                let answer = $("input[name='optionDetail']:checked")[0].value;
-                param += '&answer=' + answer;
-            }
+        function initQuestionDetail() {
+            let modules = $("#moduleDetail")[0].children;
+            modules.forEach(function (module) {
+                module.selected = 'false';
+            });
 
-            $.post('{{ url_for('question_bp.create_question') }}', param, function (data) {
-                if (!jQuery.isEmptyObject(data)) {
-                    alert(data);
-                    $('#btTable').bootstrapTable('refresh');
+            let types = $("#typeDetail")[0].children;
+            types.forEach(function (type) {
+                type.selected = 'false';
+            });
+
+            $("#questionNameDetail").val("");
+            $("#questionDescriptionDetail").val("");
+            $("#questionFeedback").val("");
+            $('#optionGroup').html("");
+            $("#questionAnswerDetail").val("");
+        }
+
+        function createQuestion() {
+            if ($("#questionNameDetailVerification").attr("class") != "invalid-feedback" && $("#questionDescriptionDetailVerification").attr("class") != "invalid-feedback"
+                && $("#questionFeedbackVerification").attr("class") != "invalid-feedback") {
+                let param = "";
+                param += 'module_code=' + $("#moduleDetail").val();
+                param += '&name=' + $("#questionNameDetail").val();
+                param += '&type=' + $("#typeDetail").get(0).selectedIndex;
+                param += '&description=' + $("#questionDescriptionDetail").val();
+                param += '&feedback=' + $("#questionFeedback").val();
+                let optionStr = "";
+                let answer = "";
+                if ($("#typeDetail").get(0).selectedIndex == 0 && $("#optionInputVerification").attr("class") != "invalid-feedback") {
+                    let options = $("#optionGroup")[0].children
+                    for (let i = 0; i < options.length; i++) {
+                        optionStr += options[i].children[0].id + ': ' + options[i].children[0].value + '|';
+                    }
+                    optionStr = optionStr.substring(0, optionStr.length - 1);
+                    if ($("input[name='optionDetail']:checked")[0] != undefined) {
+                        answer = $("input[name='optionDetail']:checked")[0].value;
+                    }
+                } else if ($("#questionAnswerDetailVerification").attr("class") != "invalid-feedback") {
+                    answer = $("#questionAnswerDetail").val();
                 }
-            })
+                param += '&option=' + optionStr;
+                param += '&answer=' + answer;
+
+                $.post('{{ url_for('question_bp.create_question') }}', param, function (data) {
+                    if (!jQuery.isEmptyObject(data)) {
+                        alert(data);
+                        $('#btTable').bootstrapTable('refresh');
+                    }
+                })
+            } else {
+                alert("Invalid question");
+            }
         }
 
         function addQuestionOption(e) {
@@ -245,6 +347,42 @@
             e.style.display = 'none';
             $('#optionInput')[0].style.display = 'none';
             $('#addQuestionBtn')[0].disabled = false;
+        }
+
+        function editQuestion(id) {
+            initQuestionDetail();
+
+            $.get('{{ url_for('question_bp.edit_question',id='id') }}'.replace("id", id), "", function (data) {
+                if (!jQuery.isEmptyObject(data)) {
+                    let modules = $("#moduleDetail")[0].children;
+                    modules.forEach(function (module) {
+                        if (module.text == data[0]['module_code']) {
+                            module.selected = 'selected';
+                            $(modules).trigger("change");
+                        }
+                    });
+                    let types = $("#typeDetail")[0].children;
+                    types.forEach(function (type) {
+                        if (type.index == data[0]['type']) {
+                            type.selected = 'selected';
+                            $(types).trigger("change");
+                        }
+                    });
+
+                    $("#questionNameDetail").val(data[0]['name']);
+                    $("#questionDescriptionDetail").val(data[0]['description']);
+                    $("#questionFeedback").val(data[0]['feedback']);
+
+                    data[0]['option'].split("|").forEach(function (option) {
+                        $('#optionGroup').append('<div class="form-check">\n' +
+                            '<input class="form-check-input" type="radio" name="optionDetail" id="' + option.split(":")[0] + '" value="' + option.split(":")[1] + '">\n' +
+                            '<label class="form-check-label" for="' + option.split(":")[0] + '">' + option.split(":")[1] + '</label>\n' +
+                            '</div>')
+                    });
+
+                    $("#questionAnswerDetail").val(data[0]['answer']);
+                }
+            })
         }
 
         function deleteQuestion() {

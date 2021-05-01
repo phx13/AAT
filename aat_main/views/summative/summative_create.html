@@ -27,6 +27,8 @@
                         <th scope="col">Module</th>
                         <th scope="col">Name</th>
                         <th scope="col">Description</th>
+                        <th scope="col">Options</th>
+                        <th scope="col">Answer</th>
                         <th scope="col">Add Question?</th>
                     </tr>
                 </thead>
@@ -37,6 +39,8 @@
                                 <th scope="row">{{ question.module_code }}</th>
                                 <td>{{ question.name }}</td>
                                 <td>{{ question.description }}</td>
+                                <td>{{ question.option }}</td>
+                                <td>{{ question.answer }}</td>
                                 <td>
                                     <input class="{{ question.module_code }}" id="{{ question.id }}" type="checkbox" name="{{ question.id }}" value="{{ question.id }}">
                                 </td>
@@ -79,6 +83,7 @@
 {% block scripts %}
     {{ super() }}
     <script>
+        // https://medium.com/@crawftv/javascript-jinja-flask-b0ebfdb406b3
         function disableQuestions(question_id) {
             question_ids = JSON.parse({{ question_id | tojson }})
             for (i = 0; i < question_ids.length; i++) {
@@ -93,13 +98,8 @@
                     
             }
             };
-            // x = document.getElementsByClassName(class_);
-            // for (i = 0; i < x.length; i++){
-            //     x[i].setAttribute("disabled", "true");
-            //     x[i].
 
         function enableQuestions(module) {
-            // console.log(module)
             x = document.getElementsByClassName(module);
             c = document.getElementsByName(module)
             for (i = 0; i < x.length; i++){

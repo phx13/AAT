@@ -15,8 +15,9 @@ class Question(db.Model):
     id: int, auto_increment, primary
     name: varchar(128)
     description: varchar(256)
-    module_code: varchar, foreign key\
+    module_code: varchar, foreign key
     type: int, formative-multiple choice:0; formative-fill in blank:1; summative:2
+    feedback: text
     option: varchar(128)
     answer: varchar(128)
     release_time: datetime
@@ -28,6 +29,10 @@ class Question(db.Model):
 
     def get_question_by_id(id):
         return db.session.query(Question).get(id)
+
+    @staticmethod
+    def get_question_management_by_id(id):
+        return db.session.query(Question).filter(Question.id == id).first()
 
     @staticmethod
     def get_question_by_module(module):
@@ -45,17 +50,16 @@ class Question(db.Model):
         db.session.commit()
 
     @staticmethod
-    def create_question_management(module_code, name, type, description, option, answer):
-        db.session.add(Question(module_code=module_code, name=name, type=type, description=description, option=option, answer=answer))
+    def create_question_management(module_code, name, type, description, option, answer, feedback, time):
+        db.session.add(
+            Question(module_code=module_code, name=name, type=type, description=description,
+                     option=option, answer=answer, feedback=feedback, release_time=time))
         db.session.commit()
 
     @staticmethod
     def delete_question_by_id(id):
-        try:
-            db.session.query(Question).filter_by(id=id).delete()
-            db.session.commit()
-        except SQLAlchemyError:
-            return 'Server error'
+        db.session.query(Question).filter_by(id=id).delete()
+        db.session.commit()
 
     def get_module(self):
         return db.session.query(
