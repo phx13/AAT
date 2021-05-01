@@ -15,12 +15,13 @@ def create_question():
     form = question_form()
     if form.validate_on_submit():
         Question.create_question(form.name.data, form.description.data, form.course.data)
-        return redirect(url_for('course_bp.assessments'))
+        return redirect(url_for('assessment_bp.assessments'))
 
     return render_template("create_question.html", form=form)
     # try:
     #     return render_template('question.html')
     # except TemplateError:
     #     raise NotFoundException()
+
 
 

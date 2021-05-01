@@ -11,23 +11,23 @@ class ReviewForm(FlaskForm):
         (4, 'Agree'),
         (5, 'Strongly Agree')
     ]
-    comment = TextAreaField('Additional comments (optional)')
+    comment = TextAreaField('Additional comments (optional):')
     submit = SubmitField('Submit')
 
 
 class AssessmentReviewForm(ReviewForm):
     # reference https://stackoverflow.com/questions/13404476/inherited-class-variable-modification-in-python/13404537#13404537
-    statement1 = RadioField('I feel that I had sufficient knowledge to complete this assessment',
+    statement1 = RadioField('I feel that I had sufficient knowledge to complete this assessment.',
                             choices=ReviewForm.options)
-    statement2 = RadioField('I found this assessment difficult', choices=ReviewForm.options)
+    statement2 = RadioField('I found this assessment difficult.', choices=ReviewForm.options)
 
 
 class AATReviewForm(ReviewForm):
-    statement1 = RadioField('I find it easy to navigate the AAT to find my tasks that need to be completed',
+    statement1 = RadioField('I find it easy to navigate the AAT to find my tasks that need to be completed.',
                             choices=ReviewForm.options)
-    statement2 = RadioField('I am pleased overall with the functionality of the AAT', choices=ReviewForm.options)
+    statement2 = RadioField('I am pleased overall with the functionality of the AAT.', choices=ReviewForm.options)
 
 
 class QuestionReviewForm(ReviewForm):
-    statement1 = RadioField('I found this question difficult to answer', choices=ReviewForm.options)
-    statement2 = RadioField('I feel this question is relevant to the topic being assessed', choices=ReviewForm.options)
+    statement1 = RadioField('I found this question difficult to answer.', choices=ReviewForm.options)
+    statement2 = RadioField('I feel this question is relevant to the topic being assessed.', choices=ReviewForm.options)

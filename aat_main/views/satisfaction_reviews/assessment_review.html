@@ -1,36 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <p>This is a review for {{ assessment.title }}</p>
+    <h1>This is a review for {{ assessment.title }}.</h1>
+    {% include '_review-instruction.html' %}
+
     <form action="" method="post">
         {{ form.csrf_token() }}
 
-        <div>
-            <p>{{ form.statement1.label }}</p>
-            {% for option in form.statement1 %}
-                {{ option }}
-                {{ option.label }}
-            {% endfor %}
+        {% set statements = [form.statement1, form.statement2] %}
 
-        </div>
+        {% for statement in statements %}
+            {% include '_review-statement.html' %}
+        {% endfor %}
 
-        <div>
-            <p>{{ form.statement2.label }}</p>
-            {% for option in form.statement2 %}
-                {{ option }}
-                {{ option.label }}
-            {% endfor %}
+        {% include '_review-comment.html' %}
 
-        </div>
-
-        <div>
-            <p>{{ form.comment.label }}</p>
-            {{ form.comment }}
-        </div>
-
-        <div>
-            {{ form.submit }}
-        </div>
+        {% include '_review-submit.html' %}
     </form>
 
     {% include '_flash-messages.html' %}

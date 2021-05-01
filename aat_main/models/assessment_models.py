@@ -1,9 +1,12 @@
-import json
+# from ast import literal_eval
+import ast
+import datetime
+
 from sqlalchemy import MetaData, Table
 from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main import db
-
+from aat_main.models.question_models import Question
 from aat_main.models.satisfaction_review_model import AssessmentReview
 
 
@@ -21,7 +24,7 @@ class Assessment(db.Model):
     attempt: int(3)
     availability_date: datetime
     due_date: datetime
-    timelimit: int
+    timelimit: int, default(0)
     time_created: datetime, default now()
     """
 
@@ -39,6 +42,7 @@ class Assessment(db.Model):
     def convert_datetime(date, time):
         return str(date) + " " + str(time)
 
+
     @staticmethod
     def create_assessment(title, questions, description, module, type, count_in, attempt, start_datetime, end_datetime,
                           timelimit, time):
@@ -48,6 +52,29 @@ class Assessment(db.Model):
                 Assessment(title=title, questions=questions, description=description, module=module, type=type,
                            count_in=count_in, attempt=attempt, availability_date=start_datetime,
                            due_date=end_datetime, timelimit=timelimit, time_created=time))
+            db.session.commit()
+        except SQLAlchemyError:
+            raise SQLAlchemyError
+
+    @staticmethod
+    def update_assessment(title, questions, description, start_datetime, end_datetime, timelimit, assessment_id):
+        try:
+            assessment = Assessment.query.filter_by(id=assessment_id).first()
+            assessment.title = title
+            assessment.questions = questions
+            assessment.description = description
+            assessment.availability_date = start_datetime
+            assessment.due_date = end_datetime
+            assessment.timelimit = timelimit
+            db.session.commit()
+        except SQLAlchemyError:
+            raise SQLAlchemyError
+
+    @staticmethod
+    def delete_assessment(assessment_id):
+        try:
+            assessment = Assessment.query.filter_by(id=assessment_id).first()
+            db.session.delete(assessment)
             db.session.commit()
         except SQLAlchemyError:
             raise SQLAlchemyError
@@ -79,6 +106,14 @@ class Assessment(db.Model):
         except SQLAlchemyError:
             return 'Server error'
 
+
+    def get_questions(self):
+        questions = db.session.query(Assessment.questions).filter_by(id=self.id).first()
+        questions_ids = ast.literal_eval(questions[0])
+
+        return db.session.query(Question).filter(Question.id.in_(questions_ids)).all()
+
+        
 
 class AssessmentCompletion(db.Model):
     __tablename__ = 'assessment_completion'

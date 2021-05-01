@@ -1,21 +1,25 @@
 {% extends 'base.html' %}
+{% block heads %}
+    <link rel="stylesheet" href="/css/import_css/bootstrap-table.min.css">
+{% endblock %}
+
 {% block content %}
-    {#    <h2>#}
-    {#        This is content in summative html#}
-    {#    </h2>#}
-    {#    <form action="" method="post">#}
-    {#        {{ form.csrf_token() }}#}
-    {#        {{ form.title.label }} {{ form.title }}#}
-    {#        {{ form.submit.label }} {{ form.submit }}#}
-    {#    </form>#}
-    {#    {{ message }}#}
+{#        <h2>#}
+{#            This is content in summative html#}
+{#        </h2>#}
+{#        <form action="" method="post">#}
+{#            {{ form.csrf_token() }}#}
+{#            {{ form.title.label }} {{ form.title }}#}
+{#            {{ form.submit.label }} {{ form.submit }}#}
+{#        </form>#}
+{#        {{ message }}#}
     <div class="container">
         <form action="" method="post" id="module_choice_form" class="row">
             <p id="courseTitle" class="col-8 display-4"></p>
             {{ form.module(class="custom-select col-4", placeholder="Please Choose a Module") }}
-            {#            {% for error in form.module.errors %}#}
-            {#                <span style="color: red;">[ {{ error }} ]</span><br>#}
-            {#            {% endfor %}#}
+                        {% for error in form.module.errors %}
+                            <span style="color: red;">[ {{ error }} ]</span><br>
+                        {% endfor %}
             <!-- Module selection -->
 
         </form>
@@ -139,6 +143,7 @@
     <script type="text/javascript" src="/js/import_js/bootstrap-table.min.js"></script>
     <script type="text/javascript" src="/js/import_js/laydate.js"></script>
     <script>
+
         function createAssessment() {
             let formativeTitle = $.trim($('#formativeTitle').val());
             let releaseTime = $.trim($('#releaseTime').val());

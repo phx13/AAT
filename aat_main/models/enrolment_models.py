@@ -11,3 +11,6 @@ class ModuleEnrolment(db.Model):
     account_id: int, foreign key
     module_code: varchar(8), foreign key
     """
+    @staticmethod
+    def get_all():
+        return db.session.query(ModuleEnrolment).all()

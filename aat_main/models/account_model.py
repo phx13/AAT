@@ -1,6 +1,7 @@
+from ast import literal_eval
 from datetime import datetime
 
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from sqlalchemy import MetaData, Table, and_
 
 from aat_main import db, login_manager
@@ -22,6 +23,7 @@ class AccountModel(db.Model, UserMixin):
     role: varchar(16) (either student, lecturer, or admin)
     avatar: varchar(64)
     profile: tinytext(0)
+    credit: int
     time: datetime
     """
 
@@ -65,19 +67,52 @@ class AccountModel(db.Model, UserMixin):
             AssessmentCompletion.student_id == self.id
         ).all()
 
-    def has_reviewed_assessment(self, id):
+    def has_reviewed_assessment(self, assessment_id):
         return db.session.query(
             AssessmentReview
         ).filter(
             and_(
                 AssessmentReview.student_id == self.id,
-                AssessmentReview.assessment_id == id
+                AssessmentReview.assessment_id == assessment_id
             )
         ).first()
 
+    def has_reviewed_all_questions(self, assessment_id):
+        assessment = db.session.query(Assessment).filter_by(id=assessment_id).first()
+        questions = assessment.get_questions()
+        reviewed_questions = db.session.query(
+            Question
+        ).join(
+            QuestionReview,
+            Question.id == QuestionReview.question_id
+        ).filter(
+            QuestionReview.student_id == self.id
+        ).all()
+        return all(q in reviewed_questions for q in questions)
+
     def get_completed_questions(self):
-        # TODO implement this properly
-        return db.session.query(Question).all()
+        # TODO check if this works after changes to tables are made
+        completed_assessments = db.session.query(
+            Assessment
+        ).join(
+            AssessmentCompletion,
+            AssessmentCompletion.assessment_id == Assessment.id
+        ).filter(
+            AssessmentCompletion.student_id == self.id
+        ).all()
+
+        completed_question_ids = {}
+        for assessment in completed_assessments:
+            question_set = literal_eval(assessment.questions)
+            completed_question_ids.update(question_set)
+
+        return db.session.query(
+            Question
+        ).filter(
+            Question.id.in_(completed_question_ids)
+        )
+
+        # return db.session.query(Question).all()
 
     def has_reviewed_question(self, id):
         return db.session.query(
@@ -104,7 +139,9 @@ class AccountModel(db.Model, UserMixin):
     def get_days_until_next_aat_review(self):
         last_review_date = self.get_last_aat_review().date
         time_elapsed = datetime.now() - last_review_date
-        return self.DAYS_BETWEEN_AAT_REVIEWS - time_elapsed.days
+        # The min() is needed below because time_elapsed.days==-1 immediately after the review is made, making days
+        # remaining until next review == 8
+        return min(self.DAYS_BETWEEN_AAT_REVIEWS, self.DAYS_BETWEEN_AAT_REVIEWS - time_elapsed.days)
 
     def get_enrolled_modules(self):
         return db.session.query(
@@ -155,7 +192,19 @@ class AccountModel(db.Model, UserMixin):
             )
         ).all()
 
+    def update_credit(self, email, credit):
+        result = self.search_account_by_email(email)
+        result.credit = int(result.credit) + credit
+        db.session.commit()
+        
+    @staticmethod
+    def get_current_user():
+        return current_user.id
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return db.session.query(AccountModel).get(int(user_id))
+
+
+

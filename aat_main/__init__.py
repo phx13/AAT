@@ -39,7 +39,7 @@ def before_request():
 
 
 from aat_main.controllers.index_controller import index_bp
-from aat_main.controllers.course_controller import course_bp
+from aat_main.controllers.assessment_controller import assessment_bp
 from aat_main.controllers.summative_controller import summative_blueprint
 from aat_main.controllers.formative_controller import formative_blueprint
 
@@ -52,7 +52,7 @@ from aat_main.controllers.question_controller import question_bp
 from aat_main.controllers.create_question_controller import create_question_blueprint
 
 app.register_blueprint(index_bp)
-app.register_blueprint(course_bp)
+app.register_blueprint(assessment_bp)
 app.register_blueprint(summative_blueprint)
 app.register_blueprint(formative_blueprint)
 app.register_blueprint(satisfaction_review_bp)
@@ -62,3 +62,4 @@ app.register_blueprint(error_bp)
 app.register_blueprint(account_bp)
 app.register_blueprint(question_bp)
 app.register_blueprint(create_question_blueprint)
+

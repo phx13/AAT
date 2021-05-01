@@ -12,6 +12,10 @@ formative_blueprint = Blueprint('formative_blueprint', __name__, template_folder
 
 @formative_blueprint.route('/assessments/assessments_management/formative/', methods=['GET', 'POST'])
 def formative():
+    # form = assessment_form()
+    # if form.validate_on_submit():
+    #     Assessment.create_assessment(form.title.data)
+    #     return redirect(url_for('assessment_bp.assessments'))
     form = module_choice_form()
     message = 'Nothing Now'
     if request.method == "POST":
