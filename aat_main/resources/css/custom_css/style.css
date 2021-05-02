@@ -25,7 +25,6 @@ footer div {
 }
 
 
-
 .review-statement-box {
     margin-bottom: 5vh;
     background-color: lightgray;
@@ -64,6 +63,18 @@ footer div {
     flex-direction: row;
     justify-content: space-between;
     width: 50vw;
+}
+
+
+/* Formative CSS elements */
+.table {
+    table-layout: fixed;
+}
+
+.table tbody tr td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /*white-space: nowrap;*/
 }
 
 
