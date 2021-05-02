@@ -1,3 +1,5 @@
+import time
+
 from flask import Blueprint, render_template, request, jsonify
 from flask_login import current_user
 
@@ -24,7 +26,7 @@ def question_data(module):
     else:
         origin_data = Question.get_question_by_module(module)
     data = []
-    type_dic = {0: 'formative-type-one', 1: 'formative-type-two', 2: 'summative'}
+    type_dic = {0: 'Multiple choice', 1: 'Fill in blank', 2: 'Summative'}
     for od in origin_data:
         dic = {
             'id': od.id,
@@ -34,18 +36,20 @@ def question_data(module):
             'type': type_dic[od.type],
             'option': od.option,
             'answer': od.answer,
+            'feedback': od.feedback,
             'release_time': od.release_time
         }
         data.append(dic)
 
-    if request.method == 'GET':
-        info = request.values
-        limit = info.get('limit', 10)
-        offset = info.get('offset', 0)
-    return jsonify({
-        'total': len(data),
-        'rows': data[int(offset):(int(offset) + int(limit))]
-    })
+    # if request.method == 'GET':
+    #     info = request.values
+    #     limit = info.get('limit', 10)
+    #     offset = info.get('offset', 0)
+    # return jsonify({
+    #     'total': len(data),
+    #     'rows': data[int(offset):(int(offset) + int(limit))]
+    # })
+    return jsonify(data)
 
 
 @question_bp.route('/management/data/delete/', methods=['POST'])
@@ -61,8 +65,9 @@ def create_question():
         question = {}
         for k, v in request.form.items():
             question[k] = v
+        release_time = time.strftime('%Y-%m-%d %H:%M:%S')
         Question.create_question_management(question['module_code'], question['name'], int(question['type']), question['description'], question['option'], question['answer'],
-                                            question['feedback'])
+                                            question['feedback'], release_time)
         return 'create successful'
     except:
         return 'server error'
