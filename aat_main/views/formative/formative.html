@@ -1,27 +1,43 @@
 {% extends 'base.html' %}
-{% block content %}
-    {#    <h2>#}
-    {#        This is content in summative html#}
-    {#    </h2>#}
-    {#    <form action="" method="post">#}
-    {#        {{ form.csrf_token() }}#}
-    {#        {{ form.title.label }} {{ form.title }}#}
-    {#        {{ form.submit.label }} {{ form.submit }}#}
-    {#    </form>#}
-    {#    {{ message }}#}
-    <div class="container">
-        <form action="" method="post" id="module_choice_form" class="row">
-            <p id="courseTitle" class="col-8 display-4"></p>
-            {{ form.module(class="custom-select col-4", placeholder="Please Choose a Module") }}
-            {#            {% for error in form.module.errors %}#}
-            {#                <span style="color: red;">[ {{ error }} ]</span><br>#}
-            {#            {% endfor %}#}
-            <!-- Module selection -->
+{% block heads %}
+    <link rel="stylesheet" href="/css/import_css/bootstrap-table.min.css">
+{% endblock %}
 
-        </form>
+{% block content %}
+    {#        <h2>#}
+    {#            This is content in summative html#}
+    {#        </h2>#}
+    {#        <form action="" method="post">#}
+    {#            {{ form.csrf_token() }}#}
+    {#            {{ form.title.label }} {{ form.title }}#}
+    {#            {{ form.submit.label }} {{ form.submit }}#}
+    {#        </form>#}
+    {#        {{ message }}#}
+    <div class="container">
+        <div class="row">
+            <p id="courseTitle" class="col-8 display-4">All Assessments</p>
+            {#            {{ form.module(class="custom-select col-4", placeholder="Please Choose a Module") }}#}
+
+            <select id="module" class="form-control col-4">
+                <option>Please Choose a Module</option>
+                {% for m in modules %}
+                    <option>{{ m.code }}:{{ m.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {#        <form action="" method="post" id="module_choice_form" class="row">#}
+
+
+        {#            {% for error in form.module.errors %}#}
+        {#                <span style="color: red;">[ {{ error }} ]</span><br>#}
+        {#            {% endfor %}#}
+        <!-- Module selection -->
+
+        {#        </form>#}
         <div>
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#assessmentDetail">
+            <button type="button" class="btn btn-success" id="newAssessmentButton" data-toggle="modal"
+                    data-target="#assessmentDetail" disabled>
                 New Assessment
             </button>
 
@@ -31,7 +47,7 @@
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">New Assessment</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -57,17 +73,20 @@
                                             <label for="formativeTitle">Title</label>
                                             <input type="text" class="form-control" id="formativeTitle"
                                                    placeholder="Title">
+                                            <h4 id="formativeTitleVerification"></h4>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col">
                                                 <label for="releaseTime">Release Time</label>
                                                 <input type="text" class="form-control" id="releaseTime"
                                                        placeholder="Release Time">
+                                                <h4 id="releaseTimeVerification"></h4>
                                             </div>
                                             <div class="form-group col">
                                                 <label for="dueDate">Due Date</label>
                                                 <input type="text" class="form-control" id="dueDate"
                                                        placeholder="Due Date">
+                                                <h4 id="dueDateVerification"></h4>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -75,11 +94,13 @@
                                                 <label for="countIn">Count In</label>
                                                 <input type="text" class="form-control" id="countIn"
                                                        placeholder="Count In">
+                                                <h4 id="countInVerification"></h4>
                                             </div>
                                             <div class="form-group col">
                                                 <label for="attemptTime">Attempt Times</label>
                                                 <input type="text" class="form-control" id="attemptTime"
                                                        placeholder="attemptTime">
+                                                <h4 id="attemptTimeVerification"></h4>
                                                 <div class="custom-control custom-checkbox custom-control-inline">
                                                     <input type="checkbox" class="custom-control-input"
                                                            id="attemptTimeCheckbox">
@@ -90,6 +111,7 @@
                                                 <label for="timeLimit">Time Limit</label>
                                                 <input type="text" class="form-control" id="timeLimit"
                                                        placeholder="Time Limit">
+                                                <h4 id="timeLimitVerification"></h4>
                                             </div>
 
                                         </div>
@@ -97,6 +119,7 @@
                                             <label for="description">Description</label>
                                             <textarea class="form-control"
                                                       id="description"></textarea>
+                                            <h4 id="descriptionVerification"></h4>
                                         </div>
                                     </form>
                                 </div>
@@ -115,7 +138,7 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-danger" onclick="deleteQuestion()">Delete Assessment</button>
+            <button type="button" class="btn btn-danger" onclick="deleteAssessment()">Delete Assessment</button>
         </div>
         <hr>
 
@@ -135,30 +158,150 @@
 
 {% block scripts %}
     {{ super() }}
+    <style>
+        .select_css {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /*white-space: nowrap;*/
+        }
+    </style>
     <script type="text/javascript" src="/js/import_js/bootstrap-table.min.js"></script>
     <script type="text/javascript" src="/js/import_js/laydate.js"></script>
     <script>
-        function createAssessment() {
-            let formativeTitle = $.trim($('#formativeTitle').val());
-            let releaseTime = $.trim($('#releaseTime').val());
-            let dueDate = $.trim($('#dueDate').val());
-            let countIn = $.trim($('#countIn').val());
-            let attemptTime = $.trim($('#attemptTime').val());
-            let timeLimit = $.trim($('#timeLimit').val());
-            let description = $.trim($('#description').val());
-            let module = $.trim($("#module").val().split(":")[0]);
+        $(document).ready(function () {
+            $("#formativeTitle").bind('input propertychange', monitorInput);
+            $("#releaseTime").bind('input propertychange', monitorInput);
+            $("#dueDate").bind('input propertychange', monitorInput);
+            $("#countIn").bind('input propertychange', monitorInput);
+            $("#attemptTime").bind('input propertychange', monitorInput);
+            $("#timeLimit").bind('input propertychange', monitorInput);
+            $("#description").bind('input propertychange', monitorInput);
+        })
 
-            let param = "formativeTitle=" + formativeTitle + "&releaseTime=" + releaseTime + "&dueDate=" + dueDate + "&countIn=" + countIn + "&attemptTime=" + attemptTime + "&timeLimit=" + timeLimit + "&description=" + description + "&module=" + module;
-            $.post('/assessments/assessments_management/formative/create/', param, function (data) {
-                if (!jQuery.isEmptyObject(data)) {
-                    alert(data);
-                    let status = $("#nav-tab").children(".active")[0].id == 'nav-current-tab' ? 'current/' : 'pass/';
-                    $("#assessmentTable").bootstrapTable('refresh', {
-                        url: '/assessments/assessments_management/formative/' + status + $.trim($("#module").val().split(":")[0])
-                    });
+        function monitorInput() {
+            if ($.trim($("#formativeTitle").val()).length == 0) {
+                $("#formativeTitle").attr("class", "form-control is-invalid");
+                $("#formativeTitleVerification").attr("class", "invalid-feedback");
+                $("#formativeTitleVerification").html("Invalid title");
+            } else {
+                $("#formativeTitle").attr("class", "form-control is-valid");
+                $("#formativeTitleVerification").attr("class", "valid-feedback");
+                $("#formativeTitleVerification").html("Valid title");
+            }
+
+            if ($.trim($("#releaseTime").val()).length == 0) {
+                $("#releaseTime").attr("class", "form-control is-invalid");
+                $("#releaseTimeVerification").attr("class", "invalid-feedback");
+                $("#releaseTimeVerification").html("Invalid release time");
+            } else {
+                $("#releaseTime").attr("class", "form-control is-valid");
+                $("#releaseTimeVerification").attr("class", "valid-feedback");
+                $("#releaseTimeVerification").html("Valid release time");
+            }
+
+            if ($.trim($("#dueDate").val()).length == 0) {
+                $("#dueDate").attr("class", "form-control is-invalid");
+                $("#dueDateVerification").attr("class", "invalid-feedback");
+                $("#dueDateVerification").html("Invalid due date");
+            } else {
+                $("#dueDate").attr("class", "form-control is-valid");
+                $("#dueDateVerification").attr("class", "valid-feedback");
+                $("#dueDateVerification").html("Valid due date");
+            }
+
+            if ($.trim($("#countIn").val()).length == 0) {
+                $("#countIn").attr("class", "form-control is-invalid");
+                $("#countInVerification").attr("class", "invalid-feedback");
+                $("#countInVerification").html("Invalid count in");
+            } else {
+                $("#countIn").attr("class", "form-control is-valid");
+                $("#countInVerification").attr("class", "valid-feedback");
+                $("#countInVerification").html("Valid count in");
+            }
+
+            if ($("#attemptTime").prop("readonly") == true) {
+                $("#attemptTime").attr("class", "form-control is-valid");
+                $("#attemptTimeVerification").attr("class", "valid-feedback");
+                $("#attemptTimeVerification").html("Valid attempt time");
+            } else {
+                if ($.trim($("#attemptTime").val()).length > 0) {
+                    $("#attemptTime").attr("class", "form-control is-valid");
+                    $("#attemptTimeVerification").attr("class", "valid-feedback");
+                    $("#attemptTimeVerification").html("Valid attempt time");
+                } else {
+                    $("#attemptTime").attr("class", "form-control is-invalid");
+                    $("#attemptTimeVerification").attr("class", "invalid-feedback");
+                    $("#attemptTimeVerification").html("Invalid attempt time");
                 }
-            })
+            }
+
+            if ($.trim($("#timeLimit").val()).length == 0) {
+                $("#timeLimit").attr("class", "form-control is-invalid");
+                $("#timeLimitVerification").attr("class", "invalid-feedback");
+                $("#timeLimitVerification").html("Invalid time limit");
+            } else {
+                $("#timeLimit").attr("class", "form-control is-valid");
+                $("#timeLimitVerification").attr("class", "valid-feedback");
+                $("#timeLimitVerification").html("Valid time limit");
+            }
+
+            if ($.trim($("#description").val()).length == 0) {
+                $("#description").attr("class", "form-control is-invalid");
+                $("#descriptionVerification").attr("class", "invalid-feedback");
+                $("#descriptionVerification").html("Invalid description");
+            } else {
+                $("#description").attr("class", "form-control is-valid");
+                $("#descriptionVerification").attr("class", "valid-feedback");
+                $("#descriptionVerification").html("Valid description");
+            }
         }
+
+        function createAssessment() {
+            if ($("#formativeTitleVerification").attr("class") == "valid-feedback"
+                &&
+                $("#releaseTimeVerification").attr("class") == "valid-feedback"
+                &&
+                $("#dueDateVerification").attr("class") == "valid-feedback"
+                &&
+                $("#countInVerification").attr("class") == "valid-feedback"
+                &&
+                $("#attemptTimeVerification").attr("class") == "valid-feedback"
+                &&
+                $("#timeLimitVerification").attr("class") == "valid-feedback"
+                &&
+                $("#descriptionVerification").attr("class") == "valid-feedback") {
+                let formativeTitle = $.trim($('#formativeTitle').val());
+                let releaseTime = $.trim($('#releaseTime').val());
+                let dueDate = $.trim($('#dueDate').val());
+                let countIn = $.trim($('#countIn').val());
+
+                let attemptTime = 0
+                if ($('#attemptTimeCheckbox').is(':checked') == true) {
+                    attemptTime = '-1';
+                } else {
+                    attemptTime = $.trim($('#attemptTime').val());
+                }
+
+                let timeLimit = $.trim($('#timeLimit').val());
+                let description = $.trim($('#description').val());
+                let module = $.trim($("#module").val().split(":")[0]);
+
+
+                let param = "formativeTitle=" + formativeTitle + "&releaseTime=" + releaseTime + "&dueDate=" + dueDate + "&countIn=" + countIn + "&attemptTime=" + attemptTime + "&timeLimit=" + timeLimit + "&description=" + description + "&module=" + module;
+                $.post('/assessments/assessments_management/formative/create/', param, function (data) {
+                    if (!jQuery.isEmptyObject(data)) {
+                        alert(data);
+                        let status = $("#nav-tab").children(".active")[0].id == 'nav-current-tab' ? 'current/' : 'pass/';
+                        $("#assessmentTable").bootstrapTable('refresh', {
+                            url: '/assessments/assessments_management/formative/' + status + $.trim($("#module").val().split(":")[0])
+                        });
+                    }
+                })
+            } else {
+                alert("invalid assessment");
+            }
+        }
+
 
         $('#assessmentTable').bootstrapTable({
             url: '/assessments/assessments_management/formative/current/' + $.trim($("#module").val().split(":")[0]),  // 请求数据源的路由
@@ -182,15 +325,18 @@
             showToggle: true, //是否显示详细视图和列表视图的切换按钮
             // cardView: true, //是否显示详细视图
             // detailView: true, //是否显示父子表，设置为 true 可以显示详细页面模式,在每行最前边显示+号#}
-            sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+            sidePagination: "client", //分页方式：client客户端分页，server服务端分页（*）
             columns: [
                 {
                     title: "selectAll",
                     field: "select",
                     checkbox: true,
-                    align: "center"
-                },
-                {
+                    align: "center",
+                    cellStyle: function () {
+                        $(".th-inner")[0].style.overflow = "inherit";
+                        return {css: {"overflow": "inherit"}}
+                    }
+                }, {
                     field: 'id',
                     title: 'Id'
                 }, {
@@ -205,8 +351,9 @@
                 }, {
                     field: 'operation',
                     title: 'Operation',
-                    formatter: function () {
-                        return '<a href="#">edit</a>'
+                    formatter: function (value, row, index) {
+                        let editUrl = "{{ url_for('formative_blueprint.edit_assessment',id='assessmentId') }}".replace("assessmentId", row.id);
+                        return '<a class="btn btn-outline-primary" href="' + editUrl + '">edit</a>'
                     }
                 }]
         });
@@ -222,8 +369,31 @@
             type: 'datetime'
         });
 
+        $("#attemptTimeCheckbox").on('change', function () {
+            if ($("#attemptTimeCheckbox").is(':checked')) {
+                $("#attemptTime").prop("readonly", true);
+                $("#attemptTime").val("");
+                $("#attemptTime").attr("class", "form-control is-valid");
+                $("#attemptTimeVerification").attr("class", "valid-feedback");
+                $("#attemptTimeVerification").html("Valid attempt time");
+            } else {
+                $("#attemptTime").prop('readonly', false);
+                $("#attemptTime").attr("class", "form-control is-invalid");
+                $("#attemptTimeVerification").attr("class", "invalid-feedback");
+                $("#attemptTimeVerification").html("Invalid attempt time");
+            }
+        })
+
         $("#module").on('change', function () {
-            $("#courseTitle").text(this.value.split(':')[1]);
+            if (this.value != 'Please Choose a Module') {
+                $("#newAssessmentButton").prop("disabled", false);
+                $("#courseTitle").text(this.value.split(':')[1]);
+            } else {
+                $("#newAssessmentButton").prop("disabled", true);
+                $("#courseTitle").text("All Assessments");
+            }
+
+
             let status = $("#nav-tab").children(".active")[0].id == 'nav-current-tab' ? 'current' : 'pass';
 
             $("#assessmentTable").bootstrapTable('refresh', {
@@ -243,7 +413,7 @@
             });
         })
 
-        function deleteQuestion() {
+        function deleteAssessment() {
             let datas = $('#currentTable').bootstrapTable('getSelections');
             let param = "";
             datas.forEach(function (item) {

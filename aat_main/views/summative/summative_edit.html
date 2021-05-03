@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>
-        New Assessment
+        Edit Assessment
     </h2>
     <form action="" method="post", id=summative_form>
         {{ form.csrf_token() }}
@@ -31,7 +31,7 @@
                             </tr>
                             {% else %}
                             <tr>
-                                <th scope="row">{{ question.id }}</th>
+                                <th scope="row">{{ question.module_code }}</th>
                                 <td>{{ question.name }}</td>
                                 <td>{{ question.description }}</td>
                                 <td>
