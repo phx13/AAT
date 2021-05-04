@@ -29,21 +29,21 @@
                             {% if student_stat_status == 0 %}
                                 {% include 'student_stat_base.html' %}
                             {% elif student_stat_status == 1 %}
-                                {% include 'student_stat_attempt.html' %}e
+                                {% include 'student_stat_attempt.html' %}
                             {% elif student_stat_status == 2 %}
                                 {% include 'student_stat_attainment.html' %}
                             {% elif student_stat_status == 3 %}
                                 {% include 'student_stat_engagement.html' %}
                             {% endif %}
                         {% else %}
-{#                            {% if staff_stat_status == 0 %}#}
-{#                                {% include 'staff_stat_base.html' %}#}
-{#                            {% elif staff_stat_status == 1 %}#}
-{#                                {% include 'staff_stat_attempt.html' %}#}
-{#                            {% elif staff_stat_status == 2 %}#}
-{#                                {% include 'staff_stat_attainment.html' %}#}
-{#                            {% elif staff_stat_status == 3 %}#}
-{#                                {% include 'staff_stat_engagement.html' %}#}
+                            {#                            {% if staff_stat_status == 0 %}#}
+                            {#                                {% include 'staff_stat_base.html' %}#}
+                            {#                            {% elif staff_stat_status == 1 %}#}
+                            {#                                {% include 'staff_stat_attempt.html' %}#}
+                            {#                            {% elif staff_stat_status == 2 %}#}
+                            {#                                {% include 'staff_stat_attainment.html' %}#}
+                            {#                            {% elif staff_stat_status == 3 %}#}
+                            {#                                {% include 'staff_stat_engagement.html' %}#}
                         {% endif %}
                     </div>
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
@@ -108,4 +108,308 @@
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript" src="/js/custom_js/account.js"></script>
+    {% if current_account.role == 'student' %}
+        <script type="text/javascript" src="/js/import_js/laydate.js"></script>
+        <script type="text/javascript" src="/js/import_js/echarts.js"></script>
+        {% if student_stat_status == 0 %}
+
+        {% elif student_stat_status == 1 %}
+            <script>
+                let attemptBarChart;
+                $(document).ready(function () {
+                    laydate.render({
+                        elem: '#startDate',
+                        lang: 'en'
+                    });
+                    laydate.render({
+                        elem: '#endDate',
+                        lang: 'en'
+                    });
+
+                    let attemptUrl = '{{ url_for('account_bp.stat_attempt_data',module='MODULE',type='TYPE') }}'.replace("MODULE", "{{ course }}").replace("TYPE", "All");
+                    $.get(attemptUrl, "", function (data) {
+                        //attempt bar chart
+                        attemptBarChart = echarts.init(document.getElementById("attemptBarChart"));
+                        let attemptBarChartDataAxis = [];
+                        let attemptBarChartData = [];
+                        data.forEach(function (d) {
+                            attemptBarChartDataAxis.push(d["submit_time"]);
+                            attemptBarChartData.push(d["score"]);
+                        })
+                        let attemptBarChartOption = {
+                            xAxis: {
+                                data: attemptBarChartDataAxis,
+                                axisLabel: {
+                                    inside: true,
+                                    textStyle: {
+                                        color: '#fff'
+                                    }
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLine: {
+                                    show: false
+                                },
+                                z: 10
+                            },
+                            yAxis: {
+                                axisLine: {
+                                    show: false
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLabel: {
+                                    textStyle: {
+                                        color: '#999'
+                                    }
+                                }
+                            },
+                            dataZoom: [
+                                {
+                                    type: 'inside'
+                                }
+                            ],
+                            series: [
+                                {
+                                    type: 'bar',
+                                    showBackground: true,
+                                    itemStyle: {
+                                        color: new echarts.graphic.LinearGradient(
+                                            0, 0, 0, 1,
+                                            [
+                                                {offset: 0, color: '#83bff6'},
+                                                {offset: 0.5, color: '#188df0'},
+                                                {offset: 1, color: '#188df0'}
+                                            ]
+                                        )
+                                    },
+                                    emphasis: {
+                                        itemStyle: {
+                                            color: new echarts.graphic.LinearGradient(
+                                                0, 0, 0, 1,
+                                                [
+                                                    {offset: 0, color: '#2378f7'},
+                                                    {offset: 0.7, color: '#2378f7'},
+                                                    {offset: 1, color: '#83bff6'}
+                                                ]
+                                            )
+                                        }
+                                    },
+                                    data: attemptBarChartData
+                                }
+                            ]
+                        };
+                        // Enable data zoom when user click bar.
+                        let attemptBarChartXZoomSize = 6;
+                        attemptBarChart.on('click', function (params) {
+                            attemptBarChart.dispatchAction({
+                                type: 'dataZoom',
+                                startValue: attemptBarChartDataAxis[Math.max(params.dataIndex - attemptBarChartXZoomSize / 2, 0)],
+                                endValue: attemptBarChartDataAxis[Math.min(params.dataIndex + attemptBarChartXZoomSize / 2, attemptBarChartData.length - 1)]
+                            });
+                        });
+                        attemptBarChart.setOption(attemptBarChartOption);
+                    })
+                })
+
+                function resetData() {
+                    $("#typeDropdown").val("All");
+
+                    let attemptUrl = '{{ url_for('account_bp.stat_attempt_data',module='MODULE',type='TYPE') }}'.replace("MODULE", "{{ course }}").replace("TYPE", "All");
+                    $.get(attemptUrl, "", function (data) {
+                        //attempt bar chart
+                        let attemptBarChartDataAxis = [];
+                        let attemptBarChartData = [];
+                        data.forEach(function (d) {
+                            attemptBarChartDataAxis.push(d["submit_time"]);
+                            attemptBarChartData.push(d["score"]);
+                        })
+                        let attemptBarChartOption = {
+                            xAxis: {
+                                data: attemptBarChartDataAxis,
+                                axisLabel: {
+                                    inside: true,
+                                    textStyle: {
+                                        color: '#fff'
+                                    }
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLine: {
+                                    show: false
+                                },
+                                z: 10
+                            },
+                            yAxis: {
+                                axisLine: {
+                                    show: false
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLabel: {
+                                    textStyle: {
+                                        color: '#999'
+                                    }
+                                }
+                            },
+                            dataZoom: [
+                                {
+                                    type: 'inside'
+                                }
+                            ],
+                            series: [
+                                {
+                                    type: 'bar',
+                                    showBackground: true,
+                                    itemStyle: {
+                                        color: new echarts.graphic.LinearGradient(
+                                            0, 0, 0, 1,
+                                            [
+                                                {offset: 0, color: '#83bff6'},
+                                                {offset: 0.5, color: '#188df0'},
+                                                {offset: 1, color: '#188df0'}
+                                            ]
+                                        )
+                                    },
+                                    emphasis: {
+                                        itemStyle: {
+                                            color: new echarts.graphic.LinearGradient(
+                                                0, 0, 0, 1,
+                                                [
+                                                    {offset: 0, color: '#2378f7'},
+                                                    {offset: 0.7, color: '#2378f7'},
+                                                    {offset: 1, color: '#83bff6'}
+                                                ]
+                                            )
+                                        }
+                                    },
+                                    data: attemptBarChartData
+                                }
+                            ]
+                        };
+                        // Enable data zoom when user click bar.
+                        let attemptBarChartXZoomSize = 6;
+                        attemptBarChart.on('click', function (params) {
+                            attemptBarChart.dispatchAction({
+                                type: 'dataZoom',
+                                startValue: attemptBarChartDataAxis[Math.max(params.dataIndex - attemptBarChartXZoomSize / 2, 0)],
+                                endValue: attemptBarChartDataAxis[Math.min(params.dataIndex + attemptBarChartXZoomSize / 2, attemptBarChartData.length - 1)]
+                            });
+                        });
+                        attemptBarChart.setOption(attemptBarChartOption);
+                    })
+                }
+
+                $("#typeDropdown").on("change", function () {
+                    let type = "";
+                    switch (this.value) {
+                        case "All":
+                            type = "All";
+                            break;
+                        case "Formative":
+                            type = "0";
+                            break;
+                        case "Summative":
+                            type = "1";
+                            break;
+                    }
+                    let attemptUrl = '{{ url_for('account_bp.stat_attempt_data',module='MODULE',type='TYPE') }}'.replace("MODULE", "{{ course }}").replace("TYPE", type);
+                    $.get(attemptUrl, "", function (data) {
+                        //attempt bar chart
+                        let attemptBarChartDataAxis = [];
+                        let attemptBarChartData = [];
+                        data.forEach(function (d) {
+                            attemptBarChartDataAxis.push(d["submit_time"]);
+                            attemptBarChartData.push(d["score"]);
+                        })
+                        let attemptBarChartOption = {
+                            xAxis: {
+                                data: attemptBarChartDataAxis,
+                                axisLabel: {
+                                    inside: true,
+                                    textStyle: {
+                                        color: '#fff'
+                                    }
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLine: {
+                                    show: false
+                                },
+                                z: 10
+                            },
+                            yAxis: {
+                                axisLine: {
+                                    show: false
+                                },
+                                axisTick: {
+                                    show: false
+                                },
+                                axisLabel: {
+                                    textStyle: {
+                                        color: '#999'
+                                    }
+                                }
+                            },
+                            dataZoom: [
+                                {
+                                    type: 'inside'
+                                }
+                            ],
+                            series: [
+                                {
+                                    type: 'bar',
+                                    showBackground: true,
+                                    itemStyle: {
+                                        color: new echarts.graphic.LinearGradient(
+                                            0, 0, 0, 1,
+                                            [
+                                                {offset: 0, color: '#83bff6'},
+                                                {offset: 0.5, color: '#188df0'},
+                                                {offset: 1, color: '#188df0'}
+                                            ]
+                                        )
+                                    },
+                                    emphasis: {
+                                        itemStyle: {
+                                            color: new echarts.graphic.LinearGradient(
+                                                0, 0, 0, 1,
+                                                [
+                                                    {offset: 0, color: '#2378f7'},
+                                                    {offset: 0.7, color: '#2378f7'},
+                                                    {offset: 1, color: '#83bff6'}
+                                                ]
+                                            )
+                                        }
+                                    },
+                                    data: attemptBarChartData
+                                }
+                            ]
+                        };
+                        // Enable data zoom when user click bar.
+                        let attemptBarChartXZoomSize = 6;
+                        attemptBarChart.on('click', function (params) {
+                            attemptBarChart.dispatchAction({
+                                type: 'dataZoom',
+                                startValue: attemptBarChartDataAxis[Math.max(params.dataIndex - attemptBarChartXZoomSize / 2, 0)],
+                                endValue: attemptBarChartDataAxis[Math.min(params.dataIndex + attemptBarChartXZoomSize / 2, attemptBarChartData.length - 1)]
+                            });
+                        });
+                        attemptBarChart.setOption(attemptBarChartOption);
+                    })
+                });
+            </script>
+        {% elif student_stat_status == 2 %}
+
+        {% elif student_stat_status == 3 %}
+
+        {% endif %}
+    {% else %}
+
+    {% endif %}
 {% endblock %}
