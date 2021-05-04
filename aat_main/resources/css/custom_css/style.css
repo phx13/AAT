@@ -31,6 +31,7 @@ footer div {
     padding: 1vh 1vw;
     border-radius: 5px;
     width: 60vw;
+    position: relative;
 }
 
 .review-comment {
@@ -49,6 +50,16 @@ footer div {
     max-height: 10vh;
 }
 
+.radio-group-error {
+    font-weight: bold;
+    color: #C70039;
+    position: absolute;
+    z-index: 1;
+    left: 102%;
+    bottom: 40%;
+    /* reference 3 May https://stackoverflow.com/questions/51309415/how-to-force-span-width-to-length-of-inner-text*/
+    white-space: nowrap;
+}
 /* Summative form CSS elements */
 #summative_form {
     display: flex;
