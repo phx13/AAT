@@ -2,7 +2,9 @@
 
 {% block content %}
 <h1>Questions: {{question_id}}</h1>
-<form action="" method="POST">
+<div>Remaining Time: <span id="timeLeftLabel" style="color:red">{{ time }}</span> minutes</div>
+
+<form id="assessment_form" action="" method="POST">
     <!-- {{ form.csrf_token() }} -->
 
         <hr> 
@@ -29,13 +31,56 @@
             <input type="text" id="{{question.id}}" name="{{ question.id }}" value="">
 
 
-            <hr>        
+            <hr> 
+            
         {% endif %}
     {% endfor %}
-    
+    <input type="number" id="time_value" value="{{ time }}" hidden></div>
+
 
 
     <button type="submit" value="{{assessment.id}}">Submit</button>   
 </form>
+
+<script>
+    // timer for assesment
+    let time = document.getElementById("time_value").value
+    let testDuration = time * 60000;
+
+    const timeLeftLabel = document.getElementById("timeLeftLabel")
+
+    const interval = setInterval(function(){
+        testDuration = testDuration - 5000;
+
+        timeLeft = (Math.round(testDuration / 60000))
+
+        if (toString(timeLeft).length <= 2) {
+            timeLeftOut = "<= 1"
+            timeLeftLabel.innerHTML = timeLeftOut
+        } else {
+            timeLeftOut = timeLeft
+            timeLeftLabel.innerHTML = timeLeftOut
+        }
+
+        if (testDuration == 3600000 ) {
+            alert("you have 1 hour remaining")
+        } else if (testDuration == 1800000) {
+            alert("You have 30 minutes remaining")
+        } else if (testDuration == 900000) {
+            alert("You have 15 minutes remaining")
+        } else if (testDuration == 300000) {
+            alert("you have 5 minutes remaining")
+        } else if (testDuration == 60000) {
+            alert("you have 1 minute remaining") 
+        } else if (testDuration == 30000) {
+            alert("you have 30 seconds remaining")
+        } else if (testDuration <= 0) {
+            document.getElementById("assessment_form").submit()
+        }
+    }, 5000)
+
+    
+
+</script>
 
 {% endblock %}
