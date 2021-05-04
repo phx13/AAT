@@ -1,14 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, TextAreaField, RadioField, validators
+from wtforms import SubmitField, TextAreaField, RadioField
 from wtforms.validators import Length
 
 
-def create_radio_field(label):
-    return RadioField(label, validators=[validators.Required()], choices=ReviewForm.options,
-                      default=3)
-
-
 # reference 3 May https://stackoverflow.com/questions/25297716/how-to-make-radio-field-show-default-value-with-flask-and-wtforms
+def create_radio_field(label):
+    return RadioField(label, choices=ReviewForm.options, default=3)
+
+
 class ReviewForm(FlaskForm):
     # reference https://stackoverflow.com/questions/14591202/how-to-make-a-radiofield-in-flask/14591681#14591681
     MAX_COMMENT_LENGTH = 512
@@ -19,10 +18,11 @@ class ReviewForm(FlaskForm):
         (4, 'Agree'),
         (5, 'Strongly Agree')
     ]
-    comment = TextAreaField('Additional comments (optional):',
-                            validators=[Length(max=MAX_COMMENT_LENGTH,
-                                               message=f'Maximum comment length is 512 characters.')
-                                        ])
+    comment = TextAreaField(
+        'Additional comments (optional):',
+        validators=[Length(max=MAX_COMMENT_LENGTH,
+                           message=f'Maximum comment length is 512 characters.')])
+
     submit = SubmitField('Submit')
 
 

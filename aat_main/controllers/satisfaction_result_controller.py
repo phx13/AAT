@@ -26,6 +26,11 @@ def before_request():
     check_if_authorized(authorized_role)
 
 
+@satisfaction_result_bp.route('/')
+def home():
+    return render_template('home.html')
+
+
 @satisfaction_result_bp.route('/assessment/<id>')
 def assessment_review_results(id):
     assessment = Assessment.get_assessment_by_id(id)
@@ -59,7 +64,8 @@ def aat_review_results():
 
     title = 'Results of AAT Reviews'
 
-    return render_template('satisfaction_results/review-results.html', results=statement_response_counts,
+    return render_template('satisfaction_results/review-results.html',
+                           results=statement_response_counts,
                            comments=comments, responses=responses,
                            page_title=title)
 
