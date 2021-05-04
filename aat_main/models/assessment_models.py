@@ -27,6 +27,7 @@ class Assessment(db.Model):
     timelimit: int, default(0)
     time_created: datetime, default now()
     """
+
     # TODO maybe add percentage completed on 'Available Assessments' page to get the distinction
     #  criteria for going beyond expectations
 
@@ -43,7 +44,6 @@ class Assessment(db.Model):
 
     def convert_datetime(date, time):
         return str(date) + " " + str(time)
-
 
     @staticmethod
     def create_assessment(title, questions, description, module, type, count_in, attempt, start_datetime, end_datetime,
@@ -123,7 +123,6 @@ class Assessment(db.Model):
         return availability_date < datetime.now() < due_date
 
 
-
 class AssessmentCompletion(db.Model):
     __tablename__ = 'assessment_completion'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
@@ -133,15 +132,16 @@ class AssessmentCompletion(db.Model):
     assessment_id: foreign key, references assessment(id)
     results: json (dict of question.id + true/false or quest ans)
     mark: int
+    attempt: int
+    submit_time: datetime
     """
 
-
-    @staticmethod 
+    @staticmethod
     def create_assessment_completion(student_id, assessment_id, results, mark):
         try:
             db.session.add(
                 AssessmentCompletion(student_id=student_id,
-                assessment_id=assessment_id, results=results, mark=mark))
+                                     assessment_id=assessment_id, results=results, mark=mark))
             db.session.commit()
         except SQLAlchemyError:
             raise SQLAlchemyError
@@ -153,5 +153,8 @@ class AssessmentCompletion(db.Model):
 
     @staticmethod
     def get_results_by_id(stu_id, ass_id):
-        return db.session.query(AssessmentCompletion).filter(AssessmentCompletion.student_id=='stu_id', AssessmentCompletion.assessment_id=='ass_id').all()
+        return db.session.query(AssessmentCompletion).filter(AssessmentCompletion.student_id == 'stu_id', AssessmentCompletion.assessment_id == 'ass_id').all()
 
+    @staticmethod
+    def get_score_by_conditions(*conditions):
+        return db.session.query(AssessmentCompletion).join(Assessment, AssessmentCompletion.assessment_id == Assessment.id).filter(*conditions).all()
