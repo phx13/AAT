@@ -49,6 +49,9 @@ def assessment_review(assessment_id):
 @satisfaction_review_bp.route('/aat', methods=['GET', 'POST'])
 def aat_review():
     check_if_authorized(authorized_role)
+    if current_user.has_reviewed_aat_recently():
+        days = current_user.get_days_until_next_aat_review()
+        return render_template('wait-aat-review.html', num_of_days=days)
 
     form = AATReviewForm()
     if form.validate_on_submit():

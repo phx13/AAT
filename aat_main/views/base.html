@@ -70,13 +70,20 @@
                                 </a>
                             </li>
                         {% endif %}
-                        <li class=" nav-item">
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('account_bp.account_page') }}">
                                 Account
                             </a>
                         </li>
+                        {% if current_user.role=='lecturer' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('satisfaction_result_bp.home') }}">
+                                    Satisfaction Review Results
+                                </a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item">
-                            <span class="navbar-text">
+                            <span style="margin:0 1vw" class="navbar-text">
                                 Logged in as <span style="font-weight:bold;">{{ current_user.name }}</span>
                             </span>
                         </li>
@@ -104,8 +111,10 @@
 </main>
 
 <footer>
-    <div class="container-fluid text-center">
-        This is page footer in base html
+    <div>
+        <a style="color: cornflowerblue" href="{{ url_for('satisfaction_review_bp.aat_review') }}">
+            Review automAATiq
+        </a>
     </div>
 </footer>
 

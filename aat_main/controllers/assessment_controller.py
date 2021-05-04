@@ -36,7 +36,7 @@ def available_assessments():
     if current_user.role == 'student':
         assessments = current_user.get_available_assessments_student()
         completed = AssessmentCompletion.get_completed_assessments_by_user_id(current_user.id)
-        valid_assessments = []  
+        valid_assessments = []
 
         for assessment in assessments:
             count = 0

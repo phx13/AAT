@@ -4,9 +4,7 @@
         New Assessment
     </h2>
     <form action="" method="post", id=summative_form>
-        {% if 'csrf_token' in form %}
         {{ form.csrf_token() }}
-        {% endif %}
 
         {{ form.title(class="form-control", maxlength="64", placeholder="Please Enter a Title") }}<br>
 
