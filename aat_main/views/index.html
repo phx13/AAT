@@ -2,7 +2,7 @@
 {% block content %}
     {% include '_flash-messages.html' %}
     <h1>
-            Welcome to <span style="text-shadow:1px 1px 1px grey">automAATiq</span>
+            Welcome to <span style="text-shadow:2px 2px 5px grey">automAATiq</span>
     </h1>
     {% if current_user.role == 'student' %}
         {% if current_user.has_reviewed_aat_recently() %}
