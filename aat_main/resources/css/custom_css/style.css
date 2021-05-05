@@ -55,6 +55,31 @@ footer div {
     max-height: 10vh;
 }
 
+.pie-chart-container {
+    width: 50vw;
+    height: 70vh;
+    margin: auto;
+}
+/*.pie-chart-container {*/
+/*    width: 200vw;*/
+/*    height: 150vh;*/
+/*    margin: auto;*/
+/*}*/
+
+@media print {
+    .pie-chart-container {
+        width: 200vw;
+        height: 150vh;
+        margin: 0;
+    }
+}
+
+.combo-chart-container {
+    width: 80vw;
+    height: 80vh;
+    margin: auto;
+}
+
 .radio-group-error {
     font-weight: bold;
     color: #C70039;
@@ -71,6 +96,13 @@ footer div {
     border-radius: 5px;
     display: block;
     margin: 10vh 1vw;
+    padding-top: 1vh;
+}
+
+@media print {
+    .container-with-shadow {
+        margin: 2cm 5cm;
+    }
 }
 
 .result-home-page-option {
