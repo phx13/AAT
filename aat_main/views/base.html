@@ -6,7 +6,8 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
 
     <!-- Mobile Metas -->
-    <meta content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <meta content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+          name="viewport">
 
     <!-- Site Metas -->
     <title>AAT</title>
@@ -27,7 +28,8 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400&display=swap"
+          rel="stylesheet">
 
 </head>
 
@@ -37,10 +39,12 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <img class="img-fluid" src="/images/icons/favicon.ico" width="50px" height="50px" alt=""/>
+                <img class="img-fluid" src="/images/icons/favicon.ico" width="50px" height="50px"
+                     alt=""/>
             </a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                    data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                    data-target="#navbarResponsive" aria-controls="navbarResponsive"
+                    aria-expanded="false"
                     aria-label="Toggle navigation">
                 Menu
                 <i class="fa fa-bars" aria-hidden="true"></i>
@@ -53,11 +57,11 @@
                                 Home
                             </a>
                         </li>
-{#                        <li class="nav-item">#}
-{#                            <a class="nav-link" href="/course/">#}
-{#                                Course#}
-{#                            </a>#}
-{#                        </li>#}
+                        {#                        <li class="nav-item">#}
+                        {#                            <a class="nav-link" href="/course/">#}
+                        {#                                Course#}
+                        {#                            </a>#}
+                        {#                        </li>#}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('assessment_bp.assessments') }}">
                                 Assessments
@@ -65,7 +69,8 @@
                         </li>
                         {% if current_user.role == 'lecturer' %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('question_bp.manage_questions') }}">
+                                <a class="nav-link"
+                                   href="{{ url_for('question_bp.manage_questions') }}">
                                     Questions
                                 </a>
                             </li>
@@ -75,16 +80,18 @@
                                 Account
                             </a>
                         </li>
-                        {% if current_user.role=='lecturer' %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('satisfaction_result_bp.home') }}">
-                                    Satisfaction Review Results
-                                </a>
-                            </li>
-                        {% endif %}
+                        {#                        {% if current_user.role=='lecturer' %}#}
+                        {#                            <li class="nav-item">#}
+                        {#                                <a class="nav-link"#}
+                        {#                                   href="{{ url_for('satisfaction_result_bp.home') }}">#}
+                        {#                                    Satisfaction Review Results#}
+                        {#                                </a>#}
+                        {#                            </li>#}
+                        {#                        {% endif %}#}
                         <li class="nav-item">
                             <span style="margin:0 1vw" class="navbar-text">
-                                Logged in as <span style="font-weight:bold;">{{ current_user.name }}</span>
+                                Logged in as <span
+                                    style="font-weight:bold;">{{ current_user.name }}</span>
                             </span>
                         </li>
                         <li class="nav-item">
@@ -110,13 +117,24 @@
     {% endblock %}
 </main>
 
-<footer>
-    <div>
-        <a style="color: cornflowerblue" href="{{ url_for('satisfaction_review_bp.aat_review') }}">
-            Review automAATiq
-        </a>
-    </div>
-</footer>
+{% if current_user.is_authenticated %}
+    <footer>
+        <div>
+            {% if current_user.role == 'student' %}
+                <a class="footer-link-text"
+                   href="{{ url_for('satisfaction_review_bp.aat_review') }}">
+                    Review automAATiq
+                </a>
+            {% elif current_user.role == 'lecturer' %}
+{#                <a href="{{ url_for('satisfaction_result_bp.aat_review_results') }}"#}
+{#                   class="footer-link-text">#}
+{#                    See what students think about automAATiq#}
+{#                </a>#}
+                -
+            {% endif %}
+        </div>
+    </footer>
+{% endif %}
 
 <!-- JS -->
 <script type="text/javascript" src="/js/import_js/jquery-3.5.1.min.js"></script>

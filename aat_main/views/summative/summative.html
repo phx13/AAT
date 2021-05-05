@@ -13,6 +13,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
                 <th scope="col">Edit/Delete</th>
+                <th scope="col">Satisfaction review results</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +26,11 @@
                         <td>{{ assessment.description }}</td>
                         <td>
                             <a class="btn btn-primary" href="{{ url_for('summative_blueprint.summative_edit', assessment_id = assessment.id) }}">EDIT</a> / <a class="btn btn-danger" href="{{ url_for('summative_blueprint.summative_delete_action', assessment_id  = assessment.id, action='delete') }}">DELETE</a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('satisfaction_result_bp.assessment_review_results', id=assessment.id) }}" class="btn btn-secondary">
+                                View
+                            </a>
                         </td>
                     </tr>
                 {% endif %}

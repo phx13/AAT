@@ -1,7 +1,7 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 {% for statement in results %}
-    <div style="box-shadow: 5px 5px 10px black">
+    <div class="container-with-shadow">
         <h3 class="review-results-statement-title">{{ statement['statement'] }}</h3>
         {#        reference https://stackoverflow.com/questions/12145434/how-to-output-loop-counter-in-python-jinja-template
                    22 March #}

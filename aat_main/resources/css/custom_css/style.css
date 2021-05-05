@@ -11,8 +11,13 @@ footer div {
     color: rgba(255, 255, 255, .5);
     margin: 0 1vw;
     padding: 0.5vh 1vw;
-    border-radius: 10px;
-    text-align: center;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.footer-link-text {
+    color: cornflowerblue;
+    font-style: italic;
 }
 
 /* Styles for review pages*/
@@ -36,7 +41,7 @@ footer div {
 
 .review-comment {
     margin: 1vh 0;
-    box-shadow: 2px 2px 5px black;
+    box-shadow: 1px 1px 5px black;
 }
 
 .review-complete-statement {
@@ -59,6 +64,19 @@ footer div {
     bottom: 40%;
     /* reference 3 May https://stackoverflow.com/questions/51309415/how-to-force-span-width-to-length-of-inner-text*/
     white-space: nowrap;
+}
+
+.container-with-shadow {
+    box-shadow: 5px 5px 10px black;
+    border-radius: 5px;
+    display: block;
+    margin: 10vh 1vw;
+}
+
+.result-home-page-option {
+    margin: 2vh 2vw;
+    text-align: center;
+    padding: 1vh 1vw;
 }
 /* Summative form CSS elements */
 #summative_form {

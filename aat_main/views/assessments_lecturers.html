@@ -2,15 +2,15 @@
 
 {% block content %}
     <h1>Assessments</h1>
-    <p><a href="{{ url_for('assessment_bp.assessments_management') }}">Assessments Management</a></p>
-    <ul>
-        {% for assessment in assessments %}
-            <li>
-                {{ assessment.title }}
-                <a href="{{ url_for('satisfaction_result_bp.assessment_review_results', id=assessment.id) }}">
-                    View satisfaction review results
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+    <a href="{{ url_for('formative_blueprint.formative') }}" class="list-group-item list-group-item-action">Formative</a>
+    <a href="{{ url_for('summative_blueprint.summative') }}" class="list-group-item list-group-item-action">Summative</a>
+
+{#        {% for assessment in assessments %}#}
+{#            <li>#}
+{#                {{ assessment.title }}#}
+{#                <a href="{{ url_for('satisfaction_result_bp.assessment_review_results', id=assessment.id) }}">#}
+{#                    View satisfaction review results#}
+{#                </a>#}
+{#            </li>#}
+{#        {% endfor %}#}
 {% endblock %}
