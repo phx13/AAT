@@ -355,6 +355,13 @@
                         let editUrl = "{{ url_for('formative_blueprint.edit_assessment',id='assessmentId') }}".replace("assessmentId", row.id);
                         return '<a class="btn btn-outline-primary" href="' + editUrl + '">edit</a>'
                     }
+                }, {
+                    field: 'review',
+                    title: 'Review',
+                    formatter: function (value, row, index) {
+                        let reviewUrl = "{{ url_for('satisfaction_result_bp.assessment_review_results',id='assessmentId' ) }}".replace('assessmentId', row.id);
+                        return '<a class="btn btn-outline-primary" href="' + reviewUrl + '">review</a>'
+                    }
                 }]
         });
 
