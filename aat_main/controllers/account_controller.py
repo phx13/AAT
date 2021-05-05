@@ -7,8 +7,8 @@ from jinja2 import TemplateError
 from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main.models.account_model import AccountModel
+from aat_main.models.assessment_models import Assessment, AssessmentCompletion
 from aat_main.models.credit_model import CreditModel
-from aat_main.models.score_model import ScoreModel
 from aat_main.utils.api_exception_helper import InterServerErrorException, NotFoundException
 from aat_main.utils.base64_helper import Base64Helper
 from aat_main.utils.serialization_helper import SerializationHelper
@@ -61,12 +61,26 @@ def stat_attempt(course):
     return render_template('account_base.html', current_account=current_user, course=course, student_stat_status=1)
 
 
-@account_bp.route('/account/stat/attempt/data/<module>/<type>')
-def stat_attempt_data(module, type):
-    if type == 'All':
-        score = ScoreModel.get_score_by_module(current_user.id, module)
-    else:
-        score = ScoreModel.get_score_by_module_and_type(current_user.id, module, type)
+@account_bp.route('/account/stat/attempt/data/')
+def stat_attempt_data():
+    conditions = []
+    if ('module' in request.args) and (request.args['module']):
+        conditions.append(Assessment.module == request.args['module'])
+
+    if ('type' in request.args) and (request.args['type']):
+        if request.args['type'] == '0' or request.args['type'] == '1':
+            conditions.append(Assessment.type == request.args['type'])
+
+    if ('startDate' in request.args) and (request.args['startDate']):
+        conditions.append(AssessmentCompletion.submit_time > request.args['startDate'])
+
+    if ('endDate' in request.args) and (request.args['endDate']):
+        conditions.append(AssessmentCompletion.submit_time < request.args['endDate'])
+
+    if current_user.role == 'student':
+        conditions.append(AssessmentCompletion.student_id == current_user.id)
+
+    score = AssessmentCompletion.get_score_by_conditions(*conditions)
     return jsonify(SerializationHelper.model_to_list(score))
 
 
