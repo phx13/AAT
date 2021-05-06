@@ -121,20 +121,18 @@
 
 {% if current_user.is_authenticated %}
     <footer>
-        <div>
-            {% if current_user.role == 'student' %}
-                <a class="footer-link-text"
-                   href="{{ url_for('satisfaction_review_bp.aat_review') }}">
-                    Review automAATiq
-                </a>
-            {% elif current_user.role == 'lecturer' %}
-{#                <a href="{{ url_for('satisfaction_result_bp.aat_review_results') }}"#}
-{#                   class="footer-link-text">#}
-{#                    See what students think about automAATiq#}
-{#                </a>#}
-                -
-            {% endif %}
-        </div>
+        {% if current_user.role == 'student' %}
+            <a class="footer-link-text"
+               href="{{ url_for('satisfaction_review_bp.aat_review') }}">
+                Review automAATiq
+            </a>
+        {% elif current_user.role == 'lecturer' %}
+            {#                <a href="{{ url_for('satisfaction_result_bp.aat_review_results') }}"#}
+            {#                   class="footer-link-text">#}
+            {#                    See what students think about automAATiq#}
+            {#                </a>#}
+            -
+        {% endif %}
     </footer>
 {% endif %}
 
