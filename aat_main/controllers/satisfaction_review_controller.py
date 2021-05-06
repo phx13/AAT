@@ -9,7 +9,7 @@ from aat_main.models.account_model import AccountModel
 from aat_main.models.assessment_models import Assessment
 from aat_main.models.credit_model import CreditModel
 from aat_main.models.question_models import Question
-from aat_main.models.satisfaction_review_model import AssessmentReview, AATReview, QuestionReview
+from aat_main.models.satisfaction_review_models import AssessmentReview, AATReview, QuestionReview
 from aat_main.utils.authorization_helper import check_if_authorized
 
 satisfaction_review_bp = Blueprint('satisfaction_review_bp', __name__, url_prefix='/review',
@@ -35,7 +35,8 @@ def assessment_review(assessment_id):
             }
         )
 
-        AssessmentReview.create_review(current_user.id, assessment_id, statement_response_map, form.comment.data)
+        AssessmentReview.create_review(current_user.id, assessment_id, statement_response_map,
+                                       form.comment.data)
 
         # Insert credit event when a student review an assessment (Phoenix)
         credit_event = 'Give feedback to assessment(' + assessment_id + ')'
@@ -80,14 +81,14 @@ def aat_review():
         create_time = time.strftime('%Y-%m-%d %H:%M:%S')
         CreditModel.insert_credit(current_user.id, 2, credit_event, 0, 10, create_time)
         AccountModel().update_credit(current_user.id, 10)
-
-        flash('Thanks for leaving a review!')
+        print('update finished')
+        flash('Thanks for reviewing automAATiq!')
         return redirect(url_for('index_bp.home'))
     else:
         for error in form.errors.values():
             flash(error)
 
-    title = 'This is a review for the AAT.'
+    title = 'This is a review for automAATiq.'
     return render_template('satisfaction-review.html', form=form, page_title=title)
 
 

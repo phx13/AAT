@@ -1,5 +1,5 @@
 from sqlalchemy import MetaData, Table
-
+from datetime import datetime
 from aat_main import db
 
 
@@ -34,7 +34,9 @@ class AATReview(db.Model):
 
     @staticmethod
     def create_review(student_id, statement_response_map, comment):
-        db.session.add(AATReview(student_id=student_id, statement_response_map=statement_response_map, comment=comment))
+        db.session.add(AATReview(student_id=student_id,
+                                 statement_response_map=statement_response_map, comment=comment,
+                                 date=datetime.utcnow()))
         db.session.commit()
 
     @staticmethod

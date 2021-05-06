@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from aat_main.models.assessment_models import Assessment
 from aat_main.models.question_models import Question
-from aat_main.models.satisfaction_review_model import AATReview
+from aat_main.models.satisfaction_review_models import AATReview
 from aat_main.utils.authorization_helper import check_if_authorized
 from aat_main.utils.serialization_helper import SerializationHelper
 
@@ -28,13 +28,21 @@ def before_request():
 
 @satisfaction_result_bp.route('/')
 def home():
-    return render_template('home.html')
+    # links = {
+    #     'automAATiq': 'assessment_review_results',
+    #     'Assessments': ''
+    # }
+    assessments = current_user.get_available_assessments_lecturer()
+    return render_template('home.html', assessments=assessments)
 
 
 @satisfaction_result_bp.route('/assessment/<id>')
 def assessment_review_results(id):
     assessment = Assessment.get_assessment_by_id(id)
     reviews = assessment.get_reviews()
+    if not reviews:
+        return render_template('no-reviews-assessment.html', assessment=assessment)
+
     # TODO handle case where there are no reviews
 
     statement_response_counts = SerializationHelper.decode(reviews, responses)
@@ -62,7 +70,7 @@ def aat_review_results():
 
     comments = [review.comment for review in reviews if review.comment]
 
-    title = 'Results of AAT Reviews'
+    title = 'Result of satisfaction reviews for automAATiq'
 
     return render_template('satisfaction_results/review-results.html',
                            results=statement_response_counts,
