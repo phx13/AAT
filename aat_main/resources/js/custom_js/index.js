@@ -1,13 +1,13 @@
 $(document).ready(function ($) {
-    let animationDelay = 2500,
-        barAnimationDelay = 3800,
-        barWaiting = barAnimationDelay - 3000,
-        lettersDelay = 50,
-        typeLettersDelay = 150,
-        selectionDuration = 500,
-        typeAnimationDelay = selectionDuration + 800,
-        revealDuration = 600,
-        revealAnimationDelay = 1500;
+    let animationDelay = 5000,
+        barAnimationDelay = 10000,
+        barWaiting = barAnimationDelay - 5000,
+        lettersDelay = 100,
+        typeLettersDelay = 300,
+        selectionDuration = 2000,
+        typeAnimationDelay = selectionDuration + 1500,
+        revealDuration = 2000,
+        revealAnimationDelay = 4000;
 
     initHeadline();
 

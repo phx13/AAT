@@ -222,8 +222,8 @@ class AccountModel(db.Model, UserMixin):
             )
         ).all()
 
-    def update_credit(self, email, credit):
-        result = self.search_account_by_email(email)
+    def update_credit(self, id, credit):
+        result = self.search_account_by_id(id)
         result.credit = int(result.credit) + credit
         db.session.commit()
 
