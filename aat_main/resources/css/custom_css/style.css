@@ -6,6 +6,13 @@ main {
     margin: 1vh 1vw;
 }
 
+@media print {
+    footer {
+        display: none;
+    }
+}
+
+
 footer div {
     background-color: #343a40;
     color: rgba(255, 255, 255, .5);
@@ -14,6 +21,10 @@ footer div {
     border-radius: 5px;
     text-align: left;
 }
+
+/*@media print {*/
+/*    footer     */
+/*}*/
 
 .footer-link-text {
     color: cornflowerblue;
@@ -55,31 +66,37 @@ footer div {
     max-height: 10vh;
 }
 
-.pie-chart-container {
-    width: 50vw;
-    height: 70vh;
-    margin: auto;
-}
 /*.pie-chart-container {*/
-/*    width: 200vw;*/
-/*    height: 150vh;*/
+/*    width: 50vw;*/
+/*    height: 70vh;*/
 /*    margin: auto;*/
 /*}*/
-
-@media print {
-    .pie-chart-container {
-        width: 200vw;
-        height: 150vh;
-        margin: 0;
-    }
+.pie-chart-container {
+    width: 80vw;
+    height: 40vh;
+    margin: auto;
 }
+
 
 .combo-chart-container {
     width: 80vw;
-    height: 80vh;
-    margin: auto;
+    height: 40vh;
+    margin: 0 auto;
+    padding: 0;
 }
 
+@media screen {
+    .pie-chart-container {
+        width: 80vw;
+        height: 100vh;
+    }
+
+    .combo-chart-container {
+        width: 80vw;
+        height: 60vh;
+        margin: auto;
+    }
+}
 .radio-group-error {
     font-weight: bold;
     color: #C70039;
