@@ -27,12 +27,12 @@
                         Review questions
                     </a>
                 {% endif %}
-                    
+
                 <span>|</span>
 
-                    <a href="{{ url_for('assessment_bp.assessment_feedback', assessment_id = assessment.id) }}">
-                        Results and Feedback
-                    </a>
+                <a href="{{ url_for('assessment_bp.assessment_feedback', assessment_id = assessment.id) }}">
+                    Results and Feedback
+                </a>
             </li>
 
         {% endfor %}

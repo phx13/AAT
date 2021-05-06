@@ -13,147 +13,144 @@
     {#            {{ form.submit.label }} {{ form.submit }}#}
     {#        </form>#}
     {#        {{ message }}#}
-    <div class="container">
-        <div class="row">
-            <p id="courseTitle" class="col-8 display-4">All Assessments</p>
-            {#            {{ form.module(class="custom-select col-4", placeholder="Please Choose a Module") }}#}
+    <div class="row">
+        <p id="courseTitle" class="col-8 display-4">All Assessments</p>
+        {#            {{ form.module(class="custom-select col-4", placeholder="Please Choose a Module") }}#}
 
-            <select id="module" class="form-control col-4">
-                <option>Please Choose a Module</option>
-                {% for m in modules %}
-                    <option>{{ m.code }}:{{ m.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        {#        <form action="" method="post" id="module_choice_form" class="row">#}
+        <select id="module" class="form-control col-4">
+            <option>Please Choose a Module</option>
+            {% for m in modules %}
+                <option>{{ m.code }}:{{ m.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {#        <form action="" method="post" id="module_choice_form" class="row">#}
 
 
-        {#            {% for error in form.module.errors %}#}
-        {#                <span style="color: red;">[ {{ error }} ]</span><br>#}
-        {#            {% endfor %}#}
-        <!-- Module selection -->
+    {#            {% for error in form.module.errors %}#}
+    {#                <span style="color: red;">[ {{ error }} ]</span><br>#}
+    {#            {% endfor %}#}
+    <!-- Module selection -->
 
-        {#        </form>#}
-        <div>
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-success" id="newAssessmentButton" data-toggle="modal"
-                    data-target="#assessmentDetail" disabled>
-                New Assessment
-            </button>
+    {#        </form>#}
+    <div>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-success" id="newAssessmentButton" data-toggle="modal"
+                data-target="#assessmentDetail" disabled>
+            New Assessment
+        </button>
 
-            <!-- Modal -->
-            <div class="modal fade" id="assessmentDetail" data-backdrop="static" data-keyboard="false" tabindex="-1"
-                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">New Assessment</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" id="pills-formative-tab" data-toggle="pill"
-                                       href="#pills-formative"
-                                       role="tab" aria-controls="pills-formative" aria-selected="true">Formative</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="pills-summative-tab" data-toggle="pill"
-                                       href="#pills-summative"
-                                       role="tab" aria-controls="pills-summative" aria-selected="false">Summative</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content" id="pills-tabContent">
-                                <div class="tab-pane fade show active" id="pills-formative" role="tabpanel"
-                                     aria-labelledby="pills-formative-tab">
-                                    <form>
-                                        <div class="form-group">
-                                            <label for="formativeTitle">Title</label>
-                                            <input type="text" class="form-control" id="formativeTitle"
-                                                   placeholder="Title">
-                                            <h4 id="formativeTitleVerification"></h4>
+        <!-- Modal -->
+        <div class="modal fade" id="assessmentDetail" data-backdrop="static" data-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">New Assessment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="nav nav-pills nav-justified" id="pills-tab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="pills-formative-tab" data-toggle="pill"
+                                   href="#pills-formative"
+                                   role="tab" aria-controls="pills-formative" aria-selected="true">Formative</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="pills-summative-tab" data-toggle="pill"
+                                   href="#pills-summative"
+                                   role="tab" aria-controls="pills-summative" aria-selected="false">Summative</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-formative" role="tabpanel"
+                                 aria-labelledby="pills-formative-tab">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="formativeTitle">Title</label>
+                                        <input type="text" class="form-control" id="formativeTitle"
+                                               placeholder="Title">
+                                        <h4 id="formativeTitleVerification"></h4>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col">
+                                            <label for="releaseTime">Release Time</label>
+                                            <input type="text" class="form-control" id="releaseTime"
+                                                   placeholder="Release Time">
+                                            <h4 id="releaseTimeVerification"></h4>
                                         </div>
-                                        <div class="row">
-                                            <div class="form-group col">
-                                                <label for="releaseTime">Release Time</label>
-                                                <input type="text" class="form-control" id="releaseTime"
-                                                       placeholder="Release Time">
-                                                <h4 id="releaseTimeVerification"></h4>
-                                            </div>
-                                            <div class="form-group col">
-                                                <label for="dueDate">Due Date</label>
-                                                <input type="text" class="form-control" id="dueDate"
-                                                       placeholder="Due Date">
-                                                <h4 id="dueDateVerification"></h4>
+                                        <div class="form-group col">
+                                            <label for="dueDate">Due Date</label>
+                                            <input type="text" class="form-control" id="dueDate"
+                                                   placeholder="Due Date">
+                                            <h4 id="dueDateVerification"></h4>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col">
+                                            <label for="countIn">Count In</label>
+                                            <input type="text" class="form-control" id="countIn"
+                                                   placeholder="Count In">
+                                            <h4 id="countInVerification"></h4>
+                                        </div>
+                                        <div class="form-group col">
+                                            <label for="attemptTime">Attempt Times</label>
+                                            <input type="text" class="form-control" id="attemptTime"
+                                                   placeholder="attemptTime">
+                                            <h4 id="attemptTimeVerification"></h4>
+                                            <div class="custom-control custom-checkbox custom-control-inline">
+                                                <input type="checkbox" class="custom-control-input"
+                                                       id="attemptTimeCheckbox">
+                                                <label class="custom-control-label" for="attemptTimeCheckbox">Unlimited</label>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="form-group col">
-                                                <label for="countIn">Count In</label>
-                                                <input type="text" class="form-control" id="countIn"
-                                                       placeholder="Count In">
-                                                <h4 id="countInVerification"></h4>
-                                            </div>
-                                            <div class="form-group col">
-                                                <label for="attemptTime">Attempt Times</label>
-                                                <input type="text" class="form-control" id="attemptTime"
-                                                       placeholder="attemptTime">
-                                                <h4 id="attemptTimeVerification"></h4>
-                                                <div class="custom-control custom-checkbox custom-control-inline">
-                                                    <input type="checkbox" class="custom-control-input"
-                                                           id="attemptTimeCheckbox">
-                                                    <label class="custom-control-label" for="attemptTimeCheckbox">Unlimited</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col">
-                                                <label for="timeLimit">Time Limit</label>
-                                                <input type="text" class="form-control" id="timeLimit"
-                                                       placeholder="Time Limit">
-                                                <h4 id="timeLimitVerification"></h4>
-                                            </div>
+                                        <div class="form-group col">
+                                            <label for="timeLimit">Time Limit</label>
+                                            <input type="text" class="form-control" id="timeLimit"
+                                                   placeholder="Time Limit">
+                                            <h4 id="timeLimitVerification"></h4>
+                                        </div>
 
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="description">Description</label>
-                                            <textarea class="form-control"
-                                                      id="description"></textarea>
-                                            <h4 id="descriptionVerification"></h4>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="tab-pane fade" id="pills-summative" role="tabpanel"
-                                     aria-labelledby="pills-summative-tab">
-                                    summative
-                                </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <textarea class="form-control"
+                                                  id="description"></textarea>
+                                        <h4 id="descriptionVerification"></h4>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="pills-summative" role="tabpanel"
+                                 aria-labelledby="pills-summative-tab">
+                                summative
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                    onclick="createAssessment()">Create
-                            </button>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                onclick="createAssessment()">Create
+                        </button>
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-danger" onclick="deleteAssessment()">Delete Assessment</button>
         </div>
-        <hr>
-
-        <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link active" id="nav-current-tab" data-toggle="tab" href="#nav-current"
-                   role="tab"
-                   aria-controls="nav-current" aria-selected="false">Current Assessments</a>
-                <a class="nav-item nav-link" id="nav-pass-tab" data-toggle="tab" href="#nav-pass" role="tab"
-                   aria-controls="nav-pass" aria-selected="false">Passed Assessments</a>
-            </div>
-        </nav>
-        <table id="assessmentTable" data-toggle="table"></table>
+        <button type="button" class="btn btn-danger" onclick="deleteAssessment()">Delete Assessment</button>
     </div>
+    <hr>
 
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-current-tab" data-toggle="tab" href="#nav-current"
+               role="tab"
+               aria-controls="nav-current" aria-selected="false">Current Assessments</a>
+            <a class="nav-item nav-link" id="nav-pass-tab" data-toggle="tab" href="#nav-pass" role="tab"
+               aria-controls="nav-pass" aria-selected="false">Passed Assessments</a>
+        </div>
+    </nav>
+    <table id="assessmentTable" data-toggle="table"></table>
 {% endblock %}
 
 {% block scripts %}

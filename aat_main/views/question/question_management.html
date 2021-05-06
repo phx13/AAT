@@ -4,123 +4,107 @@
 {% endblock %}
 
 {% block content %}
-    {#    <h1>Question Management</h1>#}
-    {#    <ul>#}
-    {#        {% for question in questions %}#}
-    {#            {% set module = question.get_module() %}#}
-    {#            <li>#}
-    {#                {{ question.name }} from {{ module.code }} {{ module.name }} -#}
-    {#                <a href="#">Edit</a>#}
-    {#                <a href="#">Delete</a>#}
-    {#                <a href="{{ url_for('satisfaction_result_bp.question_review_result', id=question.id) }}">View reviews</a>#}
-    {#            </li>#}
-    {#        {% endfor %}#}
-    {#    </ul>#}
+    <h1>Question Management</h1>
 
-    <div class="container">
-        <h1>Question Management</h1>
+    <div class="row" style="margin: 0;">
+        <select id="moduleDropdown" class="form-control col-3" style="margin-right: 10px;">
+            <option>All</option>
+            {% for m in modules %}
+                <option>{{ m.code }}</option>
+            {% endfor %}
+        </select>
+        {#            <select id="sortDropdown" class="form-control col-3" style="margin-right: 10px;">#}
+        {#                <option>Sort by id</option>#}
+        {#                <option>Sort by time asc</option>#}
+        {#                <option>Sort by time desc</option>#}
+        {#                <option>Sort by module</option>#}
+        {#            </select>#}
+        <!-- Button trigger modal -->
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionDetail" onclick="initQuestionDetail()" style="margin-right: 10px;">
+            Create Question
+        </button>
 
-        <div class="row" style="margin: 0;">
-            <select id="moduleDropdown" class="form-control col-3" style="margin-right: 10px;">
-                <option>All</option>
-                {% for m in modules %}
-                    <option>{{ m.code }}</option>
-                {% endfor %}
-            </select>
-            {#            <select id="sortDropdown" class="form-control col-3" style="margin-right: 10px;">#}
-            {#                <option>Sort by id</option>#}
-            {#                <option>Sort by time asc</option>#}
-            {#                <option>Sort by time desc</option>#}
-            {#                <option>Sort by module</option>#}
-            {#            </select>#}
-            <!-- Button trigger modal -->
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionDetail" onclick="initQuestionDetail()" style="margin-right: 10px;">
-                Create Question
-            </button>
+        <!-- Modal -->
+        <div class="modal fade" id="questionDetail" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Question Detail</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="moduleDetail">Module</label>
+                                    <select id="moduleDetail" class="form-control">
+                                        {% for m in modules %}
+                                            <option>{{ m.code }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col">
+                                    <label for="typeDetail">Type</label>
+                                    <select id="typeDetail" class="form-control">
+                                        <option>Multiple choice</option>
+                                        <option>Fill in blank</option>
+                                        <option>Summative</option>
+                                    </select>
+                                </div>
+                            </div>
 
-            <!-- Modal -->
-            <div class="modal fade" id="questionDetail" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Question Detail</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
+                            <div class="form-group">
+                                <label for="questionNameDetail">Question Name</label>
+                                <input type="text" class="form-control" id="questionNameDetail" placeholder="Question Name Detail">
+                                <h4 id="questionNameDetailVerification"></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="questionDescriptionDetail">Question Description</label>
+                                <textarea type="text" class="form-control" id="questionDescriptionDetail" placeholder="Question Description Detail"></textarea>
+                                <h4 id="questionDescriptionDetailVerification"></h4>
+                            </div>
+                            <div class="form-group">
+                                <label for="questionFeedback">Question Feedback</label>
+                                <textarea type="text" class="form-control" id="questionFeedback" placeholder="Question Feedback"></textarea>
+                                <h4 id="questionFeedbackVerification"></h4>
+                            </div>
+                            <div class="form-group" id="optionDetailGroup">
+                                <label for="optionDetail">Question Options</label>
                                 <div class="row">
-                                    <div class="form-group col">
-                                        <label for="moduleDetail">Module</label>
-                                        <select id="moduleDetail" class="form-control">
-                                            {% for m in modules %}
-                                                <option>{{ m.code }}</option>
-                                            {% endfor %}
-                                        </select>
+                                    <div class="col" id="optionGroup">
                                     </div>
-                                    <div class="form-group col">
-                                        <label for="typeDetail">Type</label>
-                                        <select id="typeDetail" class="form-control">
-                                            <option>Multiple choice</option>
-                                            <option>Fill in blank</option>
-                                            <option>Summative</option>
-                                        </select>
+                                    <div class="col" id="addOptionGroup">
+                                        <button type="button" class="btn btn-primary inline-block" onclick="addQuestionOption(this)" id="addQuestionBtn">Add Option</button>
+                                        <button type="button" class="btn btn-success inline-block" onclick="createQuestionOption(this)" style="display: none;"
+                                                id="createOptionBtn">Create
+                                            Option
+                                        </button>
+                                        <input type="text" class="form-control" placeholder="" id="optionInput" style="display: none;">
+                                        <h4 id="optionInputVerification"></h4>
                                     </div>
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="questionNameDetail">Question Name</label>
-                                    <input type="text" class="form-control" id="questionNameDetail" placeholder="Question Name Detail">
-                                    <h4 id="questionNameDetailVerification"></h4>
-                                </div>
-                                <div class="form-group">
-                                    <label for="questionDescriptionDetail">Question Description</label>
-                                    <textarea type="text" class="form-control" id="questionDescriptionDetail" placeholder="Question Description Detail"></textarea>
-                                    <h4 id="questionDescriptionDetailVerification"></h4>
-                                </div>
-                                <div class="form-group">
-                                    <label for="questionFeedback">Question Feedback</label>
-                                    <textarea type="text" class="form-control" id="questionFeedback" placeholder="Question Feedback"></textarea>
-                                    <h4 id="questionFeedbackVerification"></h4>
-                                </div>
-                                <div class="form-group" id="optionDetailGroup">
-                                    <label for="optionDetail">Question Options</label>
-                                    <div class="row">
-                                        <div class="col" id="optionGroup">
-                                        </div>
-                                        <div class="col" id="addOptionGroup">
-                                            <button type="button" class="btn btn-primary inline-block" onclick="addQuestionOption(this)" id="addQuestionBtn">Add Option</button>
-                                            <button type="button" class="btn btn-success inline-block" onclick="createQuestionOption(this)" style="display: none;"
-                                                    id="createOptionBtn">Create
-                                                Option
-                                            </button>
-                                            <input type="text" class="form-control" placeholder="" id="optionInput" style="display: none;">
-                                            <h4 id="optionInputVerification"></h4>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group" id="questionAnswerDetailGroup" style="display: none">
-                                    <label for="questionAnswerDetail">Answer</label>
-                                    <input type="text" class="form-control" id="questionAnswerDetail" placeholder="Answer">
-                                    <h4 id="questionAnswerDetailVerification"></h4>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="createQuestion()">Create</button>
-                        </div>
+                            </div>
+                            <div class="form-group" id="questionAnswerDetailGroup" style="display: none">
+                                <label for="questionAnswerDetail">Answer</label>
+                                <input type="text" class="form-control" id="questionAnswerDetail" placeholder="Answer">
+                                <h4 id="questionAnswerDetailVerification"></h4>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="createQuestion()">Create</button>
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-danger" style="margin-right: 10px;" onclick="deleteQuestion()">Delete question</button>
         </div>
-
-        <table id="btTable" data-toggle="table"></table>
-
+        <button type="button" class="btn btn-danger" style="margin-right: 10px;" onclick="deleteQuestion()">Delete question</button>
     </div>
+
+    <table id="btTable" data-toggle="table"></table>
 {% endblock %}
 
 {% block scripts %}
@@ -215,7 +199,11 @@
                     title: "selectAll",
                     field: "select",
                     checkbox: true,
-                    align: "center"
+                    align: "center",
+                    cellStyle: function () {
+                        $(".th-inner")[0].style.overflow = "inherit";
+                        return {css: {"overflow": "inherit"}}
+                    }
                 }, {
                     field: 'id',
                     title: 'Id'

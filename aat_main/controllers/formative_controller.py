@@ -1,13 +1,12 @@
+from datetime import datetime
+
 from flask import Blueprint, render_template, request, jsonify
 from flask_login import current_user
 from jinja2 import TemplateError
-from datetime import datetime
 
-from aat_main.forms.formative_forms import module_choice_form
 from aat_main.models.assessment_models import Assessment
 from aat_main.models.question_models import Question
 from aat_main.utils.api_exception_helper import NotFoundException
-from aat_main.utils.serialization_helper import SerializationHelper
 
 formative_blueprint = Blueprint('formative_blueprint', __name__, template_folder='../views/formative')
 
@@ -174,6 +173,7 @@ def add_question_to_assessment(assessment_id):
         return 'added successful'
     except:
         return 'Server error'
+
 
 @formative_blueprint.route('/assessments/assessments_management/formative/question/delete/<assessment_id>',
                            methods=['POST'])

@@ -62,4 +62,3 @@ app.register_blueprint(error_bp)
 app.register_blueprint(account_bp)
 app.register_blueprint(question_bp)
 app.register_blueprint(create_question_blueprint)
-

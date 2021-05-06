@@ -78,7 +78,6 @@ def create_question():
     return 'create successful'
 
 
-
 @question_bp.route('/management/data/update/', methods=['POST'])
 def update_question():
     return 'update successful'

@@ -1,42 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h3>Results for:<br> {{assessment.title}}</h3>
-<h4>Mark: {{mark}}/{{outof}}</h4>
+    <h3>Results for:<br> {{ assessment.title }}</h3>
+    <h4>Mark: {{ mark }}/{{ outof }}</h4>
 
 
     <hr>
     {% for question in questions %}
-    {% if question.type == 0 %} <!-- multichoice questions -->
+        {% if question.type == 0 %} <!-- multichoice questions -->
 
-        <h4>{{question.name}}</h4>
-        {{question.description}}
-        <br>
-        <br>{% for key, value in question_options.items() %}
+            <h4>{{ question.name }}</h4>
+            {{ question.description }}
+            <br>
+            <br>{% for key, value in question_options.items() %}
 
 
-                {% if key == question.id %}  
-                    <h5>Options:</h6>
-                    <ul>
+            {% if key == question.id %}
+                <h5>Options:</h6>
+                <ul>
                     {% for val in value %}
-                        
+
                         {% if val == question.answer %}
-                        <li>{{val}} <--- Correct Answer</li>
+                            <li>{{ val }} <--- Correct Answer</li>
                         {% else %}
-                        <li>{{val}}</li>
+                            <li>{{ val }}</li>
                         {% endif %}
                     {% endfor %}
-                    </ul>
+                </ul>
 
-                {% endif %}
-            {% endfor %}
+            {% endif %}
+        {% endfor %}
             {% for key, value in results.items() %}
 
 
 
                 {% set key = key|int %}
                 {% if key == question.id %}
-                <h5>Your answer: &nbsp; {{ value }}</h5>
+                    <h5>Your answer: &nbsp; {{ value }}</h5>
                     {% if value == question.answer %}
                         <p>Your answer was Correct</p>
 
@@ -45,7 +45,7 @@
                     {% else %}
                         <p>Your answer was Incorrect</p>
                         <h4>Please make use of this feedback:</h4>
-                        {{question.feedback}}
+                        {{ question.feedback }}
 
 
                     {% endif %}
@@ -59,13 +59,13 @@
 
             {% endfor %}
 
-    {% elif question.type == 1 %} <!-- text input question -->
+        {% elif question.type == 1 %} <!-- text input question -->
 
-        <h4>{{question.name}}</h4>
-        {{question.description}}
-        <br>
-        <br>
-        <h5>Correct Answer: {{ question.answer }} </h5>
+            <h4>{{ question.name }}</h4>
+            {{ question.description }}
+            <br>
+            <br>
+            <h5>Correct Answer: {{ question.answer }} </h5>
             {% for key, value in results.items() %}
                 {% set key = key|int %}
                 {% if key == question.id %}
@@ -78,24 +78,24 @@
                     {% else %}
                         <p>Your answer was Incorrect</p>
                         <h4>Please make use of this feedback:</h4>
-                        {{question.feedback}}
+                        {{ question.feedback }}
 
 
                     {% endif %}
-    
-    
-    
-    
+
+
+
+
                 {% endif %}
-    
-    
-    
+
+
+
             {% endfor %}
 
         {% endif %}
         <hr>
     {% endfor %}
-    
+
 
 
 

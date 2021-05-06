@@ -108,6 +108,7 @@ footer div {
     white-space: nowrap;
 }
 
+
 .container-with-shadow {
     box-shadow: 5px 5px 10px black;
     border-radius: 5px;
@@ -127,6 +128,7 @@ footer div {
     text-align: center;
     padding: 1vh 1vw;
 }
+
 /* Summative form CSS elements */
 #summative_form {
     display: flex;
@@ -153,6 +155,111 @@ footer div {
     overflow: hidden;
     text-overflow: ellipsis;
     /*white-space: nowrap;*/
+}
+
+/*------------------------------------------------------------------
+    Banner
+-------------------------------------------------------------------*/
+
+.main-banner {
+    height: 100%;
+    position: relative;
+    background: url(../../images/thumbs/main_banner.png);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    display: table;
+    width: 100%;
+    text-align: end;
+}
+
+.main-banner::after {
+    content: " ";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #000;
+    z-index: 0;
+    opacity: .5;
+}
+
+.heading {
+    color: #ffffff;
+    display: table-cell;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+}
+
+.heading h1 {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 50px;
+    margin: 20px;
+}
+
+.heading p {
+    font-size: 18px;
+    margin: 20px;
+}
+
+.heading h3 {
+    color: #ffffff;
+}
+
+.cd-words-wrapper {
+    display: inline-block;
+    position: relative;
+    text-align: left;
+}
+
+.cd-words-wrapper b {
+    display: inline-block;
+    position: absolute;
+    white-space: nowrap;
+    left: 0;
+    top: 0;
+}
+
+.cd-words-wrapper b.is-visible {
+    position: relative;
+}
+
+.cd-headline.clip span {
+    display: inline-block;
+    padding: .2em 0;
+    color: #ffffff;
+    font-size: 30px;
+}
+
+.cd-headline.clip span b {
+    text-transform: uppercase;
+}
+
+.cd-headline.clip .cd-words-wrapper {
+    overflow: hidden;
+    vertical-align: top;
+}
+
+.cd-headline.clip .cd-words-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background-color: #aebcb9;
+}
+
+.cd-headline.clip b {
+    opacity: 0;
+}
+
+.cd-headline.clip b.is-visible {
+    opacity: 1;
 }
 
 

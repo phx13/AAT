@@ -1,41 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Questions: {{question_id}}</h1>
-<form action="" method="POST">
-    <!-- {{ form.csrf_token() }} -->
+    <h1>Questions: {{ question_id }}</h1>
+    <form action="" method="POST">
+        <!-- {{ form.csrf_token() }} -->
 
-        <hr> 
-    {% for question in questions %}
-        {% if question.type == 0 %} <!-- Multichoice -->
-            <h5>{{ question.name }}</h5><br>
-            <h6>Question:</h6>
-            <p>{{ question.description }}</p>
-            <h6>Options:</h6>
+        <hr>
+        {% for question in questions %}
+            {% if question.type == 0 %} <!-- Multichoice -->
+                <h5>{{ question.name }}</h5><br>
+                <h6>Question:</h6>
+                <p>{{ question.description }}</p>
+                <h6>Options:</h6>
                 {% for key, value in question_options.items() %}
                     {% if key == question.id %}
                         {% for option in value %}
-                            <input type="radio" id="{{option}}" name="{{ question.id }}" value="{{option}}">
-                            <label for="{{option}}">{{option}}</label><br>
+                            <input type="radio" id="{{ option }}" name="{{ question.id }}" value="{{ option }}">
+                            <label for="{{ option }}">{{ option }}</label><br>
                         {% endfor %}
                     {% endif %}
                 {% endfor %}
-            <hr>  
-        {% elif question.type == 1 %} <!-- Text input -->
-            <h5>{{ question.name }}</h5><br>
-            <h6>Question:</h6>
-            <p>{{ question.description }}</p>
-            <h6>Provide Answer:</h6>
-            <input type="text" id="{{question.id}}" name="{{ question.id }}" value="">
+                <hr>
+            {% elif question.type == 1 %} <!-- Text input -->
+                <h5>{{ question.name }}</h5><br>
+                <h6>Question:</h6>
+                <p>{{ question.description }}</p>
+                <h6>Provide Answer:</h6>
+                <input type="text" id="{{ question.id }}" name="{{ question.id }}" value="">
 
 
-            <hr>        
-        {% endif %}
-    {% endfor %}
-    
+                <hr>
+            {% endif %}
+        {% endfor %}
 
 
-    <button type="submit" value="{{assessment.id}}">Submit</button>   
-</form>
+
+        <button type="submit" value="{{ assessment.id }}">Submit</button>
+    </form>
 
 {% endblock %}

@@ -1,14 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
-from flask_login import current_user, login_required
 import json
 import random
-from jinja2 import TemplateError
 
+from flask import Blueprint, render_template, redirect, url_for, request
+from flask_login import current_user, login_required
+
+from aat_main.forms.complete_assessment_form import complete_assessment_form
 from aat_main.models.assessment_models import Assessment, AssessmentCompletion
 from aat_main.models.question_models import Question
-from aat_main.forms.complete_assessment_form import complete_assessment_form
-from aat_main import db
-
 
 assessment_bp = Blueprint('assessment_bp', __name__, url_prefix='/assessments', template_folder='../views')
 
@@ -96,7 +94,7 @@ def answer_questions(assessment_id):
     questions = []
     question_options = {}
     mark = 0;
-    
+
     for question in assessment_questions:
         questions.append(Question.get_question_by_id(int(question)))
 
@@ -106,39 +104,38 @@ def answer_questions(assessment_id):
         if quest.option != "" or None:
             q_string = quest.option
             options = (q_string).split("}{")
-            
+
             for opt in options:
                 opt = opt.replace("{", "")
                 opt = opt.replace("}", "")
                 opt = opt.split(":")
                 temp_options.append(opt[1])
         question_options[quest.id] = temp_options
-    
+
     answers = {}
     if request.method == "POST":
         for quest in questions:
             if quest.type == 0:
                 options = question_options[quest.id]
                 if request.form.get(str(quest.id)) == quest.answer:
-                    mark+=1
+                    mark += 1
                 for opt in options:
                     value = request.form.get(str(quest.id))
                     if value:
                         answers[quest.id] = value
-                            
-            elif quest.type == 1:   
+
+            elif quest.type == 1:
                 value = request.form.get(str(quest.id))
                 answers[quest.id] = value
                 if value == quest.answer:
-                    mark+=1
-                
+                    mark += 1
 
-        
         answers_submit = json.dumps(answers)
         AssessmentCompletion.create_assessment_completion(current_user.id, assessment.id, answers_submit, mark)
-        return redirect(url_for('assessment_bp.assessment_feedback', assessment_id = assessment.id))
+        return redirect(url_for('assessment_bp.assessment_feedback', assessment_id=assessment.id))
 
     return render_template('question_in_assessment.html', assessment=assessment, questions=questions, question_options=question_options, form=form)
+
 
 @assessment_bp.route('/feedback/<assessment_id>')
 def assessment_feedback(assessment_id):
@@ -155,12 +152,12 @@ def assessment_feedback(assessment_id):
         questions.append(Question.get_question_by_id(int(question)))
 
     for quest in questions:
-        outof+=1
+        outof += 1
         temp_options = []
         if quest.option != "" or None:
             q_string = quest.option
             options = (q_string).split("}{")
-            
+
             for opt in options:
                 opt = opt.replace("{", "")
                 opt = opt.replace("}", "")
@@ -174,8 +171,6 @@ def assessment_feedback(assessment_id):
             mark = res.mark
 
     return render_template('submitted_assessment.html',
-     questions=questions, assessment=assessment,
-     question_options=question_options, results=valid_result, 
-     mark=mark, outof=outof)
-    
-
+                           questions=questions, assessment=assessment,
+                           question_options=question_options, results=valid_result,
+                           mark=mark, outof=outof)

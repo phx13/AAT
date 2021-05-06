@@ -8,27 +8,36 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12 col-md-12 col-lg-4">
+        <div class="col-sm-12 col-md-12 col-lg-5">
             <div>
-                <p class="lead font-italic">Total Credit</p>
-                <p class="display-4 font-italic">{{ current_account.credit }}</p>
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg">
-                        <p class="lead">Formative</p>
-                        <h3>{{ credit_dic['formative'] }}</h3>
-                        <p class="lead">Summative</p>
-                        <h3>{{ credit_dic['summative'] }}</h3>
+                        <p class="lead font-italic">Total Credit</p>
+                        <p class="display-4 font-italic">{{ current_account.credit }}</p>
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg">
-                        <p class="lead">Feedback</p>
-                        <h3>{{ credit_dic['feedback'] }}</h3>
-                        <p class="lead">Collection</p>
-                        <h3>{{ credit_dic['collection'] }}</h3>
+                        <p class="lead font-italic">Module Credit</p>
+                        <p class="display-4 font-italic" id="moduleCredit">0</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg">
+                        <p>Formative Credit</p>
+                        <h3 id="formativeCredit">0</h3>
+                        <p>Summative Credit</p>
+                        <h3 id="summativeCredit">0</h3>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg">
+                        <p>Feedback Credit</p>
+                        <h3 id="feedbackCredit">0</h3>
+                        <p>Collection Credit</p>
+                        <h3 id="collectionCredit">0</h3>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-8">
+        <div class="col-sm-12 col-md-12 col-lg-7">
             <div id="engagementPieChart" style="width: 100%; height: 400px;"></div>
         </div>
     </div>
@@ -76,46 +85,3 @@
         </table>
     </div>
 </div>
-
-<script type="text/javascript" src="/js/import_js/echarts.js"></script>
-<script>
-    let data = {{ credit_dic|tojson }};
-    //engagement pie chart
-    let engagementPieChart = echarts.init(document.getElementById("engagementPieChart"));
-    let engagementPieChartOption = {
-        legend: {
-            top: 'top'
-        },
-        tooltip: {
-            trigger: 'item',
-            formatter: '{b} : {c} ({d}%)'
-        },
-        series: [
-            {
-                type: 'pie',
-                radius: [30, 150],
-                center: ['50%', '50%'],
-                roseType: 'radius',
-                label: {
-                    show: false
-                },
-                emphasis: {
-                    label: {
-                        show: true
-                    }
-                },
-                itemStyle: {
-                    borderRadius: 10
-                },
-                data: [
-                    {value: data['login'], name: 'login'},
-                    {value: data['formative'], name: 'formative'},
-                    {value: data['summative'], name: 'summative'},
-                    {value: data['feedback'], name: 'feedback'},
-                    {value: data['collection'], name: 'collection'}
-                ]
-            }
-        ]
-    };
-    engagementPieChart.setOption(engagementPieChartOption);
-</script>
