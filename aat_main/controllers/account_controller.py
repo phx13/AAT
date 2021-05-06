@@ -128,7 +128,7 @@ def stat_engagement(course):
 def stat_engagement_data():
     conditions = []
     if ('module' in request.args) and (request.args['module']):
-        conditions.append(CreditModel.module_code == request.args['module'])
+        conditions.append(Assessment.module == request.args['module'])
 
     if current_user.role == 'student':
         conditions.append(CreditModel.account_id == current_user.id)
@@ -136,8 +136,12 @@ def stat_engagement_data():
     credit_types = CreditModel.get_types_by_conditions(*conditions)
     module_credit = str(CreditModel.get_credit_by_conditions(*conditions).scalar())
     credit_dic = {}
-    credit_dic.update({4: module_credit})
+    credit_dic.update({5: module_credit})
     for credit_type in credit_types:
-        dic = {credit_type[0]: str(CreditModel.get_credit_by_conditions(*conditions, CreditModel.type == credit_type[0]).scalar())}
+        credit = str(CreditModel.get_credit_by_conditions(*conditions, CreditModel.type == credit_type[0]).scalar())
+        if credit == 'None':
+            credit = '0'
+        dic = {credit_type[0]: credit}
         credit_dic.update(dic)
+    print(credit_dic)
     return jsonify(credit_dic)
