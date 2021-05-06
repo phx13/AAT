@@ -9,7 +9,7 @@ class CreditModel(db.Model):
     """
     id: int
     email: varchar
-    type: varchar
+    type: int, {0: formative, 1:summative, 2:feedback 3: collection}
     event: varchar
     target: int
     credit: int
@@ -21,12 +21,12 @@ class CreditModel(db.Model):
         return db.session.query(CreditModel).filter_by(email=email).order_by(CreditModel.time.desc()).all()
 
     @staticmethod
-    def get_types_by_email(email):
-        return db.session.query(CreditModel.type).filter_by(email=email).distinct().all()
+    def get_types_by_conditions(*conditions):
+        return db.session.query(CreditModel.type).filter(*conditions).distinct().all()
 
     @staticmethod
-    def get_credit_by_email_and_type(email, type):
-        return db.session.query(func.sum(CreditModel.credit)).filter_by(email=email, type=type)
+    def get_credit_by_conditions(*conditions):
+        return db.session.query(func.sum(CreditModel.credit)).filter(*conditions)
 
     @staticmethod
     def insert_credit(email, type, event, target, credit, time):

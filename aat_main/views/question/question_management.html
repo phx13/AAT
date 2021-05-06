@@ -199,7 +199,11 @@
                     title: "selectAll",
                     field: "select",
                     checkbox: true,
-                    align: "center"
+                    align: "center",
+                    cellStyle: function () {
+                        $(".th-inner")[0].style.overflow = "inherit";
+                        return {css: {"overflow": "inherit"}}
+                    }
                 }, {
                     field: 'id',
                     title: 'Id'

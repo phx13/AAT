@@ -246,9 +246,173 @@
                 }
             </script>
         {% elif student_stat_status == 2 %}
+            <script>
+                //attainment radar chart
+                let attainmentRadarChart = echarts.init(document.getElementById("attainmentRadarChart"));
 
+                $(document).ready(function () {
+                    let conditions = {
+                        module: '{{ course }}'
+                    }
+                    getData(conditions);
+                })
+
+                function getData(conditions) {
+                    $.ajax({
+                        url: "{{ url_for('account_bp.stat_attainment_data') }}",
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        data: conditions,
+                        success: function (data) {
+                            $("#knowledgeLevel").text(data[0]);
+                            $("#formativeScore").text(data[1]);
+                            $("#summativeScore").text(data[2]);
+                            $("#formativeAccuracy").text(data[3]);
+                            $("#summativeAccuracy").text(data[4]);
+                            let attainmentRadarChartOption = {
+                                radar: [
+                                    {
+                                        indicator: [
+                                            {text: 'knowledge level', max: 100},
+                                            {text: 'Formative average score', max: 100},
+                                            {text: 'Formative accuracy', max: 100},
+                                            {text: 'Summative accuracy', max: 100},
+                                            {text: 'Summative average score', max: 100}
+                                        ],
+                                        center: ['50%', '50%'],
+                                        radius: 120,
+                                        startAngle: 90,
+                                        splitNumber: 4,
+                                        name: {
+                                            formatter: '{value}',
+                                            textStyle: {
+                                                color: '#72ACD1'
+                                            }
+                                        },
+                                        axisLine: {
+                                            lineStyle: {
+                                                color: 'rgba(255, 255, 255, 0.5)'
+                                            }
+                                        },
+                                        splitLine: {
+                                            lineStyle: {
+                                                color: 'rgba(255, 255, 255, 0.5)'
+                                            }
+                                        }
+                                    }
+                                ],
+                                series: [
+                                    {
+                                        type: 'radar',
+                                        emphasis: {
+                                            lineStyle: {
+                                                width: 4
+                                            }
+                                        },
+                                        data: [
+                                            {
+                                                value: data,
+                                                symbol: 'rect',
+                                                symbolSize: 5,
+                                                lineStyle: {
+                                                    type: 'dashed'
+                                                },
+                                                label: {
+                                                    show: true,
+                                                    formatter: function (params) {
+                                                        return params.value;
+                                                    }
+                                                },
+                                                areaStyle: {
+                                                    opacity: 0.9,
+                                                    color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+                                                        {
+                                                            color: '#B8D3E4',
+                                                            offset: 0
+                                                        },
+                                                        {
+                                                            color: '#72ACD1',
+                                                            offset: 1
+                                                        }
+                                                    ])
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                            attainmentRadarChart.setOption(attainmentRadarChartOption);
+                        }
+                    })
+                }
+
+            </script>
         {% elif student_stat_status == 3 %}
+            <script>
 
+                //engagement pie chart
+                let engagementPieChart = echarts.init(document.getElementById("engagementPieChart"));
+                $(document).ready(function () {
+                    let conditions = {
+                        module: '{{ course }}'
+                    }
+                    getData(conditions);
+                })
+
+                function getData(conditions) {
+                    $.ajax({
+                        url: "{{ url_for('account_bp.stat_engagement_data') }}",
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        data: conditions,
+                        success: function (data) {
+                            $("#formativeCredit").text(data[0]);
+                            $("#summativeCredit").text(data[1]);
+                            $("#feedbackCredit").text(data[2]);
+                            $("#collectionCredit").text(data[3]);
+                            $("#moduleCredit").text(data[4]);
+
+                            let engagementPieChartOption = {
+                                legend: {
+                                    top: 'top'
+                                },
+                                tooltip: {
+                                    trigger: 'item',
+                                    formatter: '{b} : {c} ({d}%)'
+                                },
+                                series: [
+                                    {
+                                        type: 'pie',
+                                        radius: [30, 150],
+                                        center: ['50%', '50%'],
+                                        roseType: 'radius',
+                                        label: {
+                                            show: false
+                                        },
+                                        emphasis: {
+                                            label: {
+                                                show: true
+                                            }
+                                        },
+                                        itemStyle: {
+                                            borderRadius: 10
+                                        },
+                                        data: [
+                                            {value: data['0'], name: 'formative'},
+                                            {value: data['1'], name: 'summative'},
+                                            {value: data['2'], name: 'feedback'},
+                                            {value: data['3'], name: 'collection'}
+                                        ]
+                                    }
+                                ]
+                            };
+                            engagementPieChart.setOption(engagementPieChartOption);
+                        }
+                    })
+                }
+
+
+            </script>
         {% endif %}
     {% else %}
 

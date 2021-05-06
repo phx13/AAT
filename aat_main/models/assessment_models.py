@@ -2,7 +2,7 @@
 import ast
 from datetime import datetime
 
-from sqlalchemy import MetaData, Table
+from sqlalchemy import MetaData, Table, func
 from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main import db
@@ -158,3 +158,7 @@ class AssessmentCompletion(db.Model):
     @staticmethod
     def get_score_by_conditions(*conditions):
         return db.session.query(AssessmentCompletion).join(Assessment, AssessmentCompletion.assessment_id == Assessment.id).filter(*conditions).all()
+
+    @staticmethod
+    def get_score_avg_by_conditions(*conditions):
+        return db.session.query(func.avg(AssessmentCompletion.mark)).join(Assessment, AssessmentCompletion.assessment_id == Assessment.id).filter(*conditions)
