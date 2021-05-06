@@ -224,10 +224,7 @@ class AccountModel(db.Model, UserMixin):
 
     def update_credit(self, id, credit):
         result = self.search_account_by_id(id)
-        if result.credit:
-            result.credit = int(result.credit) + credit
-        else:
-            result.credit = credit
+        result.credit = int(result.credit) + credit if result.credit else credit
         db.session.commit()
 
     @staticmethod
