@@ -81,7 +81,7 @@ def aat_review():
         create_time = time.strftime('%Y-%m-%d %H:%M:%S')
         CreditModel.insert_credit(current_user.id, 2, credit_event, 0, 10, create_time)
         AccountModel().update_credit(current_user.id, 10)
-
+        print('update finished')
         flash('Thanks for reviewing automAATiq!')
         return redirect(url_for('index_bp.home'))
     else:
