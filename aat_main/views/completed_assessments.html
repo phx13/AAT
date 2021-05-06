@@ -4,15 +4,20 @@
     <h1>Completed Assessments</h1>
     <ul>
         {% for assessment in assessments %}
+{#            TODO add some styling to the links on this page#}
             <li>
                 {{ assessment.title }} -
+                <a href="{{ url_for('assessment_bp.assessment_feedback', assessment_id = assessment.id) }}">
+                    Your results and feedback
+                </a>
+                <span>|</span>
                 {% if current_user.has_reviewed_assessment(assessment.id) %}
                     <span class="review-complete-statement">
                         You have reviewed this assessement
                     </span>
                 {% else %}
                     <a href="{{ url_for('satisfaction_review_bp.assessment_review', assessment_id=assessment.id) }}">
-                        Review
+                        Review this assessment
                     </a>
                 {% endif %}
 
@@ -28,11 +33,7 @@
                     </a>
                 {% endif %}
 
-                <span>|</span>
 
-                <a href="{{ url_for('assessment_bp.assessment_feedback', assessment_id = assessment.id) }}">
-                    Results and Feedback
-                </a>
             </li>
 
         {% endfor %}
