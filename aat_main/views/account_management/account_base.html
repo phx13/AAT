@@ -368,9 +368,9 @@
                         success: function (data) {
                             $("#formativeCredit").text(data[0]);
                             $("#summativeCredit").text(data[1]);
-                            $("#feedbackCredit").text(data[2]);
-                            $("#collectionCredit").text(data[3]);
-                            $("#moduleCredit").text(data[4]);
+                            $("#feedbackCredit").text(parseInt(data[2]) + parseInt(data[3]));
+                            $("#collectionCredit").text(data[4]);
+                            $("#moduleCredit").text(data[5]);
 
                             let engagementPieChartOption = {
                                 legend: {
@@ -400,8 +400,8 @@
                                         data: [
                                             {value: data['0'], name: 'formative'},
                                             {value: data['1'], name: 'summative'},
-                                            {value: data['2'], name: 'feedback'},
-                                            {value: data['3'], name: 'collection'}
+                                            {value: parseInt(data['2']) + parseInt(data['3']), name: 'feedback'},
+                                            {value: data['4'], name: 'collection'}
                                         ]
                                     }
                                 ]
@@ -410,8 +410,6 @@
                         }
                     })
                 }
-
-
             </script>
         {% endif %}
     {% else %}
