@@ -3,46 +3,46 @@
     <h2>
         Edit Assessment
     </h2>
-    <form action="" method="post", id=summative_form>
+    <form action="" method="post" , id=summative_form>
         {{ form.csrf_token() }}
         <input name="title_form" type="text" class="form-control" maxlength="64" value="{{ assessment.title }}"><br>
 
         <!-- Question check boxes -->
         <table class="table table-bordered table-hover">
             <thead>
-                <tr>
-                    <th scope="col">Module</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Add Question?</th>
-                </tr>
+            <tr>
+                <th scope="col">Module</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Add Question?</th>
+            </tr>
             </thead>
             <tbody>
-                {% for question in questions %}
-                    {% if question.module_code == assessment.module %}
-                        {% if question.id|string in added_questions %}
-                            <tr>
-                                <th scope="row">{{ question.module_code }}</th>
-                                <td>{{ question.name }}</td>
-                                <td>{{ question.description }}</td>
-                                <td>
-                                    <input type="checkbox" id="{{ question.id }}" name="{{ question.id }}" value="{{ question.id }}" checked>
-                                </td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <th scope="row">{{ question.module_code }}</th>
-                                <td>{{ question.name }}</td>
-                                <td>{{ question.description }}</td>
-                                <td>
-                                    <input type="checkbox" id="{{ question.id }}" name="{{ question.id }}" value="{{ question.id }}">
-                                </td>
-                            </tr>
-                        {% endif %}
+            {% for question in questions %}
+                {% if question.module_code == assessment.module %}
+                    {% if question.id|string in added_questions %}
+                        <tr>
+                            <th scope="row">{{ question.module_code }}</th>
+                            <td>{{ question.name }}</td>
+                            <td>{{ question.description }}</td>
+                            <td>
+                                <input type="checkbox" id="{{ question.id }}" name="{{ question.id }}" value="{{ question.id }}" checked>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <th scope="row">{{ question.module_code }}</th>
+                            <td>{{ question.name }}</td>
+                            <td>{{ question.description }}</td>
+                            <td>
+                                <input type="checkbox" id="{{ question.id }}" name="{{ question.id }}" value="{{ question.id }}">
+                            </td>
+                        </tr>
                     {% endif %}
-                {% endfor %}
+                {% endif %}
+            {% endfor %}
             </tbody>
-        </table>         
+        </table>
         <div id="datetime">
             <!-- Date/time selections -->
             <div id="date_form">
@@ -59,15 +59,16 @@
                 <input name="end_time" type="time" class="form-control timepicker" value="{{ endtime }}">
             </div>
 
-        </div> <br>
+        </div>
+        <br>
 
         <div class="input-group">
             <span class="input-group-text" id="basic-addon3">Minutes</span>
-            <input name="timelimit_form" type="number" class="form-control", min=0, max=300, value="{{ assessment.timelimit }}">
+            <input name="timelimit_form" type="number" class="form-control" , min=0, max=300, value="{{ assessment.timelimit }}">
         </div>
 
         <br><input name="description_form" type="text" class="form-control" maxlength="512" value="{{ assessment.description }}"<br>
-        
+
         {{ form.submit(class="btn btn-secondary") }}
     </form>
 {% endblock %}

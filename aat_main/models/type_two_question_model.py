@@ -4,6 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from aat_main import db
 from aat_main.utils.api_exception_helper import InterServerErrorException
 
+
 class FillinBlank(db.Model):
     __tablename__ = 'FillinBlank'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)

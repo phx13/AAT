@@ -1,9 +1,4 @@
-from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, TextAreaField, BooleanField, SelectField, IntegerField
-from wtforms.fields.html5 import DateField, TimeField
-from wtforms.validators import DataRequired, ValidationError, Length
-from aat_main.models.module_model import Module
 
 
 class module_choice_form(FlaskForm):
@@ -21,8 +16,3 @@ class module_choice_form(FlaskForm):
     #
     # module = SelectField(choices=MODULE_CHOICES)
     # submit = SubmitField()
-
-
-
-
-

@@ -4,37 +4,35 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div id="assessmentId" style="display: none">{{ current_assessment.id }}</div>
-            <p id="courseTitle" class="display-4">{{ current_assessment.module }}</p>
+    <div class="row">
+        <div id="assessmentId" style="display: none">{{ current_assessment.id }}</div>
+        <p id="courseTitle" class="display-4">{{ current_assessment.module }}</p>
+    </div>
+    <div class="row">
+        <h4><b>Title: </b>{{ current_assessment.title }}</h4>
+        <button>Edit assessment</button>
+    </div>
+    <div class="row">
+        <h4><b>Release date: </b>{{ current_assessment.availability_date }}</h4>
+        <h4><b>Due date: </b>{{ current_assessment.due_date }}</h4>
+    </div>
+    <div class="row">
+        <h4><b>Count in: </b>{{ current_assessment.count_in }}</h4>
+        <h4><b>Attempts: </b>{{ current_assessment.attempt }}</h4>
+    </div>
+    <div class="row">
+        <h4><b>Description: </b>{{ current_assessment.description }}</h4>
+    </div>
+    <div class="row">
+        <div class="col">
+            <p class="display-4">All questions</p>
+            <button class="btn btn-success" onclick="addQuestionToCurrent()">Add question</button>
+            <table id="allQuestionTable" data-search="true"></table>
         </div>
-        <div class="row">
-            <h4><b>Title: </b>{{ current_assessment.title }}</h4>
-            <button>Edit assessment</button>
-        </div>
-        <div class="row">
-            <h4><b>Release date: </b>{{ current_assessment.availability_date }}</h4>
-            <h4><b>Due date: </b>{{ current_assessment.due_date }}</h4>
-        </div>
-        <div class="row">
-            <h4><b>Count in: </b>{{ current_assessment.count_in }}</h4>
-            <h4><b>Attempts: </b>{{ current_assessment.attempt }}</h4>
-        </div>
-        <div class="row">
-            <h4><b>Description: </b>{{ current_assessment.description }}</h4>
-        </div>
-        <div class="row">
-            <div class="col">
-                <p class="display-4">All questions</p>
-                <button class="btn btn-success" onclick="addQuestionToCurrent()">Add question</button>
-                <table id="allQuestionTable" data-search="true"></table>
-            </div>
-            <div class="col">
-                <p class="display-4">Current questions</p>
-                <button class="btn btn-danger" onclick="deleteQuestionFromCurrent()">Delete question</button>
-                <table id="questionTable" data-search="true"></table>
-            </div>
+        <div class="col">
+            <p class="display-4">Current questions</p>
+            <button class="btn btn-danger" onclick="deleteQuestionFromCurrent()">Delete question</button>
+            <table id="questionTable" data-search="true"></table>
         </div>
     </div>
 {% endblock %}
@@ -167,14 +165,14 @@
             type: 'datetime'
         });
 
-        function addQuestionToCurrent(){
+        function addQuestionToCurrent() {
             let selectedQuestions = $('#allQuestionTable').bootstrapTable('getSelections');
             let param = "";
             selectedQuestions.forEach(function (item) {
                 param += item["id"] + "=id&";
             })
             param = param.substring(0, param.length - 1);
-            $.post('{{ url_for('formative_blueprint.add_question_to_assessment', assessment_id='assessmentId') }}'.replace("assessmentId",{{ current_assessment.id }}), param, function (data) {
+            $.post('{{ url_for('formative_blueprint.add_question_to_assessment', assessment_id='assessmentId') }}'.replace("assessmentId", {{ current_assessment.id }}), param, function (data) {
                 if (!jQuery.isEmptyObject(data)) {
                     alert(data);
                     $('#questionTable').bootstrapTable('refresh');
@@ -182,14 +180,14 @@
             })
         }
 
-        function deleteQuestionFromCurrent(){
+        function deleteQuestionFromCurrent() {
             let selectedQuestions = $('#questionTable').bootstrapTable('getSelections');
             let param = "";
             selectedQuestions.forEach(function (item) {
                 param += item["id"] + "=id&";
             })
             param = param.substring(0, param.length - 1);
-            $.post('{{ url_for('formative_blueprint.delete_question_from_assessment', assessment_id='assessmentId') }}'.replace("assessmentId",{{ current_assessment.id }}), param, function (data) {
+            $.post('{{ url_for('formative_blueprint.delete_question_from_assessment', assessment_id='assessmentId') }}'.replace("assessmentId", {{ current_assessment.id }}), param, function (data) {
                 if (!jQuery.isEmptyObject(data)) {
                     alert(data);
                     $('#questionTable').bootstrapTable('refresh');

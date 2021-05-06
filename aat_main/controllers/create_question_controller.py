@@ -1,11 +1,6 @@
-from flask import Blueprint, render_template, redirect, url_for
-from flask_login import current_user
-from jinja2 import TemplateError
+from flask import Blueprint
 
-from aat_main import db
 # from aat_main.forms.question_form import question_form
-from aat_main.models.question_models import Question
-from aat_main.utils.api_exception_helper import NotFoundException
 
 create_question_blueprint = Blueprint('create_question_blueprint', __name__, template_folder='../views/question')
 
@@ -23,6 +18,3 @@ def create_question():
     #     return render_template('question.html')
     # except TemplateError:
     #     raise NotFoundException()
-
-
-

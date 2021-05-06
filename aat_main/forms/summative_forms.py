@@ -1,15 +1,8 @@
 from flask_wtf import FlaskForm
 
-from aat_main import db
-
-
-from wtforms import SubmitField, TextAreaField, BooleanField, SelectField, IntegerField
+from wtforms import SubmitField, TextAreaField, SelectField, IntegerField
 from wtforms.fields.html5 import DateField, TimeField
 from wtforms.validators import DataRequired, ValidationError, Length
-from aat_main.models.module_model import Module
-from aat_main.models.enrolment_models import ModuleEnrolment
-from aat_main.models.account_model import AccountModel
-
 
 
 class assessment_form(FlaskForm):
@@ -31,8 +24,3 @@ class assessment_form(FlaskForm):
 
 class summative_edit_form(FlaskForm):
     submit = SubmitField()
-
-
-
-    
-
