@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from aat_main.models.assessment_models import Assessment
 from aat_main.models.question_models import Question
-from aat_main.models.satisfaction_review_model import AATReview
+from aat_main.models.satisfaction_review_models import AATReview
 from aat_main.utils.authorization_helper import check_if_authorized
 from aat_main.utils.serialization_helper import SerializationHelper
 

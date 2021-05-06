@@ -7,7 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main import db
 from aat_main.models.question_models import Question
-from aat_main.models.satisfaction_review_model import AssessmentReview
+from aat_main.models.satisfaction_review_models import AssessmentReview
 
 
 class Assessment(db.Model):

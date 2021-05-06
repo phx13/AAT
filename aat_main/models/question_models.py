@@ -3,7 +3,7 @@ from sqlalchemy import MetaData, Table, or_
 
 from aat_main import db
 from aat_main.models.module_model import Module
-from aat_main.models.satisfaction_review_model import QuestionReview
+from aat_main.models.satisfaction_review_models import QuestionReview
 
 
 class Question(db.Model):
