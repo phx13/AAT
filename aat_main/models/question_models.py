@@ -1,10 +1,9 @@
 from flask_login import current_user
 from sqlalchemy import MetaData, Table, or_
-from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main import db
 from aat_main.models.module_model import Module
-from aat_main.models.satisfaction_review_model import QuestionReview
+from aat_main.models.satisfaction_review_models import QuestionReview
 
 
 class Question(db.Model):

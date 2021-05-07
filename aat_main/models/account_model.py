@@ -9,7 +9,7 @@ from aat_main.models.assessment_models import Assessment, AssessmentCompletion
 from aat_main.models.enrolment_models import ModuleEnrolment
 from aat_main.models.module_model import Module
 from aat_main.models.question_models import Question
-from aat_main.models.satisfaction_review_model import AssessmentReview, AATReview, QuestionReview
+from aat_main.models.satisfaction_review_models import AssessmentReview, AATReview, QuestionReview
 
 
 class AccountModel(db.Model, UserMixin):
@@ -222,11 +222,11 @@ class AccountModel(db.Model, UserMixin):
             )
         ).all()
 
-    def update_credit(self, email, credit):
-        result = self.search_account_by_email(email)
-        result.credit = int(result.credit) + credit
+    def update_credit(self, id, credit):
+        result = self.search_account_by_id(id)
+        result.credit = int(result.credit) + credit if result.credit else credit
         db.session.commit()
-        
+
     @staticmethod
     def get_current_user():
         return current_user.id
@@ -235,6 +235,3 @@ class AccountModel(db.Model, UserMixin):
 @login_manager.user_loader
 def load_user(user_id):
     return db.session.query(AccountModel).get(int(user_id))
-
-
-

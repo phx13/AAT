@@ -1,13 +1,15 @@
 import json
+import time
 
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import current_user
 
-from aat_main.forms.satisfaction_forms import AssessmentReviewForm, AATReviewForm, \
-    QuestionReviewForm
+from aat_main.forms.satisfaction_forms import AssessmentReviewForm, AATReviewForm, QuestionReviewForm
+from aat_main.models.account_model import AccountModel
 from aat_main.models.assessment_models import Assessment
+from aat_main.models.credit_model import CreditModel
 from aat_main.models.question_models import Question
-from aat_main.models.satisfaction_review_model import AssessmentReview, AATReview, QuestionReview
+from aat_main.models.satisfaction_review_models import AssessmentReview, AATReview, QuestionReview
 from aat_main.utils.authorization_helper import check_if_authorized
 
 satisfaction_review_bp = Blueprint('satisfaction_review_bp', __name__, url_prefix='/review',
@@ -35,6 +37,13 @@ def assessment_review(assessment_id):
 
         AssessmentReview.create_review(current_user.id, assessment_id, statement_response_map,
                                        form.comment.data)
+
+        # Insert credit event when a student review an assessment (Phoenix)
+        credit_event = 'Give feedback to assessment(' + assessment_id + ')'
+        create_time = time.strftime('%Y-%m-%d %H:%M:%S')
+        CreditModel.insert_credit(current_user.id, 2, credit_event, assessment_id, 10, create_time)
+        AccountModel().update_credit(current_user.id, 10)
+
         return redirect(url_for('satisfaction_review_bp.assessment_review_complete'))
     else:
         for error in form.errors.values():
@@ -49,6 +58,9 @@ def assessment_review(assessment_id):
 @satisfaction_review_bp.route('/aat', methods=['GET', 'POST'])
 def aat_review():
     check_if_authorized(authorized_role)
+    if current_user.has_reviewed_aat_recently():
+        days = current_user.get_days_until_next_aat_review()
+        return render_template('wait-aat-review.html', num_of_days=days)
 
     form = AATReviewForm()
     if form.validate_on_submit():
@@ -63,13 +75,20 @@ def aat_review():
         )
 
         AATReview.create_review(current_user.id, statement_response_map, form.comment.data)
-        flash('Thanks for leaving a review!')
+
+        # Insert credit event when a student review aat (Phoenix)
+        credit_event = 'Give feedback to aat'
+        create_time = time.strftime('%Y-%m-%d %H:%M:%S')
+        CreditModel.insert_credit(current_user.id, 2, credit_event, 0, 10, create_time)
+        AccountModel().update_credit(current_user.id, 10)
+        print('update finished')
+        flash('Thanks for reviewing automAATiq!')
         return redirect(url_for('index_bp.home'))
     else:
         for error in form.errors.values():
             flash(error)
 
-    title = 'This is a review for the AAT.'
+    title = 'This is a review for automAATiq.'
     return render_template('satisfaction-review.html', form=form, page_title=title)
 
 
@@ -86,6 +105,12 @@ def question_review(question_id):
         )
         QuestionReview.create_review(current_user.id, question_id, statement_response_map,
                                      form.comment.data)
+
+        # Insert credit event when a student review a question (Phoenix)
+        credit_event = 'Give feedback to question(' + question_id + ')'
+        create_time = time.strftime('%Y-%m-%d %H:%M:%S')
+        CreditModel.insert_credit(current_user.id, 3, credit_event, question_id, 10, create_time)
+        AccountModel().update_credit(current_user.id, 10)
 
         assessment_id = request.args.get('assessment_id')
         return redirect(url_for('satisfaction_review_bp.question_review_complete',
