@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Questions: {{question_id}}</h1>
-<div id="assessment_duration_counter">Remaining Time: <span id="timeLeftLabel" style="color:red">{{ time }}</span> minutes &nbsp; <span id="timeLeftAlert" style="color:red"></span></div>
+<div id="assessment_duration_counter">Remaining Time: <span id="timeLeftLabel" style="color:red">{{ time }}:00</span> minutes &nbsp; <span id="timeLeftAlert" style="color:red"></span></div>
 
 <form id="assessment_form" method="POST" onsubmit="setFormSubmitting()">
     <!-- {{ form.csrf_token() }} -->
@@ -34,22 +34,13 @@
                 <hr>
             {% endif %}
         {% endfor %}
+        <button type="submit" value="{{assessment.id}}" onclick="return confirm('Are you sure want to submit. Please check you have answered all the questions.')">Submit</button>   
 
-            <hr> 
-            
-        {% endif %}
-    {% endfor %}
     <input type="number" id="time_value" value="{{ time }}" hidden></div>
 
 
 
-<<<<<<< HEAD
-    <button type="submit" value="{{assessment.id}}" onclick="return confirm('Are you sure want to submit. Please check you have answered all the questions.')">Submit</button>   
 </form>
-=======
-        <button type="submit" value="{{ assessment.id }}">Submit</button>
-    </form>
->>>>>>> 85db6f0e6ed428a10caf82182cdb181592698596
 
 <script>
     // timer for assesment
@@ -58,18 +49,29 @@
 
     const timeLeftLabel = document.getElementById("timeLeftLabel")
     const timeLeftAlert = document.getElementById("timeLeftAlert")
+    seconds = 60;
+    count = 0;
 
     const interval = setInterval(function(){
         testDuration = testDuration - 5000;
         
-        timeLeft = (Math.round(testDuration / 60000))
+        timeLeft = parseInt(testDuration / 60000)
 
-        if (toString(timeLeft).length <= 2) {
-            timeLeftOut = "<= 1"
-            timeLeftLabel.innerHTML = timeLeftOut
+        if (testDuration <= 60000) {
+            count++;
+            seconds = seconds - 5;
+            timeLeftOut = "00" + ":" + seconds;
+            
+            timeLeftLabel.innerHTML = timeLeftOut;
         } else {
-            timeLeftOut = timeLeft
-            timeLeftLabel.innerHTML = timeLeftOut
+            count++;
+            seconds = seconds - 5;
+            timeLeftOut = (timeLeft) + ":" + seconds;
+            timeLeftLabel.innerHTML = timeLeftOut;
+            if (count == 12) {
+                seconds = 60;
+                count = 0;
+            }
         }
 
         if (testDuration == 3600000 ) {
@@ -89,7 +91,6 @@
         } else {
             timeLeftAlert.innerHTML = ("")
         }
-        
     }, 5000)
 
     // Sticky time
