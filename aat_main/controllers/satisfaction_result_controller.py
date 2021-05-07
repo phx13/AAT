@@ -43,7 +43,6 @@ def assessment_review_results(id):
     if not reviews:
         return render_template('no-reviews-assessment.html', assessment=assessment)
 
-    # TODO handle case where there are no reviews
 
     statement_response_counts = SerializationHelper.decode(reviews, responses)
 
@@ -82,6 +81,9 @@ def aat_review_results():
 def question_review_result(id):
     question = Question.get_question_by_id(id)
     reviews = question.get_reviews()
+    if not reviews:
+        return render_template('no-reviews-question.html', question=question)
+
     # TODO handle case where there are no reviews
 
     statement_response_counts = SerializationHelper.decode(reviews, responses)

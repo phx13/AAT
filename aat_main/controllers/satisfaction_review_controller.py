@@ -17,8 +17,6 @@ satisfaction_review_bp = Blueprint('satisfaction_review_bp', __name__, url_prefi
 
 authorized_role = 'student'
 
-
-# TODO add validation for all reviews
 # TODO add download as PDF button
 @satisfaction_review_bp.route('/assessment/<assessment_id>', methods=['GET', 'POST'])
 def assessment_review(assessment_id):

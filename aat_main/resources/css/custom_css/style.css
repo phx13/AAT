@@ -136,6 +136,9 @@ footer {
     padding: 1vh 1vw;
 }
 
+.comments-box {
+
+}
 /* Summative form CSS elements */
 #summative_form {
     display: flex;
@@ -164,7 +167,6 @@ footer {
     /*white-space: nowrap;*/
 }
 
-<<<<<<< HEAD
 .sticky {
     position: fixed;
     top: 0;
@@ -176,7 +178,6 @@ footer {
   /* .sticky + main {
     padding-top: 11vh;
   } */
-=======
 /*------------------------------------------------------------------
     Banner
 -------------------------------------------------------------------*/
@@ -281,6 +282,5 @@ footer {
 .cd-headline.clip b.is-visible {
     opacity: 1;
 }
->>>>>>> 85db6f0e6ed428a10caf82182cdb181592698596
 
 
