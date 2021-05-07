@@ -6,7 +6,6 @@ from flask_login import current_user, login_user, logout_user
 
 from aat_main.forms.auth_forms import LoginForm
 from aat_main.models.account_model import AccountModel
-from aat_main.models.credit_model import CreditModel
 from aat_main.utils.pillow_helper import ImageCaptchaHelper
 from aat_main.utils.random_helper import RandomHelper
 from aat_main.utils.smtp_helper import EmailHelper

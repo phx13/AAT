@@ -1,5 +1,6 @@
 import hashlib
 import time
+from statistics import mean
 
 from flask import Blueprint, request, render_template, jsonify
 from flask_login import current_user, login_required
@@ -7,8 +8,8 @@ from jinja2 import TemplateError
 from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main.models.account_model import AccountModel
+from aat_main.models.assessment_models import Assessment, AssessmentCompletion
 from aat_main.models.credit_model import CreditModel
-from aat_main.models.score_model import ScoreModel
 from aat_main.utils.api_exception_helper import InterServerErrorException, NotFoundException
 from aat_main.utils.base64_helper import Base64Helper
 from aat_main.utils.serialization_helper import SerializationHelper
@@ -61,12 +62,26 @@ def stat_attempt(course):
     return render_template('account_base.html', current_account=current_user, course=course, student_stat_status=1)
 
 
-@account_bp.route('/account/stat/attempt/data/<module>/<type>')
-def stat_attempt_data(module, type):
-    if type == 'All':
-        score = ScoreModel.get_score_by_module(current_user.id, module)
-    else:
-        score = ScoreModel.get_score_by_module_and_type(current_user.id, module, type)
+@account_bp.route('/account/stat/attempt/data/')
+def stat_attempt_data():
+    conditions = []
+    if ('module' in request.args) and (request.args['module']):
+        conditions.append(Assessment.module == request.args['module'])
+
+    if ('type' in request.args) and (request.args['type']):
+        if request.args['type'] == '0' or request.args['type'] == '1':
+            conditions.append(Assessment.type == request.args['type'])
+
+    if ('startDate' in request.args) and (request.args['startDate']):
+        conditions.append(AssessmentCompletion.submit_time > request.args['startDate'])
+
+    if ('endDate' in request.args) and (request.args['endDate']):
+        conditions.append(AssessmentCompletion.submit_time < request.args['endDate'])
+
+    if current_user.role == 'student':
+        conditions.append(AssessmentCompletion.student_id == current_user.id)
+
+    score = AssessmentCompletion.get_score_by_conditions(*conditions)
     return jsonify(SerializationHelper.model_to_list(score))
 
 
@@ -75,11 +90,72 @@ def stat_attainment(course):
     return render_template('account_base.html', current_account=current_user, course=course, student_stat_status=2)
 
 
+@account_bp.route('/account/stat/attainment/data/')
+def stat_attainment_data():
+    conditions = []
+    if ('module' in request.args) and (request.args['module']):
+        conditions.append(Assessment.module == request.args['module'])
+
+    if current_user.role == 'student':
+        conditions.append(AssessmentCompletion.student_id == current_user.id)
+
+    formative_score_avg = AssessmentCompletion.get_score_avg_by_conditions(*conditions, Assessment.type == '0').scalar()
+    if not formative_score_avg:
+        formative_score_avg = 0
+    summative_score_avg = AssessmentCompletion.get_score_avg_by_conditions(*conditions, Assessment.type == '1').scalar()
+    if not summative_score_avg:
+        summative_score_avg = 0
+    # TODO How to express formative_accuracy summative_accuracy?
+    formative_accuracy = AssessmentCompletion.get_score_avg_by_conditions(*conditions).scalar()
+    if not formative_accuracy:
+        formative_accuracy = 0
+    summative_accuracy = AssessmentCompletion.get_score_avg_by_conditions(*conditions).scalar()
+    if not summative_accuracy:
+        summative_accuracy = 0
+    knowledge_level = mean([formative_score_avg, summative_score_avg, formative_accuracy, summative_accuracy])
+
+    datas = [str(round(knowledge_level, 2)), str(round(formative_score_avg, 2)), str(round(summative_score_avg, 2)), str(round(formative_accuracy, 2)),
+             str(round(summative_accuracy, 2))]
+    return jsonify(datas)
+
+
 @account_bp.route('/account/stat/engagement/<string:course>/')
 def stat_engagement(course):
-    credit_types = CreditModel.get_types_by_email(current_user.email)
+    return render_template('account_base.html', current_account=current_user, course=course, student_stat_status=3)
+
+
+@account_bp.route('/account/stat/engagement/data/')
+def stat_engagement_data():
+    conditions = []
+    if ('module' in request.args) and (request.args['module']):
+        conditions.append(Assessment.module == request.args['module'])
+
+    if current_user.role == 'student':
+        conditions.append(CreditModel.account_id == current_user.id)
+
+    credit_types = CreditModel.get_types_by_conditions(*conditions)
+    module_credit = str(CreditModel.get_credit_by_conditions(*conditions).scalar())
     credit_dic = {}
-    for ctype in credit_types:
-        dic = {ctype[0]: str(CreditModel.get_credit_by_email_and_type(current_user.email, ctype[0]).scalar())}
+    credit_dic.update({5: module_credit})
+    for credit_type in credit_types:
+        credit = str(CreditModel.get_credit_by_conditions(*conditions, CreditModel.type == credit_type[0]).scalar())
+        if credit == 'None':
+            credit = '0'
+        dic = {credit_type[0]: credit}
         credit_dic.update(dic)
-    return render_template('account_base.html', current_account=current_user, course=course, credit_dic=credit_dic, student_stat_status=3)
+    return jsonify(credit_dic)
+
+
+@account_bp.route('/account/stat/credit/data/')
+def stat_credit_data():
+    origin_data = CreditModel.get_credit_by_account_id(current_user.id)
+    data = []
+    for od in origin_data:
+        dic = {
+            'id': od.id,
+            'event': od.event,
+            'credit': od.credit,
+            'time': od.time
+        }
+        data.append(dic)
+    return jsonify(data)

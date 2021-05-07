@@ -4,10 +4,8 @@
     <h2>
         New Assessment
     </h2>
-    <form action="" method="post", id=summative_form>
-        {% if 'csrf_token' in form %}
+    <form action="" method="post" , id=summative_form>
         {{ form.csrf_token() }}
-        {% endif %}
 
 
         {{ form.title(class="form-control", maxlength="64", placeholder="Please Enter a Title", id="title_form") }}
@@ -18,7 +16,7 @@
         <!-- Module selection -->
         {{ form.module(class="custom-select", onclick="disableQuestions(); enableQuestions(this.value)", id="module_form") }}
         {% for error in form.module.errors %}
-           <span style="color: red;">[ {{ error }} ]</span><br>
+            <span style="color: red;">[ {{ error }} ]</span><br>
         {% endfor %}
         
         <!-- Question check boxes -->
@@ -27,35 +25,35 @@
         <div id="question_table_div" value="Please Enter a Title">
             <table id="question_table_form" class="table table-bordered table-hover">
                 <thead>
-                    <tr>
-                        <th scope="col">Module</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Options</th>
-                        <th scope="col">Answer</th>
-                        <th scope="col">Add Question?</th>
-                    </tr>
+                <tr>
+                    <th scope="col">Module</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Options</th>
+                    <th scope="col">Answer</th>
+                    <th scope="col">Add Question?</th>
+                </tr>
                 </thead>
                 <tbody>
-                    
-                    {% for question in questions %}
-                            <tr class="question_options" name="{{ question.module_code }}">
-                                <th scope="row">{{ question.module_code }}</th>
-                                <td>{{ question.name }}</td>
-                                <td>{{ question.description }}</td>
-                                <td>{{ question.option }}</td>
-                                <td>{{ question.answer }}</td>
-                                <td>
-                                    <input class="{{ question.module_code }}" id="{{ question.id }}" type="checkbox" name="{{ question.id }}" value="{{ question.id }}">
-                                </td>
-                            </tr>
-                    {% endfor %}
+
+                {% for question in questions %}
+                    <tr class="question_options" name="{{ question.module_code }}">
+                        <th scope="row">{{ question.module_code }}</th>
+                        <td>{{ question.name }}</td>
+                        <td>{{ question.description }}</td>
+                        <td>{{ question.option }}</td>
+                        <td>{{ question.answer }}</td>
+                        <td>
+                            <input class="{{ question.module_code }}" id="{{ question.id }}" type="checkbox" name="{{ question.id }}" value="{{ question.id }}">
+                        </td>
+                    </tr>
+                {% endfor %}
                 </tbody>
 
             </table>
         </div>
 
-         
+
         <div id="datetime">
             <!-- Date/time selections -->
             <div id="date_form">
@@ -72,7 +70,8 @@
                 {{ form.end_time.label }} {{ form.end_time(class="form-control timepicker") }}
             </div>
 
-        </div> <br>
+        </div>
+        <br>
 
         <div class="input-group">
             <span class="input-group-text" id="basic-addon3">Minutes</span>
@@ -84,7 +83,7 @@
     </form>
 </body>
 
-    
+
 {% endblock %}
 {% block scripts %}
     {{ super() }}
@@ -99,21 +98,21 @@
                 c = document.getElementsByClassName("question_options")
                 console.log(c)
                 for (j = 0; j < c.length; j++) {
-                    c[j].style.color="red"
+                    c[j].style.color = "red"
                 }
-                    
+
             }
-            };
+        };
 
         function enableQuestions(module) {
             x = document.getElementsByClassName(module);
             c = document.getElementsByName(module)
-            for (i = 0; i < x.length; i++){
+            for (i = 0; i < x.length; i++) {
                 x[i].removeAttribute("disabled")
                 console.log(x[i])
             }
             for (j = 0; j < c.length; j++) {
-                c[j].style.color="green"
+                c[j].style.color = "green"
                 console.log(c[j])
             }
         }
@@ -153,7 +152,7 @@
             submitButton.disabled = !this.checkValidity();
         })
     </script>
-    
-    
+
+
 
 {% endblock %}

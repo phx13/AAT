@@ -17,19 +17,23 @@
                 {% for key, value in question_options.items() %}
                     {% if key == question.id %}
                         {% for option in value %}
-                            <input type="radio" id="{{option}}" name="{{ question.id }}" value="{{option}}">
-                            <label for="{{option}}">{{option}}</label><br>
+                            <input type="radio" id="{{ option }}" name="{{ question.id }}" value="{{ option }}">
+                            <label for="{{ option }}">{{ option }}</label><br>
                         {% endfor %}
                     {% endif %}
                 {% endfor %}
-            <hr>  
-        {% elif question.type == 1 %} <!-- Text input -->
-            <h5>{{ question.name }}</h5><br>
-            <h6>Question:</h6>
-            <p>{{ question.description }}</p>
-            <h6>Provide Answer:</h6>
-            <input type="text" id="{{question.id}}" name="{{ question.id }}" value="">
+                <hr>
+            {% elif question.type == 1 %} <!-- Text input -->
+                <h5>{{ question.name }}</h5><br>
+                <h6>Question:</h6>
+                <p>{{ question.description }}</p>
+                <h6>Provide Answer:</h6>
+                <input type="text" id="{{ question.id }}" name="{{ question.id }}" value="">
 
+
+                <hr>
+            {% endif %}
+        {% endfor %}
 
             <hr> 
             
@@ -39,8 +43,13 @@
 
 
 
+<<<<<<< HEAD
     <button type="submit" value="{{assessment.id}}" onclick="return confirm('Are you sure want to submit. Please check you have answered all the questions.')">Submit</button>   
 </form>
+=======
+        <button type="submit" value="{{ assessment.id }}">Submit</button>
+    </form>
+>>>>>>> 85db6f0e6ed428a10caf82182cdb181592698596
 
 <script>
     // timer for assesment

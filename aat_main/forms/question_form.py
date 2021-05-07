@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, TextAreaField
-from wtforms.validators import Length, DataRequired
+from wtforms.validators import DataRequired
 
 
 class question_form(FlaskForm):
