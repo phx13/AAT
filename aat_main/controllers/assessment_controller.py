@@ -37,16 +37,8 @@ def available_assessments():
         valid_assessments = []
 
         for assessment in assessments:
-            count = 0
-            for comp in completed:
-                if (comp.assessment_id) == (assessment.id):
-                    count += 1
-                else:
-                    continue
-            if count < 1:
+            if not any(comp.assessment_id == assessment.id for comp in completed):
                 valid_assessments.append(assessment)
-            else:
-                continue
 
         return render_template('available_assessments.html', assessments=valid_assessments)
 

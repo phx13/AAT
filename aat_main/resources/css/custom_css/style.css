@@ -164,6 +164,19 @@ footer {
     /*white-space: nowrap;*/
 }
 
+<<<<<<< HEAD
+.sticky {
+    position: fixed;
+    top: 0;
+    left: 0vw;
+    width: 100%;
+    background-color: cornsilk;
+  }
+  
+  /* .sticky + main {
+    padding-top: 11vh;
+  } */
+=======
 /*------------------------------------------------------------------
     Banner
 -------------------------------------------------------------------*/
@@ -268,5 +281,6 @@ footer {
 .cd-headline.clip b.is-visible {
     opacity: 1;
 }
+>>>>>>> 85db6f0e6ed428a10caf82182cdb181592698596
 
 
