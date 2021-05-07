@@ -13,6 +13,8 @@
 <p>You may attempt this <b>{{ assessment.attempt }}</b> times.</p>
 <p>You will have <b>{{ assessment.timelimit }}</b> minutes.</p>
 
+<p>On clicking the start button you will be starting your attempt.</p>
+<p>Only click start if you are ready and willing to take the assessment now.</p>
 <p>Would you like to start the assessment?</p>
 <a class="btn btn-primary" href="{{ url_for('assessment_bp.answer_questions', assessment_id = assessment.id) }}">Start</a>
 

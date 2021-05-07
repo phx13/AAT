@@ -88,4 +88,16 @@ footer div {
     /*white-space: nowrap;*/
 }
 
+.sticky {
+    position: fixed;
+    top: 0;
+    left: 0vw;
+    width: 100%;
+    background-color: cornsilk;
+  }
+  
+  /* .sticky + main {
+    padding-top: 11vh;
+  } */
+
 
