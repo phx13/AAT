@@ -143,5 +143,19 @@ def stat_engagement_data():
             credit = '0'
         dic = {credit_type[0]: credit}
         credit_dic.update(dic)
-    print(credit_dic)
     return jsonify(credit_dic)
+
+
+@account_bp.route('/account/stat/credit/data/')
+def stat_credit_data():
+    origin_data = CreditModel.get_credit_by_account_id(current_user.id)
+    data = []
+    for od in origin_data:
+        dic = {
+            'id': od.id,
+            'event': od.event,
+            'credit': od.credit,
+            'time': od.time
+        }
+        data.append(dic)
+    return jsonify(data)

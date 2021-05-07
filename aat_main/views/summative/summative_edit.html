@@ -5,7 +5,9 @@
     </h2>
     <form action="" method="post" , id=summative_form>
         {{ form.csrf_token() }}
-        <input name="title_form" type="text" class="form-control" maxlength="64" value="{{ assessment.title }}"><br>
+        <input name="title_form" type="text" class="form-control" maxlength="64" value="{{ assessment.title }}", id="title_form"><br>
+        <div><span id="titleLengthLabel">0</span>/64</div>
+
 
         <!-- Question check boxes -->
         <table class="table table-bordered table-hover">
@@ -67,12 +69,49 @@
             <input name="timelimit_form" type="number" class="form-control" , min=0, max=300, value="{{ assessment.timelimit }}">
         </div>
 
-        <br><input name="description_form" type="text" class="form-control" maxlength="512" value="{{ assessment.description }}"<br>
+        <br><input name="description_form" type="text" class="form-control" maxlength="512" value="{{ assessment.description }}" id="description_form"><br>
+        <div><span id="descLengthLabel">0</span>/512</div>
 
+        
         {{ form.submit(class="btn btn-secondary") }}
     </form>
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
+    <script>
+        const maxTitleLength = 64;
+        const minTitleLength = 5;
+        const maxDescLength = 512
+        const titleLengthLabel = document.getElementById("titleLengthLabel");
+        const descLengthLabel = document.getElementById("descLengthLabel")
+        const submitButton = document.getElementById("submit")
+
+        document.getElementById("title_form").addEventListener('input', function() {
+            titleLength = this.value.length;
+            titleLengthLabel.innerHTML = titleLength;
+
+            if (titleLength > maxTitleLength) {
+                this.setCustomValidity('Title to long')
+            } else if (titleLength < minTitleLength) {
+                this.setCustomValidity('Title to short')
+            } else {
+                this.setCustomValidity('')
+            }
+
+            submitButton.disabled = !this.checkValidity();
+        })
+
+        document.getElementById("description_form").addEventListener('input', function() {
+            descLength = this.value.length;
+            descLengthLabel.innerHTML = descLength;
+
+            if (titleLength > maxDescLength) {
+                this.setCustomValidity("Description to long")
+            } else {
+                this.setCustomValidity('')
+            }
+
+            submitButton.disabled = !this.checkValidity();
+        })
+    </script>
 {% endblock %}

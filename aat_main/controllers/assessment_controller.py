@@ -37,16 +37,8 @@ def available_assessments():
         valid_assessments = []
 
         for assessment in assessments:
-            count = 0
-            for comp in completed:
-                if (comp.assessment_id) == (assessment.id):
-                    count += 1
-                else:
-                    continue
-            if count < 1:
+            if not any(comp.assessment_id == assessment.id for comp in completed):
                 valid_assessments.append(assessment)
-            else:
-                continue
 
         return render_template('available_assessments.html', assessments=valid_assessments)
 
@@ -94,7 +86,8 @@ def answer_questions(assessment_id):
     questions = []
     question_options = {}
     mark = 0;
-
+    time = assessment.timelimit
+    
     for question in assessment_questions:
         questions.append(Question.get_question_by_id(int(question)))
 
@@ -134,7 +127,7 @@ def answer_questions(assessment_id):
         AssessmentCompletion.create_assessment_completion(current_user.id, assessment.id, answers_submit, mark)
         return redirect(url_for('assessment_bp.assessment_feedback', assessment_id=assessment.id))
 
-    return render_template('question_in_assessment.html', assessment=assessment, questions=questions, question_options=question_options, form=form)
+    return render_template('question_in_assessment.html', assessment=assessment, questions=questions, question_options=question_options, form=form, time=time)
 
 
 @assessment_bp.route('/feedback/<assessment_id>')

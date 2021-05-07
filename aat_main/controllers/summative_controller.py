@@ -74,7 +74,6 @@ def summative_create():
             Assessment.create_assessment(form.title.data, added_questions, form.description.data, module_code, type, count_in, attempts,
                                          start_datetime, end_datetime, form.timelimit.data, datetime.now())
             return redirect(url_for('assessment_bp.assessments'))
-
     return render_template("summative_create.html", form=form, questions=valid_questions, modules=module_choices, question_id=question_id, valid_modules=valid_modules)
     # try:
     #     return render_template('summative.html')
