@@ -1,5 +1,6 @@
 import json
 import random
+from datetime import datetime
 
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import current_user, login_required
@@ -82,7 +83,6 @@ def answer_questions(assessment_id):
     form = complete_assessment_form()
     assessment = Assessment.get_assessment_by_id(assessment_id)
     assessment_questions = json.loads(assessment.questions)
-    random.shuffle(assessment_questions)
     questions = []
     question_options = {}
     mark = 0;
@@ -140,6 +140,8 @@ def assessment_feedback(assessment_id):
     valid_result = {}
     mark = 0
     outof = 0
+    time_now = datetime.now()
+
 
     for question in assessment_questions:
         questions.append(Question.get_question_by_id(int(question)))
@@ -163,7 +165,16 @@ def assessment_feedback(assessment_id):
             valid_result = json.loads(res.results)
             mark = res.mark
 
-    return render_template('submitted_assessment.html',
-                           questions=questions, assessment=assessment,
-                           question_options=question_options, results=valid_result,
-                           mark=mark, outof=outof)
+    if assessment.type == 1:
+        if assessment.due_date > time_now:
+            return render_template('feedback_not_available.html', assessment=assessment)
+        else:
+            return render_template('submitted_assessment.html',
+                            questions=questions, assessment=assessment,
+                            question_options=question_options, results=valid_result,
+                            mark=mark, outof=outof)
+    if assessment.type == 0:
+        return render_template('submitted_assessment.html',
+                            questions=questions, assessment=assessment,
+                            question_options=question_options, results=valid_result,
+                            mark=mark, outof=outof)        

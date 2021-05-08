@@ -151,6 +151,10 @@
 
             submitButton.disabled = !this.checkValidity();
         })
+
+        document.addEventListener("submit", function() {
+            alert("Assessment created!")
+        })
     </script>
 
 
