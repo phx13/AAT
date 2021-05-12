@@ -21,12 +21,14 @@
         {#            </select>#}
         <!-- Button trigger modal -->
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionDetail" onclick="initQuestionDetail()" style="margin-right: 10px;">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionDetail"
+                onclick="initQuestionDetail()" style="margin-right: 10px;">
             Create Question
         </button>
 
         <!-- Modal -->
-        <div class="modal fade" id="questionDetail" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="questionDetail" data-backdrop="static" data-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -58,17 +60,20 @@
 
                             <div class="form-group">
                                 <label for="questionNameDetail">Question Name</label>
-                                <input type="text" class="form-control" id="questionNameDetail" placeholder="Question Name Detail">
+                                <input type="text" class="form-control" id="questionNameDetail"
+                                       placeholder="Question Name Detail">
                                 <h4 id="questionNameDetailVerification"></h4>
                             </div>
                             <div class="form-group">
                                 <label for="questionDescriptionDetail">Question Description</label>
-                                <textarea type="text" class="form-control" id="questionDescriptionDetail" placeholder="Question Description Detail"></textarea>
+                                <textarea type="text" class="form-control" id="questionDescriptionDetail"
+                                          placeholder="Question Description Detail"></textarea>
                                 <h4 id="questionDescriptionDetailVerification"></h4>
                             </div>
                             <div class="form-group">
                                 <label for="questionFeedback">Question Feedback</label>
-                                <textarea type="text" class="form-control" id="questionFeedback" placeholder="Question Feedback"></textarea>
+                                <textarea type="text" class="form-control" id="questionFeedback"
+                                          placeholder="Question Feedback"></textarea>
                                 <h4 id="questionFeedbackVerification"></h4>
                             </div>
                             <div class="form-group" id="optionDetailGroup">
@@ -77,12 +82,16 @@
                                     <div class="col" id="optionGroup">
                                     </div>
                                     <div class="col" id="addOptionGroup">
-                                        <button type="button" class="btn btn-primary inline-block" onclick="addQuestionOption(this)" id="addQuestionBtn">Add Option</button>
-                                        <button type="button" class="btn btn-success inline-block" onclick="createQuestionOption(this)" style="display: none;"
+                                        <button type="button" class="btn btn-primary inline-block"
+                                                onclick="addQuestionOption(this)" id="addQuestionBtn">Add Option
+                                        </button>
+                                        <button type="button" class="btn btn-success inline-block"
+                                                onclick="createQuestionOption(this)" style="display: none;"
                                                 id="createOptionBtn">Create
                                             Option
                                         </button>
-                                        <input type="text" class="form-control" placeholder="" id="optionInput" style="display: none;">
+                                        <input type="text" class="form-control" placeholder="" id="optionInput"
+                                               style="display: none;">
                                         <h4 id="optionInputVerification"></h4>
                                     </div>
                                 </div>
@@ -96,12 +105,16 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="createQuestion()">Create</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="createQuestion()">
+                            Create
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <button type="button" class="btn btn-danger" style="margin-right: 10px;" onclick="deleteQuestion()">Delete question</button>
+        <button type="button" class="btn btn-danger" style="margin-right: 10px;" onclick="deleteQuestion()">Delete
+            question
+        </button>
     </div>
 
     <table id="btTable" data-toggle="table"></table>
@@ -294,7 +307,7 @@
                 if ($("#typeDetail").get(0).selectedIndex == 0 && $("#optionInputVerification").attr("class") != "invalid-feedback") {
                     let options = $("#optionGroup")[0].children
                     for (let i = 0; i < options.length; i++) {
-                        optionStr += options[i].children[0].id + ': ' + options[i].children[0].value + '|';
+                        optionStr += '{' + options[i].children[0].id + ': ' + options[i].children[0].value + '}';
                     }
                     optionStr = optionStr.substring(0, optionStr.length - 1);
                     if ($("input[name='optionDetail']:checked")[0] != undefined) {
@@ -361,7 +374,8 @@
                     $("#questionDescriptionDetail").val(data[0]['description']);
                     $("#questionFeedback").val(data[0]['feedback']);
 
-                    data[0]['option'].split("|").forEach(function (option) {
+                    data[0]['option'].split("}{").forEach(function (option) {
+                        option=option.replace("{", "").replace("}", "");
                         $('#optionGroup').append('<div class="form-check">\n' +
                             '<input class="form-check-input" type="radio" name="optionDetail" id="' + option.split(":")[0] + '" value="' + option.split(":")[1] + '">\n' +
                             '<label class="form-check-label" for="' + option.split(":")[0] + '">' + option.split(":")[1] + '</label>\n' +

@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from flask import Blueprint, render_template, request, jsonify
@@ -70,10 +71,10 @@ def assessment_data(status, module):
 @formative_blueprint.route('/assessments/assessments_management/formative/<assessment_id>')
 def assessment_questions(assessment_id):
     try:
-        question_ids = Assessment.get_assessment_by_id(assessment_id).questions.split(',')
+        question_ids = json.loads(Assessment.get_assessment_by_id(assessment_id).questions)
         origin_data = []
         for question_id in question_ids:
-            origin_data.append(Question.get_question_management_by_id(question_id))
+            origin_data.append(Question.get_question_management_by_id(int(question_id)))
 
         data = []
         type_dic = {0: 'Multiple choice', 1: 'Fill in blank', 2: 'Summative'}
@@ -154,7 +155,7 @@ def edit_assessment(id):
 def add_question_to_assessment(assessment_id):
     try:
         assessment = Assessment.get_assessment_by_id(assessment_id)
-        assessment_questions = assessment.questions.split(',')
+        assessment_questions = json.loads(assessment.questions)
         if len(assessment_questions) == 1 and assessment_questions[0] == '':
             assessment_questions = []
 
@@ -165,8 +166,8 @@ def add_question_to_assessment(assessment_id):
         for k, v in request.form.items():
             if k in module_question_ids:
                 if k not in assessment_questions:
-                    assessment_questions.append(k)
-        assessment_questions = ','.join(assessment_questions)
+                    assessment_questions.append(str(k))
+        assessment_questions = json.dumps(assessment_questions)
         Assessment.update_assessment(assessment.title, assessment_questions, assessment.description,
                                      assessment.availability_date, assessment.due_date, assessment.timelimit,
                                      assessment_id)
@@ -180,13 +181,13 @@ def add_question_to_assessment(assessment_id):
 def delete_question_from_assessment(assessment_id):
     try:
         assessment = Assessment.get_assessment_by_id(assessment_id)
-        assessment_questions = assessment.questions.split(',')
+        assessment_questions = json.loads(assessment.questions)
         if len(assessment_questions) == 1 and assessment_questions[0] == '':
             assessment_questions = []
         for k, v in request.form.items():
             if k in assessment_questions:
-                assessment_questions.remove(k)
-        assessment_questions = ','.join(assessment_questions)
+                assessment_questions.remove(str(k))
+        assessment_questions = json.dumps(assessment_questions)
         Assessment.update_assessment(assessment.title, assessment_questions, assessment.description,
                                      assessment.availability_date, assessment.due_date, assessment.timelimit,
                                      assessment_id)
