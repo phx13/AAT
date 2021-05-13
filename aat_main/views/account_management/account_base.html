@@ -185,6 +185,7 @@
                             let attemptBarChartOption = {
                                 xAxis: {
                                     data: attemptBarChartDataAxis,
+                                    name: "submit time",
                                     axisLabel: {
                                         inside: true,
                                         textStyle: {
@@ -200,6 +201,7 @@
                                     z: 10
                                 },
                                 yAxis: {
+                                    name: "mark",
                                     axisLine: {
                                         show: false
                                     },
@@ -210,7 +212,10 @@
                                         textStyle: {
                                             color: '#999'
                                         }
-                                    }
+                                    },
+                                    min: 0,
+                                    max: 100,
+                                    interval: 20
                                 },
                                 dataZoom: [
                                     {
@@ -432,7 +437,7 @@
                         success: function (data) {
                             $("#formativeCredit").text(data[0]);
                             $("#summativeCredit").text(data[1]);
-                            $("#feedbackCredit").text(parseInt(data[2]) + parseInt(data[3]));
+                            $("#feedbackCredit").text(isNaN(parseInt(data[2]) + parseInt(data[3])) ? "0" : parseInt(data[2]) + parseInt(data[3]));
                             $("#collectionCredit").text(data[4]);
                             $("#moduleCredit").text(data[5]);
 

@@ -1,12 +1,13 @@
 import json
-import random
 from datetime import datetime
 
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import current_user, login_required
 
 from aat_main.forms.complete_assessment_form import complete_assessment_form
+from aat_main.models.account_model import AccountModel
 from aat_main.models.assessment_models import Assessment, AssessmentCompletion
+from aat_main.models.credit_model import CreditModel
 from aat_main.models.question_models import Question
 
 assessment_bp = Blueprint('assessment_bp', __name__, url_prefix='/assessments', template_folder='../views')
@@ -85,9 +86,9 @@ def answer_questions(assessment_id):
     assessment_questions = json.loads(assessment.questions)
     questions = []
     question_options = {}
-    mark = 0;
+    mark = 0
     time = assessment.timelimit
-    
+
     for question in assessment_questions:
         questions.append(Question.get_question_by_id(int(question)))
 
@@ -124,7 +125,13 @@ def answer_questions(assessment_id):
                     mark += 1
 
         answers_submit = json.dumps(answers)
-        AssessmentCompletion.create_assessment_completion(current_user.id, assessment.id, answers_submit, mark)
+        AssessmentCompletion.create_assessment_completion(current_user.id, assessment.id, answers_submit, mark, datetime.now())
+
+        # Insert credit event when a student finish an assessment (Phoenix)
+        credit_event = 'Finish assessment(' + str(assessment.id) + ')'
+        CreditModel.insert_credit(current_user.id, assessment.type, credit_event, assessment.id, 5, datetime.now())
+        AccountModel().update_credit(current_user.id, 5)
+
         return redirect(url_for('assessment_bp.assessment_feedback', assessment_id=assessment.id))
 
     return render_template('question_in_assessment.html', assessment=assessment, questions=questions, question_options=question_options, form=form, time=time)
@@ -141,7 +148,6 @@ def assessment_feedback(assessment_id):
     mark = 0
     outof = 0
     time_now = datetime.now()
-
 
     for question in assessment_questions:
         questions.append(Question.get_question_by_id(int(question)))
@@ -170,11 +176,11 @@ def assessment_feedback(assessment_id):
             return render_template('feedback_not_available.html', assessment=assessment)
         else:
             return render_template('submitted_assessment.html',
-                            questions=questions, assessment=assessment,
-                            question_options=question_options, results=valid_result,
-                            mark=mark, outof=outof)
+                                   questions=questions, assessment=assessment,
+                                   question_options=question_options, results=valid_result,
+                                   mark=mark, outof=outof)
     if assessment.type == 0:
         return render_template('submitted_assessment.html',
-                            questions=questions, assessment=assessment,
-                            question_options=question_options, results=valid_result,
-                            mark=mark, outof=outof)        
+                               questions=questions, assessment=assessment,
+                               question_options=question_options, results=valid_result,
+                               mark=mark, outof=outof)

@@ -112,7 +112,6 @@ def create_assessment_data():
         assessment = {}
         for k, v in request.form.items():
             assessment[k] = v
-            print(k, '\t', v)
         formativeTitle = assessment['formativeTitle']
         releaseTime = datetime.fromisoformat(assessment['releaseTime'])
         dueDate = datetime.fromisoformat(assessment['dueDate'])
@@ -155,7 +154,9 @@ def edit_assessment(id):
 def add_question_to_assessment(assessment_id):
     try:
         assessment = Assessment.get_assessment_by_id(assessment_id)
-        assessment_questions = json.loads(assessment.questions)
+        assessment_questions = []
+        if assessment.questions:
+            assessment_questions = json.loads(assessment.questions)
         if len(assessment_questions) == 1 and assessment_questions[0] == '':
             assessment_questions = []
 

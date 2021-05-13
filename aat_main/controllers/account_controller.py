@@ -135,11 +135,13 @@ def stat_engagement_data():
 
     credit_types = CreditModel.get_types_by_conditions(*conditions)
     module_credit = str(CreditModel.get_credit_by_conditions(*conditions).scalar())
+    if module_credit == 'None':
+        module_credit = '0'
     credit_dic = {}
     credit_dic.update({5: module_credit})
     for credit_type in credit_types:
         credit = str(CreditModel.get_credit_by_conditions(*conditions, CreditModel.type == credit_type[0]).scalar())
-        if credit == 'None':
+        if credit == 'None' or credit == 'NaN':
             credit = '0'
         dic = {credit_type[0]: credit}
         credit_dic.update(dic)

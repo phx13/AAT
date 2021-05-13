@@ -51,9 +51,8 @@
                                 <div class="form-group col">
                                     <label for="typeDetail">Type</label>
                                     <select id="typeDetail" class="form-control">
-                                        <option>Multiple choice</option>
-                                        <option>Fill in blank</option>
-                                        <option>Summative</option>
+                                        <option value="0">Multiple choice</option>
+                                        <option value="1">Fill in blank</option>
                                     </select>
                                 </div>
                             </div>
@@ -206,7 +205,7 @@
             showToggle: true, //是否显示详细视图和列表视图的切换按钮
             // cardView: true, //是否显示详细视图
             // detailView: true, //是否显示父子表，设置为 true 可以显示详细页面模式,在每行最前边显示+号#}
-            sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+            sidePagination: "client", //分页方式：client客户端分页，server服务端分页（*）
             columns: [
                 {
                     title: "selectAll",
@@ -276,15 +275,8 @@
         });
 
         function initQuestionDetail() {
-            let modules = $("#moduleDetail")[0].children;
-            modules.forEach(function (module) {
-                module.selected = 'false';
-            });
-
-            let types = $("#typeDetail")[0].children;
-            types.forEach(function (type) {
-                type.selected = 'false';
-            });
+            $("#moduleDetail").val("0");
+            $("#typeDetail").val("0");
 
             $("#questionNameDetail").val("");
             $("#questionDescriptionDetail").val("");
@@ -307,7 +299,7 @@
                 if ($("#typeDetail").get(0).selectedIndex == 0 && $("#optionInputVerification").attr("class") != "invalid-feedback") {
                     let options = $("#optionGroup")[0].children
                     for (let i = 0; i < options.length; i++) {
-                        optionStr += '{' + options[i].children[0].id + ': ' + options[i].children[0].value + '}';
+                        optionStr += '{' + options[i].children[0].id + ':' + options[i].children[0].value + '}';
                     }
                     optionStr = optionStr.substring(0, optionStr.length - 1);
                     if ($("input[name='optionDetail']:checked")[0] != undefined) {
@@ -375,7 +367,7 @@
                     $("#questionFeedback").val(data[0]['feedback']);
 
                     data[0]['option'].split("}{").forEach(function (option) {
-                        option=option.replace("{", "").replace("}", "");
+                        option = option.replace("{", "").replace("}", "");
                         $('#optionGroup').append('<div class="form-check">\n' +
                             '<input class="form-check-input" type="radio" name="optionDetail" id="' + option.split(":")[0] + '" value="' + option.split(":")[1] + '">\n' +
                             '<label class="form-check-label" for="' + option.split(":")[0] + '">' + option.split(":")[1] + '</label>\n' +

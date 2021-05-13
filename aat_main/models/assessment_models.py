@@ -137,11 +137,9 @@ class AssessmentCompletion(db.Model):
     """
 
     @staticmethod
-    def create_assessment_completion(student_id, assessment_id, results, mark):
+    def create_assessment_completion(student_id, assessment_id, results, mark, submit_time):
         try:
-            db.session.add(
-                AssessmentCompletion(student_id=student_id,
-                                     assessment_id=assessment_id, results=results, mark=mark))
+            db.session.add(AssessmentCompletion(student_id=student_id, assessment_id=assessment_id, results=results, mark=mark, submit_time=submit_time))
             db.session.commit()
         except SQLAlchemyError:
             raise SQLAlchemyError
