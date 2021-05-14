@@ -127,21 +127,21 @@ class AssessmentCompletion(db.Model):
     __tablename__ = 'assessment_completion'
     __table__ = Table(__tablename__, MetaData(bind=db.engine), autoload=True)
     """
-    id: int, auto_increment
-    student_id: foreign key, references account(id)
-    assessment_id: foreign key, references assessment(id)
+    id: int, pk, auto_increment
+    student_id: int, foreign key, references account(id)
+    assessment_id: int, foreign key, references assessment(id)
     results: json (dict of question.id + true/false or quest ans)
+    t1_accuracy: int
+    t2_accuracy: int
     mark: int
-    attempt: int
     submit_time: datetime
     """
 
     @staticmethod
-    def create_assessment_completion(student_id, assessment_id, results, mark):
+    def create_assessment_completion(student_id, assessment_id, results, mark, t1_accuracy, t2_accuracy, submit_time):
         try:
-            db.session.add(
-                AssessmentCompletion(student_id=student_id,
-                                     assessment_id=assessment_id, results=results, mark=mark))
+            db.session.add(AssessmentCompletion(student_id=student_id, assessment_id=assessment_id, results=results, t1_accuracy=t1_accuracy, t2_accuracy=t2_accuracy, mark=mark,
+                                                submit_time=submit_time))
             db.session.commit()
         except SQLAlchemyError:
             raise SQLAlchemyError
@@ -162,3 +162,11 @@ class AssessmentCompletion(db.Model):
     @staticmethod
     def get_score_avg_by_conditions(*conditions):
         return db.session.query(func.avg(AssessmentCompletion.mark)).join(Assessment, AssessmentCompletion.assessment_id == Assessment.id).filter(*conditions)
+
+    @staticmethod
+    def get_t1_accuracy_by_conditions(*conditions):
+        return db.session.query(func.avg(AssessmentCompletion.t1_accuracy)).join(Assessment, AssessmentCompletion.assessment_id == Assessment.id).filter(*conditions)
+
+    @staticmethod
+    def get_t2_accuracy_by_conditions(*conditions):
+        return db.session.query(func.avg(AssessmentCompletion.t2_accuracy)).join(Assessment, AssessmentCompletion.assessment_id == Assessment.id).filter(*conditions)

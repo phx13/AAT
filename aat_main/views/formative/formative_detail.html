@@ -175,6 +175,7 @@
             $.post('{{ url_for('formative_blueprint.add_question_to_assessment', assessment_id='assessmentId') }}'.replace("assessmentId", {{ current_assessment.id }}), param, function (data) {
                 if (!jQuery.isEmptyObject(data)) {
                     alert(data);
+                    $('#allQuestionTable').bootstrapTable('refresh');
                     $('#questionTable').bootstrapTable('refresh');
                 }
             })

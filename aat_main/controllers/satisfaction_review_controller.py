@@ -1,5 +1,6 @@
 import json
 import time
+from datetime import datetime
 
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import current_user
@@ -38,9 +39,8 @@ def assessment_review(assessment_id):
 
         # Insert credit event when a student review an assessment (Phoenix)
         credit_event = 'Give feedback to assessment(' + assessment_id + ')'
-        create_time = time.strftime('%Y-%m-%d %H:%M:%S')
-        CreditModel.insert_credit(current_user.id, 2, credit_event, assessment_id, 10, create_time)
-        AccountModel().update_credit(current_user.id, 10)
+        CreditModel.insert_credit(current_user.id, 2, credit_event, assessment_id, 5, datetime.now())
+        AccountModel().update_credit(current_user.id, 5)
 
         return redirect(url_for('satisfaction_review_bp.assessment_review_complete'))
     else:
@@ -76,9 +76,8 @@ def aat_review():
 
         # Insert credit event when a student review aat (Phoenix)
         credit_event = 'Give feedback to aat'
-        create_time = time.strftime('%Y-%m-%d %H:%M:%S')
-        CreditModel.insert_credit(current_user.id, 2, credit_event, 0, 10, create_time)
-        AccountModel().update_credit(current_user.id, 10)
+        CreditModel.insert_credit(current_user.id, 2, credit_event, 0, 5, datetime.now())
+        AccountModel().update_credit(current_user.id, 5)
         print('update finished')
         flash('Thanks for reviewing automAATiq!')
         return redirect(url_for('index_bp.home'))
@@ -106,9 +105,8 @@ def question_review(question_id):
 
         # Insert credit event when a student review a question (Phoenix)
         credit_event = 'Give feedback to question(' + question_id + ')'
-        create_time = time.strftime('%Y-%m-%d %H:%M:%S')
-        CreditModel.insert_credit(current_user.id, 3, credit_event, question_id, 10, create_time)
-        AccountModel().update_credit(current_user.id, 10)
+        CreditModel.insert_credit(current_user.id, 3, credit_event, question_id, 5, datetime.now())
+        AccountModel().update_credit(current_user.id, 5)
 
         assessment_id = request.args.get('assessment_id')
         return redirect(url_for('satisfaction_review_bp.question_review_complete',

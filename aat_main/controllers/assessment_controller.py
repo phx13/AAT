@@ -1,11 +1,13 @@
 import json
-import random
+from datetime import datetime
 
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import current_user, login_required
 
 from aat_main.forms.complete_assessment_form import complete_assessment_form
+from aat_main.models.account_model import AccountModel
 from aat_main.models.assessment_models import Assessment, AssessmentCompletion
+from aat_main.models.credit_model import CreditModel
 from aat_main.models.question_models import Question
 
 assessment_bp = Blueprint('assessment_bp', __name__, url_prefix='/assessments', template_folder='../views')
@@ -82,12 +84,11 @@ def answer_questions(assessment_id):
     form = complete_assessment_form()
     assessment = Assessment.get_assessment_by_id(assessment_id)
     assessment_questions = json.loads(assessment.questions)
-    random.shuffle(assessment_questions)
     questions = []
     question_options = {}
-    mark = 0;
+    total_mark = 0
     time = assessment.timelimit
-    
+
     for question in assessment_questions:
         questions.append(Question.get_question_by_id(int(question)))
 
@@ -107,24 +108,46 @@ def answer_questions(assessment_id):
 
     answers = {}
     if request.method == "POST":
+        t1_mark = 0
+        t1_count = 0
+        t2_mark = 0
+        t2_count = 0
         for quest in questions:
             if quest.type == 0:
+                t1_count += 1
                 options = question_options[quest.id]
                 if request.form.get(str(quest.id)) == quest.answer:
-                    mark += 1
+                    t1_mark += 1
                 for opt in options:
                     value = request.form.get(str(quest.id))
                     if value:
                         answers[quest.id] = value
 
             elif quest.type == 1:
+                t2_count += 1
                 value = request.form.get(str(quest.id))
                 answers[quest.id] = value
                 if value == quest.answer:
-                    mark += 1
+                    t2_mark += 1
 
+        total_mark = t1_mark + t2_mark
+        if t1_count == 0:
+            t1_accuracy = 0
+        else:
+            t1_accuracy = int(t1_mark / t1_count)
+
+        if t2_count == 0:
+            t2_accuracy = 0
+        else:
+            t2_accuracy = int(t2_mark / t2_count)
         answers_submit = json.dumps(answers)
-        AssessmentCompletion.create_assessment_completion(current_user.id, assessment.id, answers_submit, mark)
+        AssessmentCompletion.create_assessment_completion(current_user.id, assessment.id, answers_submit, total_mark, t1_accuracy, t2_accuracy, datetime.now())
+
+        # Insert credit event when a student finish an assessment (Phoenix)
+        credit_event = 'Finish assessment(' + str(assessment.id) + ')'
+        CreditModel.insert_credit(current_user.id, assessment.type, credit_event, assessment.id, 5, datetime.now())
+        AccountModel().update_credit(current_user.id, 5)
+
         return redirect(url_for('assessment_bp.assessment_feedback', assessment_id=assessment.id))
 
     return render_template('question_in_assessment.html', assessment=assessment, questions=questions, question_options=question_options, form=form, time=time)
@@ -140,6 +163,7 @@ def assessment_feedback(assessment_id):
     valid_result = {}
     mark = 0
     outof = 0
+    time_now = datetime.now()
 
     for question in assessment_questions:
         questions.append(Question.get_question_by_id(int(question)))
@@ -163,7 +187,16 @@ def assessment_feedback(assessment_id):
             valid_result = json.loads(res.results)
             mark = res.mark
 
-    return render_template('submitted_assessment.html',
-                           questions=questions, assessment=assessment,
-                           question_options=question_options, results=valid_result,
-                           mark=mark, outof=outof)
+    if assessment.type == 1:
+        if assessment.due_date > time_now:
+            return render_template('feedback_not_available.html', assessment=assessment)
+        else:
+            return render_template('submitted_assessment.html',
+                                   questions=questions, assessment=assessment,
+                                   question_options=question_options, results=valid_result,
+                                   mark=mark, outof=outof)
+    if assessment.type == 0:
+        return render_template('submitted_assessment.html',
+                               questions=questions, assessment=assessment,
+                               question_options=question_options, results=valid_result,
+                               mark=mark, outof=outof)
