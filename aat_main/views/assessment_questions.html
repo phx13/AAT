@@ -1,21 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Questions for {{ assessment.title }}</h1>
-    <ul>
+    <h1>Questions from <span style="font-style: italic;">{{ assessment.title }}</span></h1>
+    <ul style="padding:0;">
         {% for question in questions %}
-            <li>
-                {{ question.name }} -
+            <li class="list-group-item list-group-item-action colored-box">
+                <span style="display:inline-block;width:70%;">{{ question.name }}</span>
+
                 {% if current_user.has_reviewed_question(question.id) %}
-                    <span class="review-complete-statement">
+                    <span class="review-complete-statement" style="display:inline-block;width:29%;text-align:right;">
                         You have reviewed this question
                     </span>
                 {% else %}
-                    <a href="{{ url_for('satisfaction_review_bp.question_review', question_id=question.id, assessment_id=assessment.id) }}">
+                    <a href="{{ url_for('satisfaction_review_bp.question_review', question_id=question.id, assessment_id=assessment.id) }}"
+                        style="display:inline-block;width:29%;text-align:right;"
+                    >
                         Review
                     </a>
                 {% endif %}
             </li>
         {% endfor %}
     </ul>
+    <a href="{{ url_for('assessment_bp.completed_assessments') }}">Return to Completed Assessments</a>
 {% endblock %}

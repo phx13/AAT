@@ -34,21 +34,21 @@ class SerializationHelper:
     @staticmethod
     def decode(reviews: List, responses: dict) -> List[dict]:
         """
-        This produces a list of the form
+        This returns a list of the form
         [
             {
                 'statement': statement1
                 'responses': {
-                    'Strongly disagree': x
+                    'Strongly disagree': a
                     ...
-                    'Strongly agree': y
+                    'Strongly agree': b
             },
             {
                 'statement': statement2
                 'responses': {
-                    'Strongly disagree': w
+                    'Strongly disagree': c
                     ...
-                    'Strongly agree': z
+                    'Strongly agree': d
             }
         ]
         """

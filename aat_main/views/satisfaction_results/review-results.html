@@ -2,7 +2,12 @@
 
 {% block content %}
 
-    <h1 class="review-results-page-title">{{ page_title }}</h1>
+    <h1 class="review-results-page-title">
+        {{ page_title_prefix }}
+        <span style="font-style:italic;">
+            {{ page_title_body }}
+        </span>
+    </h1>
 
     {% include '_review-statements-results.html' %}
 

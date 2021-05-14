@@ -84,10 +84,10 @@ footer {
     margin: auto;
 }
 
-
 .combo-chart-container {
-    width: 80vw;
+    width: 100%;
     height: 40vh;
+    /*border: green 10px solid;*/
     margin: 0 auto;
     padding: 0;
 }
@@ -95,15 +95,25 @@ footer {
 @media screen {
     .pie-chart-container {
         width: 70vw;
-        height: 100vh;
+        height: 90vh;
     }
 
     .combo-chart-container {
-        width: 75vw;
+        /*position: absolute;*/
+        /*left: 0;*/
+        width: 100%;
         height: 60vh;
-        margin: auto;
+        /*margin-right: 50vw;*/
+        /*border: red 10px solid;*/
     }
 }
+
+/*.test-div {*/
+/*    width: 70vw;*/
+/*    height: 10vh;*/
+/*    border: yellow 10px solid;*/
+/*}*/
+
 .radio-group-error {
     font-weight: bold;
     color: #C70039;
@@ -123,11 +133,12 @@ footer {
     margin: 10vh 1vw;
     padding-top: 1vh;
     background-color: white;
+    /*border: blue 10px solid;*/
 }
 
 @media print {
     .container-with-shadow {
-        margin: 2cm 5cm;
+        margin: 1cm 0;
     }
 }
 

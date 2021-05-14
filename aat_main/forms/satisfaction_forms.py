@@ -29,26 +29,29 @@ class ReviewForm(FlaskForm):
 class AssessmentReviewForm(ReviewForm):
     # reference https://stackoverflow.com/questions/13404476/inherited-class-variable-modification-in-python/13404537#13404537
     statement1 = create_radio_field(
-        'I feel that I had sufficient knowledge to complete this assessment.'
+        'I feel that I had sufficient knowledge to complete this assessment'
     )
     statement2 = create_radio_field(
-        'I found this assessment difficult.'
+        'I found this assessment difficult'
     )
 
 
 class AATReviewForm(ReviewForm):
     statement1 = create_radio_field(
-        'I find it easy to navigate the AAT to find my tasks that need to be completed.'
+        'I find it easy to navigate the AAT to find my tasks that need to be completed'
     )
     statement2 = create_radio_field(
-        'I am pleased overall with the functionality of the AAT.'
+        'I am pleased overall with the functionality of the AAT'
+    )
+    statement3 = create_radio_field(
+        'I prefer using automAATiq to Learning Central for completing assessments'
     )
 
 
 class QuestionReviewForm(ReviewForm):
     statement1 = create_radio_field(
-        'I found this question difficult to answer.'
+        'I found this question difficult to answer'
     )
     statement2 = create_radio_field(
-        'I feel this question is relevant to the topic being assessed.'
+        'I feel this question is relevant to the topic being assessed'
     )

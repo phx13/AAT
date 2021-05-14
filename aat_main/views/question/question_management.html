@@ -247,14 +247,14 @@
                     field: 'operation',
                     title: 'Operation',
                     formatter: function (value, row, index) {
-                        return '<button class="btn btn-outline-primary" data-toggle="modal" data-target="#questionDetail" onclick="editQuestion(' + row.id + ')">edit</button>'
+                        return '<button class="btn btn-outline-primary" data-toggle="modal" data-target="#questionDetail" onclick="editQuestion(' + row.id + ')">Edit</button>'
                     }
                 }, {
                     field: 'review',
-                    title: 'Review',
+                    title: 'Satisfaction reviews',
                     formatter: function (value, row, index) {
                         let reviewUrl = "{{ url_for('satisfaction_result_bp.question_review_result',id='questionId' ) }}".replace('questionId', row.id);
-                        return '<a class="btn btn-outline-primary" href="' + reviewUrl + '">review</a>'
+                        return '<a class="btn btn-outline-primary" href="' + reviewUrl + '">View results</a>'
                     }
                 }]
         });

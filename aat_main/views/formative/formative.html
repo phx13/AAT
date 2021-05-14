@@ -147,7 +147,7 @@
                role="tab"
                aria-controls="nav-current" aria-selected="false">Current Assessments</a>
             <a class="nav-item nav-link" id="nav-pass-tab" data-toggle="tab" href="#nav-pass" role="tab"
-               aria-controls="nav-pass" aria-selected="false">Passed Assessments</a>
+               aria-controls="nav-pass" aria-selected="false">Past Assessments</a>
         </div>
     </nav>
     <table id="assessmentTable" data-toggle="table"></table>
@@ -350,14 +350,14 @@
                     title: 'Operation',
                     formatter: function (value, row, index) {
                         let editUrl = "{{ url_for('formative_blueprint.edit_assessment',id='assessmentId') }}".replace("assessmentId", row.id);
-                        return '<a class="btn btn-outline-primary" href="' + editUrl + '">edit</a>'
+                        return '<a class="btn btn-outline-primary" href="' + editUrl + '">Edit</a>'
                     }
                 }, {
                     field: 'review',
-                    title: 'Review',
+                    title: 'Satisfaction reviews',
                     formatter: function (value, row, index) {
                         let reviewUrl = "{{ url_for('satisfaction_result_bp.assessment_review_results',id='assessmentId' ) }}".replace('assessmentId', row.id);
-                        return '<a class="btn btn-outline-primary" href="' + reviewUrl + '">review</a>'
+                        return '<a class="btn btn-outline-primary" href="' + reviewUrl + '">View results</a>'
                     }
                 }]
         });

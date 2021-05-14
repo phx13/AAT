@@ -8,19 +8,22 @@
 {#            TODO add some styling to the links on this page#}
             <li class="list-group-item list-group-item-action colored-box">
 {#            reference https://stackoverflow.com/questions/257505/css-fixed-width-in-a-span/257564#257564 #}
-                <span style="font-weight:bold;display:inline-block;width:12vw;">{{ assessment.title }}</span>
+                <span style="font-weight:bold;display:inline-block;width:12vw;">
+                    {{ assessment.title }}
+                </span>
+
                 <a href="{{ url_for('assessment_bp.assessment_feedback', assessment_id = assessment.id) }}"
                     style="display:inline-block; width:13vw">
                     Results and feedback
                 </a>
 {#                <span>|</span>#}
                 {% if current_user.has_reviewed_assessment(assessment.id) %}
-                    <span class="review-complete-statement" style="width:21vw;">
+                    <span class="review-complete-statement" style="width:21vw;text-align:center">
                         You have reviewed this assessement
                     </span>
                 {% else %}
                     <a href="{{ url_for('satisfaction_review_bp.assessment_review', assessment_id=assessment.id) }}"
-                        style="display:inline-block;width:21vw;"
+                        style="display:inline-block;width:21vw;text-align: center"
                     >
                         Review this assessment
                     </a>
@@ -29,11 +32,13 @@
 {#                <span>|</span>#}
 
                 {% if current_user.has_reviewed_all_questions(assessment.id) %}
-                    <span class="review-complete-statement">
+                    <span class="review-complete-statement" style="text-align:center">
                         You have reviewed all questions for this assessment
                     </span>
                 {% else %}
-                    <a href="{{ url_for('assessment_bp.assessment_questions', assessment_id=assessment.id) }}">
+                    <a href="{{ url_for('assessment_bp.assessment_questions', assessment_id=assessment.id) }}"
+                        style="text-align:center;display:inline-block;"
+                    >
                         Review questions from this assessment
                     </a>
                 {% endif %}

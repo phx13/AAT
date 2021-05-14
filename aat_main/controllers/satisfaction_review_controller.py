@@ -48,9 +48,9 @@ def assessment_review(assessment_id):
             flash(error)
 
     assessment = Assessment.get_assessment_by_id(assessment_id)
-    title = f'This is a review for {assessment.title}.'
+    title = f'This is a review for the assessment:'
     return render_template('satisfaction-review.html', assessment=assessment, form=form,
-                           page_title=title)
+                           page_title_prefix=title, page_title_body=assessment.title)
 
 
 @satisfaction_review_bp.route('/aat', methods=['GET', 'POST'])
@@ -85,8 +85,8 @@ def aat_review():
         for error in form.errors.values():
             flash(error)
 
-    title = 'This is a review for automAATiq.'
-    return render_template('satisfaction-review.html', form=form, page_title=title)
+    title = 'This is a review for automAATiq'
+    return render_template('satisfaction-review.html', form=form, page_title_prefix=title)
 
 
 @satisfaction_review_bp.route('/question/<question_id>', methods=['GET', 'POST'])
@@ -116,9 +116,9 @@ def question_review(question_id):
             flash(error)
 
     question = Question.get_question_by_id(question_id)
-    title = f'This is a review for the question: {question.description}'
+    title = f'This is a review for the question:'
     return render_template('satisfaction-review.html', question=question, form=form,
-                           page_title=title)
+                           page_title_prefix=title, page_title_body=question.description)
 
 
 @satisfaction_review_bp.route('/assessment/review-complete')
