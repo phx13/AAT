@@ -63,6 +63,7 @@ footer {
 
 .review-complete-statement {
     font-style: italic;
+    display: inline-block;
 }
 
 .review-comment-input {
