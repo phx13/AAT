@@ -86,7 +86,7 @@ def answer_questions(assessment_id):
     assessment_questions = json.loads(assessment.questions)
     questions = []
     question_options = {}
-    mark = 0
+    total_mark = 0
     time = assessment.timelimit
 
     for question in assessment_questions:
@@ -108,24 +108,40 @@ def answer_questions(assessment_id):
 
     answers = {}
     if request.method == "POST":
+        t1_mark = 0
+        t1_count = 0
+        t2_mark = 0
+        t2_count = 0
         for quest in questions:
             if quest.type == 0:
+                t1_count += 1
                 options = question_options[quest.id]
                 if request.form.get(str(quest.id)) == quest.answer:
-                    mark += 1
+                    t1_mark += 1
                 for opt in options:
                     value = request.form.get(str(quest.id))
                     if value:
                         answers[quest.id] = value
 
             elif quest.type == 1:
+                t2_count += 1
                 value = request.form.get(str(quest.id))
                 answers[quest.id] = value
                 if value == quest.answer:
-                    mark += 1
+                    t2_mark += 1
 
+        total_mark = t1_mark + t2_mark
+        if t1_count == 0:
+            t1_accuracy = 0
+        else:
+            t1_accuracy = int(t1_mark / t1_count)
+
+        if t2_count == 0:
+            t2_accuracy = 0
+        else:
+            t2_accuracy = int(t2_mark / t2_count)
         answers_submit = json.dumps(answers)
-        AssessmentCompletion.create_assessment_completion(current_user.id, assessment.id, answers_submit, mark, datetime.now())
+        AssessmentCompletion.create_assessment_completion(current_user.id, assessment.id, answers_submit, total_mark, t1_accuracy, t2_accuracy, datetime.now())
 
         # Insert credit event when a student finish an assessment (Phoenix)
         credit_event = 'Finish assessment(' + str(assessment.id) + ')'

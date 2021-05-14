@@ -106,16 +106,16 @@ def stat_attainment_data():
     if not summative_score_avg:
         summative_score_avg = 0
     # TODO How to express formative_accuracy summative_accuracy?
-    formative_accuracy = AssessmentCompletion.get_score_avg_by_conditions(*conditions).scalar()
+    formative_accuracy = AssessmentCompletion.get_t1_accuracy_by_conditions(*conditions).scalar()
     if not formative_accuracy:
         formative_accuracy = 0
-    summative_accuracy = AssessmentCompletion.get_score_avg_by_conditions(*conditions).scalar()
+    summative_accuracy = AssessmentCompletion.get_t2_accuracy_by_conditions(*conditions).scalar()
     if not summative_accuracy:
         summative_accuracy = 0
     knowledge_level = mean([formative_score_avg, summative_score_avg, formative_accuracy, summative_accuracy])
 
-    datas = [str(round(knowledge_level, 2)), str(round(formative_score_avg, 2)), str(round(summative_score_avg, 2)), str(round(formative_accuracy, 2)),
-             str(round(summative_accuracy, 2))]
+    datas = [str(round(knowledge_level, 2)), str(round(formative_score_avg, 2)), str(round(summative_score_avg, 2)), str(round(formative_accuracy, 2) * 100) + '%',
+             str(round(summative_accuracy, 2) * 100) + '%']
     return jsonify(datas)
 
 
