@@ -2,6 +2,7 @@ from sqlalchemy import MetaData, Table, func
 
 from aat_main import db
 from aat_main.models.assessment_models import Assessment
+from aat_main.models.question_models import Question
 
 
 class CreditModel(db.Model):
@@ -26,8 +27,24 @@ class CreditModel(db.Model):
         return db.session.query(CreditModel.type).filter(*conditions).distinct().all()
 
     @staticmethod
+    def get_assessment_events_by_conditions(*conditions):
+        return db.session.query(CreditModel).join(Assessment, Assessment.id == CreditModel.target_id).filter(*conditions).all()
+
+    @staticmethod
+    def get_question_events_by_conditions(*conditions):
+        return db.session.query(CreditModel).join(Question, Question.id == CreditModel.target_id).filter(*conditions).all()
+
+    @staticmethod
     def get_credit_by_conditions(*conditions):
+        return db.session.query(func.sum(CreditModel.credit)).filter(*conditions)
+
+    @staticmethod
+    def get_assessment_credit_by_conditions(*conditions):
         return db.session.query(func.sum(CreditModel.credit)).join(Assessment, Assessment.id == CreditModel.target_id).filter(*conditions)
+
+    @staticmethod
+    def get_question_credit_by_conditions(*conditions):
+        return db.session.query(func.sum(CreditModel.credit)).join(Question, Question.id == CreditModel.target_id).filter(*conditions)
 
     @staticmethod
     def insert_credit(account_id, type, event, target_id, credit, time):

@@ -301,7 +301,7 @@
                     for (let i = 0; i < options.length; i++) {
                         optionStr += '{' + options[i].children[0].id + ':' + options[i].children[0].value + '}';
                     }
-                    optionStr = optionStr.substring(0, optionStr.length - 1);
+                    {#optionStr = optionStr.substring(0, optionStr.length - 1);#}
                     if ($("input[name='optionDetail']:checked")[0] != undefined) {
                         answer = $("input[name='optionDetail']:checked")[0].value;
                     }

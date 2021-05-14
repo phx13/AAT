@@ -11,6 +11,7 @@ from aat_main.models.account_model import AccountModel
 from aat_main.models.assessment_models import Assessment, AssessmentCompletion
 from aat_main.models.collection_model import CollectionModel
 from aat_main.models.credit_model import CreditModel
+from aat_main.models.question_models import Question
 from aat_main.utils.api_exception_helper import InterServerErrorException, NotFoundException
 from aat_main.utils.base64_helper import Base64Helper
 from aat_main.utils.serialization_helper import SerializationHelper
@@ -28,7 +29,8 @@ def before_request():
 def account_page():
     try:
         courses = current_user.get_enrolled_module_codes()
-        return render_template('account_base.html', current_account=current_user, courses=courses, student_stat_status=0)
+        return render_template('account_base.html', current_account=current_user, courses=courses,
+                               student_stat_status=0)
     except TemplateError:
         raise NotFoundException()
 
@@ -52,7 +54,8 @@ def update_profile():
             password = hashlib.md5(password.encode()).hexdigest()
 
         update_time = time.strftime('%Y-%m-%d %H:%M:%S')
-        AccountModel.update_account(current_user.email, current_user.id, password, name, current_user.role, avatar, profile, update_time)
+        AccountModel.update_account(current_user.email, current_user.id, password, name, current_user.role, avatar,
+                                    profile, update_time)
         return 'Success (Server) : Update profile successful'
     except SQLAlchemyError:
         raise InterServerErrorException()
@@ -115,7 +118,8 @@ def stat_attainment_data():
         summative_accuracy = 0
     knowledge_level = mean([formative_score_avg, summative_score_avg, formative_accuracy, summative_accuracy])
 
-    datas = [str(round(knowledge_level, 2)), str(round(formative_score_avg, 2)), str(round(summative_score_avg, 2)), str(round(formative_accuracy, 2) * 100) + '%',
+    datas = [str(round(knowledge_level, 2)), str(round(formative_score_avg, 2)), str(round(summative_score_avg, 2)),
+             str(round(formative_accuracy, 2) * 100) + '%',
              str(round(summative_accuracy, 2) * 100) + '%']
     return jsonify(datas)
 
@@ -127,32 +131,61 @@ def stat_engagement(course):
 
 @account_bp.route('/account/stat/engagement/data/')
 def stat_engagement_data():
-    conditions = []
+    assessment_conditions = []
     if ('module' in request.args) and (request.args['module']):
-        conditions.append(Assessment.module == request.args['module'])
-
+        assessment_conditions.append(Assessment.module == request.args['module'])
     if current_user.role == 'student':
-        conditions.append(CreditModel.account_id == current_user.id)
+        assessment_conditions.append(CreditModel.account_id == current_user.id)
+    assessment_credit = str(CreditModel.get_assessment_credit_by_conditions(*assessment_conditions).scalar())
+    if assessment_credit == 'None':
+        assessment_credit = 0
 
-    credit_types = CreditModel.get_types_by_conditions(*conditions)
-    module_credit = str(CreditModel.get_credit_by_conditions(*conditions).scalar())
-    if module_credit == 'None':
-        module_credit = 0
+    question_conditions = []
+    if ('module' in request.args) and (request.args['module']):
+        question_conditions.append(Question.module_code == request.args['module'])
+    if current_user.role == 'student':
+        question_conditions.append(CreditModel.account_id == current_user.id)
+    question_credit = str(CreditModel.get_question_credit_by_conditions(*question_conditions).scalar())
+    if question_credit == 'None':
+        question_credit = 0
+
+    credit_types = CreditModel.get_types_by_conditions(CreditModel.account_id == current_user.id)
     credit_dic = {}
-    credit_dic.update({5: module_credit})
+    credit_dic.update({5: int(assessment_credit) + int(question_credit)})
+
     for credit_type in credit_types:
-        credit = str(CreditModel.get_credit_by_conditions(*conditions, CreditModel.type == credit_type[0]).scalar())
+        if credit_type[0] == 0 or credit_type[0] == 1 or credit_type[0] == 2:
+            credit = str(CreditModel.get_assessment_credit_by_conditions(*assessment_conditions, CreditModel.type == credit_type[0]).scalar())
+        else:
+            credit = str(CreditModel.get_question_credit_by_conditions(*question_conditions, CreditModel.type == credit_type[0]).scalar())
         if credit == 'None':
             credit = 0
         credit_dic.update({credit_type[0]: credit})
     return jsonify(credit_dic)
 
 
-@account_bp.route('/account/stat/credit/data/')
-def stat_credit_data():
-    origin_data = CreditModel.get_credit_by_account_id(current_user.id)
+@account_bp.route('/account/stat/credit/data/<module>')
+def stat_credit_data(module):
+    conditions = []
+    conditions.append(Assessment.module == module)
+    conditions.append(CreditModel.account_id == current_user.id)
+    assessment_data = CreditModel.get_assessment_events_by_conditions(*conditions)
+    conditions = []
+    conditions.append(Question.module_code == module)
+    conditions.append(CreditModel.account_id == current_user.id)
+    question_data = CreditModel.get_question_events_by_conditions(*conditions)
+
     data = []
-    for od in origin_data:
+    for od in assessment_data:
+        dic = {
+            'id': od.id,
+            'event': od.event,
+            'credit': od.credit,
+            'time': od.time
+        }
+        data.append(dic)
+
+    for od in question_data:
         dic = {
             'id': od.id,
             'event': od.event,

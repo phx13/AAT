@@ -296,7 +296,7 @@
                                         indicator: [
                                             {text: 'knowledge level', max: 100},
                                             {text: 'Formative average score', max: 100},
-                                            {text: 'Formative accuracy', max: 100},
+                                            {text: 'Summative average score', max: 100},
                                             {text: 'Multiple choice accuracy', max: 100},
                                             {text: 'Fill in blank accuracy', max: 100}
                                         ],
@@ -375,7 +375,7 @@
                 let engagementPieChart = echarts.init(document.getElementById("engagementPieChart"));
                 $(document).ready(function () {
                     $('#creditEvent').bootstrapTable({
-                        url: "{{ url_for('account_bp.stat_credit_data') }}",  // 请求数据源的路由
+                        url: "{{ url_for('account_bp.stat_credit_data',module = course) }}",  // 请求数据源的路由
                         dataType: "json",
                         pagination: true, //前端处理分页
                         singleSelect: false,//是否只能单选

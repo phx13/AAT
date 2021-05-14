@@ -149,12 +149,12 @@ def answer_questions(assessment_id):
         if t1_count == 0:
             t1_accuracy = 0
         else:
-            t1_accuracy = int(t1_mark / t1_count)
+            t1_accuracy = round(t1_mark / t1_count, 2)
 
         if t2_count == 0:
             t2_accuracy = 0
         else:
-            t2_accuracy = int(t2_mark / t2_count)
+            t2_accuracy = round(t2_mark / t2_count, 2)
         answers_submit = json.dumps(answers)
         AssessmentCompletion.create_assessment_completion(current_user.id, assessment.id, answers_submit, total_mark, t1_accuracy, t2_accuracy, datetime.now())
 

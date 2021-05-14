@@ -116,12 +116,12 @@
     super()
     <script>
         function manageCollection(e, questionId) {
-            if ($(e).html() == 'Collect') {
+            if ($.trim($(e).text()) == 'Collect') {
                 addCollection(questionId);
-                $(e).html('Collected');
+                $(e).text('Collected');
             } else {
                 cancelCollection(questionId);
-                $(e).html('Collect');
+                $(e).text('Collect');
             }
         }
 
