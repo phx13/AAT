@@ -42,7 +42,6 @@ from aat_main.controllers.index_controller import index_bp
 from aat_main.controllers.assessment_controller import assessment_bp
 from aat_main.controllers.summative_controller import summative_blueprint
 from aat_main.controllers.formative_controller import formative_blueprint
-
 from aat_main.controllers.satisfaction_review_controller import satisfaction_review_bp
 from aat_main.controllers.satisfaction_result_controller import satisfaction_result_bp
 from aat_main.controllers.auth_controller import auth_bp
@@ -50,6 +49,7 @@ from aat_main.controllers.error_controller import error_bp
 from aat_main.controllers.account_controller import account_bp
 from aat_main.controllers.question_controller import question_bp
 from aat_main.controllers.create_question_controller import create_question_blueprint
+from aat_main.controllers.collection_controller import collection_bp
 
 app.register_blueprint(index_bp)
 app.register_blueprint(assessment_bp)
@@ -62,3 +62,4 @@ app.register_blueprint(error_bp)
 app.register_blueprint(account_bp)
 app.register_blueprint(question_bp)
 app.register_blueprint(create_question_blueprint)
+app.register_blueprint(collection_bp)

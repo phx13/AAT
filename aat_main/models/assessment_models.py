@@ -83,22 +83,19 @@ class Assessment(db.Model):
 
     @staticmethod
     def get_all_current(time):
-        return db.session.query(Assessment).filter(Assessment.due_date > time).all()
-        # return db.session.query(Assessment).filter.all()
+        return db.session.query(Assessment).filter(Assessment.type == 0, Assessment.due_date > time).all()
 
     @staticmethod
     def get_all_pass(time):
-        return db.session.query(Assessment).filter(Assessment.due_date < time).all()
+        return db.session.query(Assessment).filter(Assessment.type == 0, Assessment.due_date < time).all()
 
     @staticmethod
     def get_all_current_by_module(module, time):
-        return db.session.query(Assessment).filter(Assessment.module == module, Assessment.due_date > time).all()
+        return db.session.query(Assessment).filter(Assessment.type == 0, Assessment.module == module, Assessment.due_date > time).all()
 
     @staticmethod
     def get_all_pass_by_module(module, time):
-        return db.session.query(Assessment).filter(Assessment.module == module, Assessment.due_date < time).all()
-        #
-        # return db.session.query(Assessment).filter(Assessment.module == module).all()
+        return db.session.query(Assessment).filter(Assessment.type == 0, Assessment.module == module, Assessment.due_date < time).all()
 
     @staticmethod
     def delete_assessment_by_id(id):
@@ -148,8 +145,11 @@ class AssessmentCompletion(db.Model):
 
     @staticmethod
     def get_completed_assessments_by_user_id(id):
-        output = db.session.query(AssessmentCompletion).filter_by(student_id=id).all()
-        return output
+        return db.session.query(AssessmentCompletion).filter_by(student_id=id).distinct().all()
+
+    @staticmethod
+    def get_attempts_by_assessment(account_id, assessment_id):
+        return db.session.query(AssessmentCompletion).filter_by(student_id=account_id, assessment_id=assessment_id).all()
 
     @staticmethod
     def get_results_by_id(stu_id, ass_id):

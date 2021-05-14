@@ -71,7 +71,9 @@ def assessment_data(status, module):
 @formative_blueprint.route('/assessments/assessments_management/formative/<assessment_id>')
 def assessment_questions(assessment_id):
     try:
-        question_ids = json.loads(Assessment.get_assessment_by_id(assessment_id).questions)
+        assessment = Assessment.get_assessment_by_id(assessment_id)
+        if assessment.questions:
+            question_ids = json.loads(assessment.questions)
         origin_data = []
         for question_id in question_ids:
             origin_data.append(Question.get_question_management_by_id(int(question_id)))
