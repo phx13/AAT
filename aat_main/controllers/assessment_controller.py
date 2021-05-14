@@ -7,6 +7,7 @@ from flask_login import current_user, login_required
 from aat_main.forms.complete_assessment_form import complete_assessment_form
 from aat_main.models.account_model import AccountModel
 from aat_main.models.assessment_models import Assessment, AssessmentCompletion
+from aat_main.models.collection_model import CollectionModel
 from aat_main.models.credit_model import CreditModel
 from aat_main.models.question_models import Question
 
@@ -36,12 +37,23 @@ def available_assessments():
     if current_user.role == 'student':
         assessments = current_user.get_available_assessments_student()
         completed = AssessmentCompletion.get_completed_assessments_by_user_id(current_user.id)
+
         valid_assessments = []
 
         for assessment in assessments:
             if not any(comp.assessment_id == assessment.id for comp in completed):
                 valid_assessments.append(assessment)
 
+        for complete in completed:
+            attempts = len(AssessmentCompletion.get_attempts_by_assessment(current_user.id, complete.assessment_id))
+            original_assessment = Assessment.get_assessment_by_id(complete.assessment_id)
+            if original_assessment.attempt == -1 and original_assessment not in valid_assessments:
+                valid_assessments.append(complete)
+                continue
+            if attempts < original_assessment.attempt and original_assessment not in valid_assessments:
+                valid_assessments.append(original_assessment)
+
+        print(valid_assessments)
         return render_template('available_assessments.html', assessments=valid_assessments)
 
     return redirect(url_for('assessment_bp.assessments'))
@@ -50,7 +62,6 @@ def available_assessments():
 @assessment_bp.route('/completed/')
 def completed_assessments():
     assessments = current_user.get_completed_assessments()
-    print(assessments)
     return render_template('completed_assessments.html', assessments=assessments)
 
 
@@ -72,7 +83,9 @@ def assessments_management():
 @assessment_bp.route('/start/<assessment_id>')
 def start_assessment(assessment_id):
     assessment = Assessment.get_assessment_by_id(assessment_id)
-    assessment_questions = json.loads(assessment.questions)
+    assessment_questions = []
+    if assessment.questions:
+        assessment_questions = json.loads(assessment.questions)
     question_num = 0
     for question in assessment_questions:
         question_num += 1
@@ -83,7 +96,9 @@ def start_assessment(assessment_id):
 def answer_questions(assessment_id):
     form = complete_assessment_form()
     assessment = Assessment.get_assessment_by_id(assessment_id)
-    assessment_questions = json.loads(assessment.questions)
+    assessment_questions = []
+    if assessment.questions:
+        assessment_questions = json.loads(assessment.questions)
     questions = []
     question_options = {}
     total_mark = 0
@@ -194,9 +209,9 @@ def assessment_feedback(assessment_id):
             return render_template('submitted_assessment.html',
                                    questions=questions, assessment=assessment,
                                    question_options=question_options, results=valid_result,
-                                   mark=mark, outof=outof)
+                                   mark=mark, outof=outof, collection_instance=CollectionModel())
     if assessment.type == 0:
         return render_template('submitted_assessment.html',
                                questions=questions, assessment=assessment,
                                question_options=question_options, results=valid_result,
-                               mark=mark, outof=outof)
+                               mark=mark, outof=outof, collection_instance=CollectionModel())

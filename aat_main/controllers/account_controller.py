@@ -9,6 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main.models.account_model import AccountModel
 from aat_main.models.assessment_models import Assessment, AssessmentCompletion
+from aat_main.models.collection_model import CollectionModel
 from aat_main.models.credit_model import CreditModel
 from aat_main.utils.api_exception_helper import InterServerErrorException, NotFoundException
 from aat_main.utils.base64_helper import Base64Helper
@@ -136,15 +137,14 @@ def stat_engagement_data():
     credit_types = CreditModel.get_types_by_conditions(*conditions)
     module_credit = str(CreditModel.get_credit_by_conditions(*conditions).scalar())
     if module_credit == 'None':
-        module_credit = '0'
+        module_credit = 0
     credit_dic = {}
     credit_dic.update({5: module_credit})
     for credit_type in credit_types:
         credit = str(CreditModel.get_credit_by_conditions(*conditions, CreditModel.type == credit_type[0]).scalar())
-        if credit == 'None' or credit == 'NaN':
-            credit = '0'
-        dic = {credit_type[0]: credit}
-        credit_dic.update(dic)
+        if credit == 'None':
+            credit = 0
+        credit_dic.update({credit_type[0]: credit})
     return jsonify(credit_dic)
 
 
@@ -158,6 +158,22 @@ def stat_credit_data():
             'event': od.event,
             'credit': od.credit,
             'time': od.time
+        }
+        data.append(dic)
+    return jsonify(data)
+
+
+@account_bp.route('/account/stat/collection/data/<module>')
+def stat_collection_data(module):
+    collections = CollectionModel.get_collection_by_module(current_user.id, module)
+    data = []
+    type_dic = {0: 'Multiple choice', 1: 'Fill in blank', 2: 'Summative'}
+    for od in collections:
+        dic = {
+            'id': od.id,
+            'question': od.name,
+            'description': od.description,
+            'type': type_dic[od.type],
         }
         data.append(dic)
     return jsonify(data)

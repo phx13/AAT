@@ -299,7 +299,6 @@
             }
         }
 
-
         $('#assessmentTable').bootstrapTable({
             url: '/assessments/assessments_management/formative/current/' + $.trim($("#module").val().split(":")[0]),  // 请求数据源的路由
             dataType: "json",
@@ -418,13 +417,13 @@
         })
 
         function deleteAssessment() {
-            let datas = $('#currentTable').bootstrapTable('getSelections');
+            let datas = $('#assessmentTable').bootstrapTable('getSelections');
             let param = "";
             datas.forEach(function (item) {
                 param += item["id"] + "=id&";
             })
             param = param.substring(0, param.length - 1);
-            $.post('/assessments/assessments_management/formative/data/', param, function (data) {
+            $.post('/assessments/assessments_management/formative/delete/', param, function (data) {
                 if (!jQuery.isEmptyObject(data)) {
                     alert(data);
                     let status = $("#nav-tab").children(".active")[0].id == 'nav-current-tab' ? 'current/' : 'pass/';
@@ -434,7 +433,5 @@
                 }
             })
         }
-
-
     </script>
 {% endblock %}
