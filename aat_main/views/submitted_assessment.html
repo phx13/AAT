@@ -113,7 +113,6 @@
     {% endfor %}
 {% endblock %}
 {% block scripts %}
-    super()
     <script>
         function manageCollection(e, questionId) {
             if ($.trim($(e).text()) == 'Collect') {

@@ -150,6 +150,29 @@ def edit_assessment(id):
     except TemplateError:
         return 'Server error'
 
+@formative_blueprint.route('/assessments/assessments_management/formative/update/<id>', methods=['POST'])
+def update_assessment_data(id):
+    try:
+        ass = Assessment.get_assessment_by_id(id)
+        # Assessment.create_assessment(1, 1, 1, 1, 1, 1, 1, datetime.now(), datetime.now(), 1)
+        assessment = {}
+        for k, v in request.form.items():
+            assessment[k] = v
+        formativeTitle = assessment['formativeTitle']
+        releaseTime = datetime.fromisoformat(assessment['releaseTime'])
+        dueDate = datetime.fromisoformat(assessment['dueDate'])
+        countIn = int(assessment['countIn'])
+        attemptTime = int(assessment['attemptTime'])
+        timeLimit = int(assessment['timeLimit'])
+        description = assessment['description']
+
+        Assessment.update_assessment(formativeTitle, ass.questions, description,
+                                     releaseTime, dueDate, timeLimit,countIn,attemptTime,
+                                     ass.id)
+        return 'update successful'
+    except:
+        return 'Server error'
+
 
 @formative_blueprint.route('/assessments/assessments_management/formative/question/add/<assessment_id>',
                            methods=['POST'])
@@ -172,7 +195,7 @@ def add_question_to_assessment(assessment_id):
                     assessment_questions.append(str(k))
         assessment_questions = json.dumps(assessment_questions)
         Assessment.update_assessment(assessment.title, assessment_questions, assessment.description,
-                                     assessment.availability_date, assessment.due_date, assessment.timelimit,
+                                     assessment.availability_date, assessment.due_date, assessment.timelimit, assessment.count_in, assessment.attempt,
                                      assessment_id)
         return 'added successful'
     except:
@@ -193,6 +216,7 @@ def delete_question_from_assessment(assessment_id):
         assessment_questions = json.dumps(assessment_questions)
         Assessment.update_assessment(assessment.title, assessment_questions, assessment.description,
                                      assessment.availability_date, assessment.due_date, assessment.timelimit,
+                                     assessment.count_in, assessment.attempt,
                                      assessment_id)
         return 'delete successful'
     except:

@@ -48,12 +48,13 @@ def available_assessments():
             attempts = len(AssessmentCompletion.get_attempts_by_assessment(current_user.id, complete.assessment_id))
             original_assessment = Assessment.get_assessment_by_id(complete.assessment_id)
             if original_assessment.attempt == -1 and original_assessment not in valid_assessments:
-                valid_assessments.append(complete)
+                valid_assessments.append(original_assessment)
                 continue
             if attempts < original_assessment.attempt and original_assessment not in valid_assessments:
+                original_assessment.attempt -= attempts
                 valid_assessments.append(original_assessment)
+                print(original_assessment.attempt)
 
-        print(valid_assessments)
         return render_template('available_assessments.html', assessments=valid_assessments)
 
     return redirect(url_for('assessment_bp.assessments'))
@@ -82,13 +83,13 @@ def assessments_management():
 
 @assessment_bp.route('/start/<assessment_id>')
 def start_assessment(assessment_id):
+    attempts = len(AssessmentCompletion.get_attempts_by_assessment(current_user.id, assessment_id))
     assessment = Assessment.get_assessment_by_id(assessment_id)
+    assessment.attempt -= attempts
     assessment_questions = []
     if assessment.questions:
         assessment_questions = json.loads(assessment.questions)
-    question_num = 0
-    for question in assessment_questions:
-        question_num += 1
+    question_num = len(assessment_questions)
     return render_template('assessment_start.html', assessment=assessment, question_num=question_num)
 
 
@@ -156,7 +157,8 @@ def answer_questions(assessment_id):
         else:
             t2_accuracy = round(t2_mark / t2_count, 2)
         answers_submit = json.dumps(answers)
-        AssessmentCompletion.create_assessment_completion(current_user.id, assessment.id, answers_submit, total_mark, t1_accuracy, t2_accuracy, datetime.now())
+        AssessmentCompletion.create_assessment_completion(current_user.id, assessment.id, answers_submit, total_mark,
+                                                          t1_accuracy, t2_accuracy, datetime.now())
 
         # Insert credit event when a student finish an assessment (Phoenix)
         credit_event = 'Finish assessment(' + str(assessment.id) + ')'
@@ -165,7 +167,8 @@ def answer_questions(assessment_id):
 
         return redirect(url_for('assessment_bp.assessment_feedback', assessment_id=assessment.id))
 
-    return render_template('question_in_assessment.html', assessment=assessment, questions=questions, question_options=question_options, form=form, time=time)
+    return render_template('question_in_assessment.html', assessment=assessment, questions=questions,
+                           question_options=question_options, form=form, time=time)
 
 
 @assessment_bp.route('/feedback/<assessment_id>')

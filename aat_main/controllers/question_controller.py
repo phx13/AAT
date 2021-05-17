@@ -78,8 +78,25 @@ def create_question():
     return 'create successful'
 
 
-@question_bp.route('/management/data/update/', methods=['POST'])
-def update_question():
+@question_bp.route('/management/data/update/<id>', methods=['POST'])
+def update_question(id):
+    question = {}
+    for k, v in request.form.items():
+        question[k] = v
+
+    release_time = time.strftime('%Y-%m-%d %H:%M:%S')
+    ques = Question.get_question_by_id(id)
+    if ques:
+        Question().update_question_management(
+            question['module_code'],
+            question['name'],
+            int(question['type']),
+            question['description'],
+            question['option'],
+            question['answer'],
+            question['feedback'],
+            release_time,
+            id)
     return 'update successful'
 
 

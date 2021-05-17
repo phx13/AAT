@@ -38,6 +38,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        <div style="display: none" id="hiddenId"></div>
                         <form>
                             <div class="row">
                                 <div class="form-group col">
@@ -84,10 +85,12 @@
                                         <button type="button" class="btn btn-primary inline-block"
                                                 onclick="addQuestionOption(this)" id="addQuestionBtn">Add Option
                                         </button>
+                                        <button type="button" class="btn btn-danger inline-block"
+                                                onclick="deleteQuestionOption()" id="deleteQuestionBtn">Delete Option
+                                        </button>
                                         <button type="button" class="btn btn-success inline-block"
                                                 onclick="createQuestionOption(this)" style="display: none;"
-                                                id="createOptionBtn">Create
-                                            Option
+                                                id="createOptionBtn">Create Option
                                         </button>
                                         <input type="text" class="form-control" placeholder="" id="optionInput"
                                                style="display: none;">
@@ -104,8 +107,13 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="createQuestion()">
+                        <button type="button" class="btn btn-success" data-dismiss="modal" id="createBtn"
+                                onclick="createQuestion()">
                             Create
+                        </button>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" id="updateBtn"
+                                onclick="updateQuestion()">
+                            Update
                         </button>
                     </div>
                 </div>
@@ -115,7 +123,6 @@
             question
         </button>
     </div>
-
     <table id="btTable" data-toggle="table"></table>
 {% endblock %}
 
@@ -283,6 +290,9 @@
             $("#questionFeedback").val("");
             $('#optionGroup').html("");
             $("#questionAnswerDetail").val("");
+
+            $("#createBtn")[0].style.display = "block";
+            $("#updateBtn")[0].style.display = "none";
         }
 
         function createQuestion() {
@@ -301,10 +311,14 @@
                     for (let i = 0; i < options.length; i++) {
                         optionStr += '{' + options[i].children[0].id + ':' + options[i].children[0].value + '}';
                     }
-                    {#optionStr = optionStr.substring(0, optionStr.length - 1);#}
+
                     if ($("input[name='optionDetail']:checked")[0] != undefined) {
                         answer = $("input[name='optionDetail']:checked")[0].value;
+                    } else {
+                        alert("Invalid option");
+                        return;
                     }
+
                 } else if ($("#questionAnswerDetailVerification").attr("class") != "invalid-feedback") {
                     answer = $("#questionAnswerDetail").val();
                 }
@@ -331,6 +345,12 @@
             $('#createOptionBtn')[0].style.display = 'block';
         }
 
+        function deleteQuestionOption(e) {
+            if ($("input[name='optionDetail']:checked")[0] != undefined) {
+                $("input[name='optionDetail']:checked").parent().remove();
+            }
+        }
+
         function createQuestionOption(e) {
             let optionCount = $("#optionGroup")[0].children.length + 1;
             $('#optionGroup').append('<div class="form-check">\n' +
@@ -344,7 +364,6 @@
 
         function editQuestion(id) {
             initQuestionDetail();
-
             $.get('{{ url_for('question_bp.edit_question',id='id') }}'.replace("id", id), "", function (data) {
                 if (!jQuery.isEmptyObject(data)) {
                     let modules = $("#moduleDetail")[0].children;
@@ -375,6 +394,17 @@
                     });
 
                     $("#questionAnswerDetail").val(data[0]['answer']);
+
+                    let options = $("#optionGroup")[0].children
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].children[0].value == data[0]['answer']) {
+                            options[i].children[0].checked = true;
+                        }
+                    }
+
+                    $("#createBtn")[0].style.display = "None";
+                    $("#updateBtn")[0].style.display = "block";
+                    $("#hiddenId").text(id);
                 }
             })
         }
@@ -392,6 +422,47 @@
                     $('#btTable').bootstrapTable('refresh');
                 }
             })
+        }
+
+        function updateQuestion() {
+            if ($("#questionNameDetailVerification").attr("class") != "invalid-feedback" && $("#questionDescriptionDetailVerification").attr("class") != "invalid-feedback"
+                && $("#questionFeedbackVerification").attr("class") != "invalid-feedback") {
+                let param = "";
+                param += 'module_code=' + $("#moduleDetail").val();
+                param += '&name=' + $("#questionNameDetail").val();
+                param += '&type=' + $("#typeDetail").get(0).selectedIndex;
+                param += '&description=' + $("#questionDescriptionDetail").val();
+                param += '&feedback=' + $("#questionFeedback").val();
+                let optionStr = "";
+                let answer = "";
+                if ($("#typeDetail").get(0).selectedIndex == 0 && $("#optionInputVerification").attr("class") != "invalid-feedback") {
+                    let options = $("#optionGroup")[0].children
+                    for (let i = 0; i < options.length; i++) {
+                        optionStr += '{' + options[i].children[0].id + ':' + options[i].children[0].value + '}';
+                    }
+                    if ($("input[name='optionDetail']:checked")[0] != undefined) {
+                        answer = $("input[name='optionDetail']:checked")[0].value;
+                    } else {
+                        alert("Invalid option");
+                        return;
+                    }
+                } else if ($("#questionAnswerDetailVerification").attr("class") != "invalid-feedback") {
+                    answer = $("#questionAnswerDetail").val();
+                }
+                param += '&option=' + optionStr;
+                param += '&answer=' + answer;
+
+                let postUrl = '{{ url_for('question_bp.update_question', id='questionId') }}'.replace("questionId", $("#hiddenId").text());
+
+                $.post(postUrl, param, function (data) {
+                    if (!jQuery.isEmptyObject(data)) {
+                        alert(data);
+                        $('#btTable').bootstrapTable('refresh');
+                    }
+                })
+            } else {
+                alert("Invalid question");
+            }
         }
     </script>
 {% endblock %}

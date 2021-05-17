@@ -121,7 +121,7 @@ def summative_edit(assessment_id):
 
             assessment_id = assessment.id
 
-            Assessment.update_assessment(title, added_questions, description, start_datetime, end_datetime, timelimit, assessment_id)
+            Assessment.update_assessment(title, added_questions, description, start_datetime, end_datetime, timelimit, assessment.count_in, 1, assessment_id)
             return redirect(url_for('assessment_bp.assessments'))
 
     return render_template("summative_edit.html", assessment=assessment, form=form,

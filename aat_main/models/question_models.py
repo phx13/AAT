@@ -1,5 +1,6 @@
 from flask_login import current_user
 from sqlalchemy import MetaData, Table, or_
+from sqlalchemy.exc import SQLAlchemyError
 
 from aat_main import db
 from aat_main.models.module_model import Module
@@ -54,6 +55,22 @@ class Question(db.Model):
             Question(module_code=module_code, name=name, type=type, description=description,
                      option=option, answer=answer, feedback=feedback, release_time=time))
         db.session.commit()
+
+    def update_question_management(self, module_code, name, type, description, option, answer, feedback, time,
+                                   question_id):
+        try:
+            question = self.get_question_management_by_id(question_id)
+            question.module_code = module_code
+            question.name = name
+            question.type = type
+            question.description = description
+            question.option = option
+            question.answer = answer
+            question.feedback = feedback
+            question.release_time = time
+            db.session.commit()
+        except SQLAlchemyError:
+            raise SQLAlchemyError
 
     @staticmethod
     def delete_question_by_id(id):

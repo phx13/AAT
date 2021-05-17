@@ -59,7 +59,7 @@ class Assessment(db.Model):
             raise SQLAlchemyError
 
     @staticmethod
-    def update_assessment(title, questions, description, start_datetime, end_datetime, timelimit, assessment_id):
+    def update_assessment(title, questions, description, start_datetime, end_datetime, timelimit, count_in, attempt, assessment_id):
         try:
             assessment = Assessment.query.filter_by(id=assessment_id).first()
             assessment.title = title
@@ -68,6 +68,8 @@ class Assessment(db.Model):
             assessment.availability_date = start_datetime
             assessment.due_date = end_datetime
             assessment.timelimit = timelimit
+            assessment.count_in = count_in
+            assessment.attempt = attempt
             db.session.commit()
         except SQLAlchemyError:
             raise SQLAlchemyError
