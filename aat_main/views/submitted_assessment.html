@@ -47,13 +47,15 @@
 
     <hr>
     {% for question in questions %}
-        <button class="btn btn-primary" onclick="manageCollection(this, {{ question.id }})">
-            {% if collection_instance.check_collection(current_user.id, question.id) %}
+        {% if collection_instance.check_collection(current_user.id, question.id) %}
+            <button class="btn btn-success" onclick="manageCollection(this, {{ question.id }})">
                 Collected
-            {% else %}
+            </button>
+        {% else %}
+            <button class="btn btn-primary" onclick="manageCollection(this, {{ question.id }})">
                 Collect
-            {% endif %}
-        </button>
+            </button>
+        {% endif %}
         {% if question.type == 0 %} <!-- multichoice questions -->
             <h4>{{ question.name }}</h4>
             {{ question.description }}
@@ -117,9 +119,11 @@
         function manageCollection(e, questionId) {
             if ($.trim($(e).text()) == 'Collect') {
                 addCollection(questionId);
+                $(e).attr('class', "btn btn-success")
                 $(e).text('Collected');
             } else {
                 cancelCollection(questionId);
+                $(e).attr('class', "btn btn-primary")
                 $(e).text('Collect');
             }
         }

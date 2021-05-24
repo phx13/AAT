@@ -14,14 +14,15 @@ collection_bp = Blueprint('collection_bp', __name__, static_folder='resources')
 def insert_collection():
     try:
         question_id = request.form.get('question_id')
+
         if not CollectionModel.get_collection(current_user.id, question_id):
+            CollectionModel().insert_collection(current_user.id, question_id, datetime.now())
             credit_event = 'Collect question(' + question_id + ')'
             CreditModel.insert_credit(current_user.id, 4, credit_event, question_id, 5, datetime.now())
             AccountModel().update_credit(current_user.id, 5)
             return 'Success: Collection successful, credit +5'
 
         CollectionModel().insert_collection(current_user.id, question_id, datetime.now())
-
         return 'Success: Collection successful'
     except:
         return 'Fail: Collection failed'

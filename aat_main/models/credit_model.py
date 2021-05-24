@@ -3,6 +3,7 @@ from sqlalchemy import MetaData, Table, func
 from aat_main import db
 from aat_main.models.assessment_models import Assessment
 from aat_main.models.question_models import Question
+from aat_main.models.satisfaction_review_models import AssessmentReview, QuestionReview
 
 
 class CreditModel(db.Model):

@@ -179,7 +179,8 @@
                             let attemptBarChartDataAxis = [];
                             let attemptBarChartData = [];
                             data.forEach(function (d) {
-                                attemptBarChartDataAxis.push(d["submit_time"]);
+                                let formatTime = d["submit_time"].split(",")[1].split(" ");
+                                attemptBarChartDataAxis.push(formatTime[1] + "/" + formatTime[2] + "/" + formatTime[3]);
                                 attemptBarChartData.push(d["mark"]);
                             })
                             let attemptBarChartOption = {
@@ -187,9 +188,9 @@
                                     data: attemptBarChartDataAxis,
                                     name: "submit time",
                                     axisLabel: {
-                                        inside: true,
+                                        inside: false,
                                         textStyle: {
-                                            color: '#fff'
+                                            color: '#000'
                                         }
                                     },
                                     axisTick: {
@@ -214,8 +215,8 @@
                                         }
                                     },
                                     min: 0,
-                                    max: 100,
-                                    interval: 20
+                                    max: 10,
+                                    interval: 2
                                 },
                                 dataZoom: [
                                     {
@@ -285,18 +286,17 @@
                         contentType: "application/json; charset=utf-8",
                         data: conditions,
                         success: function (data) {
-                            $("#knowledgeLevel").text(data[0]);
+                            $("#knowledgeLevel").text(data[0][0] + " ~ " + data[0][1]);
                             $("#formativeScore").text(data[1]);
                             $("#summativeScore").text(data[2]);
-                            $("#formativeAccuracy").text(data[3]);
-                            $("#summativeAccuracy").text(data[4]);
+                            $("#formativeAccuracy").text(data[3] + "%");
+                            $("#summativeAccuracy").text(data[4] + "%");
                             let attainmentRadarChartOption = {
                                 radar: [
                                     {
                                         indicator: [
-                                            {text: 'knowledge level', max: 100},
-                                            {text: 'Formative average score', max: 100},
-                                            {text: 'Summative average score', max: 100},
+                                            {text: 'Formative average score', max: 10},
+                                            {text: 'Summative average score', max: 10},
                                             {text: 'Multiple choice accuracy', max: 100},
                                             {text: 'Fill in blank accuracy', max: 100}
                                         ],
@@ -332,7 +332,7 @@
                                         },
                                         data: [
                                             {
-                                                value: data,
+                                                value: data.splice(1, 4),
                                                 symbol: 'rect',
                                                 symbolSize: 5,
                                                 lineStyle: {
@@ -413,6 +413,14 @@
                             }, {
                                 field: 'event',
                                 title: 'Event',
+                                formatter: function (value, row, index) {
+                                    if (row.event.split("(")[0] == "Finish assessment") {
+                                        let reviewUrl = "{{ url_for('assessment_bp.assessment_feedback', assessment_id='AssessmentId') }}".replace('AssessmentId', row.event.split("(")[1].replace(")", ""));
+                                        return '<a href="' + reviewUrl + '">' + row.event + '</a>'
+                                    } else {
+                                        return row.event
+                                    }
+                                }
                             }, {
                                 field: 'credit',
                                 title: 'Credit'

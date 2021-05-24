@@ -163,7 +163,7 @@ class AssessmentCompletion(db.Model):
 
     @staticmethod
     def get_score_avg_by_conditions(*conditions):
-        return db.session.query(func.avg(AssessmentCompletion.mark)).join(Assessment, AssessmentCompletion.assessment_id == Assessment.id).filter(*conditions)
+        return db.session.query(AssessmentCompletion.mark).join(Assessment, AssessmentCompletion.assessment_id == Assessment.id).filter(*conditions).all()
 
     @staticmethod
     def get_t1_accuracy_by_conditions(*conditions):
