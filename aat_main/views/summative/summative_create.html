@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<body onunload="onPageUnload();">
+    <body onunload="onPageUnload();">
     <h2>
         New Assessment
     </h2>
@@ -18,7 +18,7 @@
         {% for error in form.module.errors %}
             <span style="color: red;">[ {{ error }} ]</span><br>
         {% endfor %}
-        
+
         <!-- Question check boxes -->
 
         <!-- FINISH THIS LATER. FORM NEEDS TO UPDATE WITH MODULE SELECTION. DISCUSS WITH PHEONIX -->
@@ -81,7 +81,7 @@
         <div><span id="descLengthLabel">0</span>/512</div>
         {{ form.submit(class="btn btn-secondary") }}
     </form>
-</body>
+    </body>
 
 
 {% endblock %}
@@ -124,7 +124,7 @@
         const descLengthLabel = document.getElementById("descLengthLabel")
         const submitButton = document.getElementById("submit")
 
-        document.getElementById("title_form").addEventListener('input', function() {
+        document.getElementById("title_form").addEventListener('input', function () {
             titleLength = this.value.length;
             titleLengthLabel.innerHTML = titleLength;
 
@@ -139,7 +139,7 @@
             submitButton.disabled = !this.checkValidity();
         })
 
-        document.getElementById("description_form").addEventListener('input', function() {
+        document.getElementById("description_form").addEventListener('input', function () {
             descLength = this.value.length;
             descLengthLabel.innerHTML = descLength;
 
@@ -152,7 +152,7 @@
             submitButton.disabled = !this.checkValidity();
         })
 
-        document.addEventListener("submit", function() {
+        document.addEventListener("submit", function () {
             alert("Assessment created!")
         })
     </script>

@@ -150,6 +150,7 @@ def edit_assessment(id):
     except TemplateError:
         return 'Server error'
 
+
 @formative_blueprint.route('/assessments/assessments_management/formative/update/<id>', methods=['POST'])
 def update_assessment_data(id):
     try:
@@ -167,7 +168,7 @@ def update_assessment_data(id):
         description = assessment['description']
 
         Assessment.update_assessment(formativeTitle, ass.questions, description,
-                                     releaseTime, dueDate, timeLimit,countIn,attemptTime,
+                                     releaseTime, dueDate, timeLimit, countIn, attemptTime,
                                      ass.id)
         return 'update successful'
     except:

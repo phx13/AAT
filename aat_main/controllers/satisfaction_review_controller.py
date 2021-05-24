@@ -1,5 +1,4 @@
 import json
-import time
 from datetime import datetime
 
 from flask import Blueprint, render_template, redirect, url_for, flash, request
@@ -17,6 +16,7 @@ satisfaction_review_bp = Blueprint('satisfaction_review_bp', __name__, url_prefi
                                    template_folder='../views/satisfaction_reviews')
 
 authorized_role = 'student'
+
 
 # TODO add download as PDF button
 @satisfaction_review_bp.route('/assessment/<assessment_id>', methods=['GET', 'POST'])

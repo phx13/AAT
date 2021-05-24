@@ -9,7 +9,7 @@ class assessment_form(FlaskForm):
     def validate_module(form, module):
         if module.data == "Please Choose a Module":
             raise ValidationError("Please Choose a Module!")
-    
+
     def validate_title(form, title):
         if len(title.data) < 5:
             raise ValidationError("Title must be between 5 - 64 characters")

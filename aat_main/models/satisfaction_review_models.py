@@ -1,5 +1,7 @@
-from sqlalchemy import MetaData, Table
 from datetime import datetime
+
+from sqlalchemy import MetaData, Table
+
 from aat_main import db
 
 

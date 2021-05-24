@@ -4,7 +4,7 @@
     <h1>Completed Assessments</h1>
     <ul>
         {% for assessment in assessments %}
-{#            TODO add some styling to the links on this page#}
+            {#            TODO add some styling to the links on this page#}
             <li>
                 {{ assessment.title }} -
                 <a href="{{ url_for('assessment_bp.assessment_feedback', assessment_id = assessment.id) }}">

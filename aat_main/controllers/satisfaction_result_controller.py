@@ -43,7 +43,6 @@ def assessment_review_results(id):
     if not reviews:
         return render_template('no-reviews-assessment.html', assessment=assessment)
 
-
     statement_response_counts = SerializationHelper.decode(reviews, responses)
 
     # TODO maybe add mentimeter-style visualization (including mean?)

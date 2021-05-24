@@ -103,6 +103,7 @@ footer {
         margin: auto;
     }
 }
+
 .radio-group-error {
     font-weight: bold;
     color: #C70039;
@@ -139,6 +140,7 @@ footer {
 .comments-box {
     margin-bottom: 5vh;
 }
+
 /* Summative form CSS elements */
 #summative_form {
     display: flex;
@@ -173,11 +175,11 @@ footer {
     left: 0vw;
     width: 100%;
     background-color: cornsilk;
-  }
-  
-  /* .sticky + main {
-    padding-top: 11vh;
-  } */
+}
+
+/* .sticky + main {
+  padding-top: 11vh;
+} */
 /*------------------------------------------------------------------
     Banner
 -------------------------------------------------------------------*/
